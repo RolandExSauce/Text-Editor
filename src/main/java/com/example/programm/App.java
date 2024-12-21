@@ -1,33 +1,26 @@
 package com.example.programm;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.util.Objects;
+
 
 public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Load the FXML file
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("app.fxml"));
-
-        // Create a scene using the loaded FXML
-        Scene scene = new Scene(fxmlLoader.load());
-
-        // Set the title of the window
-        //stage.setTitle("Hello!");
-
-        // Set the scene to the stage (window)
-        //stage.setScene(scene);
-
-        // Show the window
+        Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/com/example/programm/fxml/main.fxml")));
+        //set icon
+        stage.setTitle("Stable Edit");
+        stage.setScene(new Scene(root));
         stage.show();
-    }
+    };
 
     public static void main(String[] args) {
-        // Launch the JavaFX application
-        launch();
+        launch(args);
     }
 }
+
