@@ -12,8 +12,8 @@ public class EditController {
         welcomeText.setText("Hello, JavaFX!");
     }
 
-    //test von alaa
-    private String test;
+    //test von roland
+    private String bessereVariable;
 
 }
 
