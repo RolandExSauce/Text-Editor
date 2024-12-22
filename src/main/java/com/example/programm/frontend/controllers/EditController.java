@@ -11,4 +11,9 @@ public class EditController {
     private void onHelloButtonClick() {
         welcomeText.setText("Hello, JavaFX!");
     }
+
+    //test von roland
+    private String bessereVariable;
+
 }
+
