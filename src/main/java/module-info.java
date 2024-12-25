@@ -10,6 +10,10 @@ module com.example.programm {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires kotlin.stdlib;
+    requires java.prefs;
+    requires annotations;
+    requires static lombok;
     //requires kotlin.stdlib; // Add this line if Kotlin is required by a dependency
     opens com.example.programm.frontend.controllers to javafx.fxml; // Allow access for FXML
     exports com.example.programm.frontend.controllers;
