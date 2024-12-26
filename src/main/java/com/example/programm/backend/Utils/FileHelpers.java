@@ -14,12 +14,12 @@ public class FileHelpers {
     // Preferences to save and load the last opened directory
     private static final Preferences prefs = Preferences.userNodeForPackage(FileHelpers.class);
     public static final String LAST_OPENED_DIR_KEY = "lastOpenedDir";
-
+    /********************************************************************************************************************/
     //save last opened directory
     public static void saveLastOpenedDir(String path) {
         prefs.put(LAST_OPENED_DIR_KEY, path);
     }
-
+    /********************************************************************************************************************/
     // after modifying get the file chooser
     @NotNull
     public static FileChooser getFileChooser(String fileChooserTitle) {
@@ -34,7 +34,7 @@ public class FileHelpers {
         );
         return fileChooser;
     };
-
+    /********************************************************************************************************************/
     //update chooser with last opened dir first
     @NotNull
     private static FileChooser modChooserFirst(String fileChooserTitle, String lastDirPath) {
@@ -54,45 +54,42 @@ public class FileHelpers {
         }
         return fileChooser;
     };
-
-
+    /********************************************************************************************************************/
     // overload helper methods for getting file extension name
-    public static String getFileExtension(File file) {
-        return getFileExtension(file.getName());
-    }
-
-    //get file extension from a file path
-    public static String getFileExtension(String filePath) {
-        int lastIndex = filePath.lastIndexOf('.');
-        return (lastIndex == -1) ? "Unknown" : filePath.substring(lastIndex + 1);
+    public static String getFileTypeByExtension(Object input) {
+        String fileName;
+        if (input instanceof File) {
+            fileName = ((File) input).getName();
+        } else if (input instanceof String) {
+            fileName = (String) input;
+        } else {
+            throw new IllegalArgumentException("Input must be either File or String");
+        }
+        int lastIndex = fileName.lastIndexOf('.');
+        return (lastIndex == -1) ? "Unknown" : fileName.substring(lastIndex + 1);
     };
-
-
+    /********************************************************************************************************************/
     //get file name from a given path
     public static String getFileNameFromPath(String filePath) {
         Path path = Paths.get(filePath);
         return path.getFileName().toString();
     };
-
-
-    // helper method to create FileInfo from a File and content (which can be null, that's why we use overloading)
-    public static FileInfo createFileInfo(File file) {
-        // Default content to null
-        return createFileInfo(file, null);
+    /********************************************************************************************************************/
+    // helper method to create FileInfo from a File record
+    public static FileInfo createFileInfo(Object input) {
+        if (input instanceof String) {
+            return new FileInfo((String) input);
+        } else if (input instanceof File) {
+            return new FileInfo(((File) input).getAbsolutePath());
+        } else {
+            throw new IllegalArgumentException("Input must be either String or File");
+        }
     };
-
-    public static FileInfo createFileInfo(File file, String content) {
-        String fileName = file.getName();
-        String fileType = FileHelpers.getFileExtension(file);
-        String filePath = file.getAbsolutePath();
-        return new FileInfo(fileName, fileType, filePath, content);
-    };
-
-
+    /********************************************************************************************************************/
     //read content from a file and return it
-    public static String readFileContent(File file) {
+    public static String readFileContent(String filePath) {
         StringBuilder fileData = new StringBuilder();
-        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath), StandardCharsets.UTF_8)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 fileData.append(line).append("\n");
@@ -102,8 +99,7 @@ public class FileHelpers {
         }
         return fileData.toString();
     };
-
-
+    /********************************************************************************************************************/
     // check if file content has changed
     public static boolean trackIfChangesMade(Path filePath, String newContent) {
         try {

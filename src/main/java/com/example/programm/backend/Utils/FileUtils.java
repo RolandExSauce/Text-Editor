@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import java.nio.file.*;
 import java.io.*;
 
+
 //utility class to handle all file related operations, will interact with FileService class
 public class FileUtils {
     // create file method
@@ -19,9 +20,9 @@ public class FileUtils {
                 // check if the file already exists
                 if (file.exists()) {
                     //System.out.println("file already exists. Opening the existing file.");
-                    String content = FileHelpers.readFileContent(file);
+                    String content = FileHelpers.readFileContent(file.getPath());
                     // TODO: return FileInfo object with existing file content or rather delete content ?
-                    return FileHelpers.createFileInfo(file, content);
+                    return FileHelpers.createFileInfo(file);
                 } else {
                     // try creating a new file
                     if (file.createNewFile()) {
@@ -53,8 +54,8 @@ public class FileUtils {
         File file = fileChooser.showOpenDialog(mainStage);
         if (file != null) {
             FileHelpers.saveLastOpenedDir(file.getParentFile().getAbsolutePath());
-            String content = FileHelpers.readFileContent(file);
-            return FileHelpers.createFileInfo(file, content);
+            //String content = FileHelpers.readFileContent(file.getPath());
+            return FileHelpers.createFileInfo(file);
         } else return null; //on cancel
     };
     /********************************************************************************************************************/
@@ -83,7 +84,7 @@ public class FileUtils {
                     bw.write(fileInfo.fileContent());
                     bw.newLine(); // add a newline after appending content
                 }
-                System.out.println("changes saved to file: " + fileInfo.filePath());
+                //System.out.println("changes saved to file: " + fileInfo.filePath());
             } else {
                 System.out.println("no changes detected. file not updated.");
             }

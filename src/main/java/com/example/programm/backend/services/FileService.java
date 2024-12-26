@@ -13,7 +13,8 @@ public class FileService {
     public static void openFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage) {
         FileInfo fileInfo = FileUtils.openFileAndGetContent(primaryStage);
         if (fileInfo != null) {
-            boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
+            //boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
+            boolean added = TabManager.addFileToOpenTabs(fileInfo);
             if (added) {
                 Tab newTab = new Tab(fileInfo.fileName());
                 newTab.setOnClosed(e -> closeFile(tabPane, tabFileMap, newTab));
@@ -28,7 +29,8 @@ public class FileService {
     public static void createOrOpenFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage) {
         FileInfo fileInfo = FileUtils.createOrOpenFileAndGetContent(primaryStage);
         if (fileInfo != null) {
-            boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
+            //boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
+            boolean added = TabManager.addFileToOpenTabs(fileInfo);
             if (added) {
                 Tab newTab = new Tab(fileInfo.fileName());
                 newTab.setOnClosed(e -> closeFile(tabPane, tabFileMap, newTab));
