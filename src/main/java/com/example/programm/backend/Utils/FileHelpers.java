@@ -1,5 +1,7 @@
 package com.example.programm.backend.Utils;
+import com.example.programm.backend.DTO.FileInfo;
 import org.jetbrains.annotations.NotNull;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.prefs.Preferences;
 import javafx.stage.FileChooser;
@@ -7,9 +9,8 @@ import java.nio.file.*;
 import java.io.*;
 
 
-
+//helper class for FileUtils class
 public class FileHelpers {
-
     // Preferences to save and load the last opened directory
     private static final Preferences prefs = Preferences.userNodeForPackage(FileHelpers.class);
     public static final String LAST_OPENED_DIR_KEY = "lastOpenedDir";
@@ -19,7 +20,7 @@ public class FileHelpers {
         prefs.put(LAST_OPENED_DIR_KEY, path);
     }
 
-    // modify FileChooser with the last opened directory
+    // after modifying get the file chooser
     @NotNull
     public static FileChooser getFileChooser(String fileChooserTitle) {
         String lastDirPath = prefs.get(LAST_OPENED_DIR_KEY, null); // Load last opened directory
@@ -32,7 +33,7 @@ public class FileHelpers {
                 new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")
         );
         return fileChooser;
-    }
+    };
 
     //update chooser with last opened dir first
     @NotNull
@@ -52,7 +53,7 @@ public class FileHelpers {
             fileChooser.setInitialDirectory(lastOpenedDirectory);
         }
         return fileChooser;
-    }
+    };
 
 
     // overload helper methods for getting file extension name
@@ -64,14 +65,43 @@ public class FileHelpers {
     public static String getFileExtension(String filePath) {
         int lastIndex = filePath.lastIndexOf('.');
         return (lastIndex == -1) ? "Unknown" : filePath.substring(lastIndex + 1);
-    }
+    };
 
 
     //get file name from a given path
     public static String getFileNameFromPath(String filePath) {
         Path path = Paths.get(filePath);
         return path.getFileName().toString();
-    }
+    };
+
+
+    // helper method to create FileInfo from a File and content (which can be null, that's why we use overloading)
+    public static FileInfo createFileInfo(File file) {
+        // Default content to null
+        return createFileInfo(file, null);
+    };
+
+    public static FileInfo createFileInfo(File file, String content) {
+        String fileName = file.getName();
+        String fileType = FileHelpers.getFileExtension(file);
+        String filePath = file.getAbsolutePath();
+        return new FileInfo(fileName, fileType, filePath, content);
+    };
+
+
+    //read content from a file and return it
+    public static String readFileContent(File file) {
+        StringBuilder fileData = new StringBuilder();
+        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileData.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+        return fileData.toString();
+    };
 
 
     // check if file content has changed
@@ -79,12 +109,12 @@ public class FileHelpers {
         try {
             // get current content or empty if file does not exist
             String currentContent = Files.exists(filePath) ? Files.readString(filePath) : "";
-            System.out.println("Changes made: "+!currentContent.equals(newContent));
+            System.out.println("Changes made: " + !currentContent.equals(newContent));
             return !currentContent.equals(newContent); // return true if content different
         } catch (IOException e) {
             // debug err
             // e.printStackTrace();
             return false;
         }
-    }
+    };
 }
