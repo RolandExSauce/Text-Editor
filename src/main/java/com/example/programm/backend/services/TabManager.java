@@ -1,4 +1,5 @@
 package com.example.programm.backend.services;
+import com.example.programm.backend.DTO.FileInfo;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,11 +8,14 @@ public class TabManager {
     private static final int MAX_TABS = 5; //max number of opened tab files
 
     // stores file key and filename, file key is created with filePath+fileName
-    private static final Map<String, String> openTabs = new HashMap<>();
+    private static final Map<String, FileInfo> openTabs = new HashMap<>();
 
     // add a new tab
-    public static boolean addFileToOpenTabs(String fileName, String filePath) {
-        String fileKey = genFileKey(fileName, filePath);
+    public static boolean addFileToOpenTabs(
+        // String fileName, String filePath,
+        FileInfo fileInfo
+    ) {
+        String fileKey = genFileKey(fileInfo.fileName(), fileInfo.filePath());
         if (openTabs.size() >= MAX_TABS) {
             System.out.println("error: maximum number of tabs reached."); //will prompt a error dialog message
             return false; // cannot add more tabs
@@ -19,8 +23,9 @@ public class TabManager {
 
         //put the file in openTabs if key not inside
         if (!openTabs.containsKey(fileKey)) {
-            openTabs.put(fileKey, fileName);
-            //System.out.println("tab added: " + fileName);
+            openTabs.put(fileKey, fileInfo);
+            FileInfo info = openTabs.get(fileKey);
+            System.out.println("tab added: " + info.fileContent());
             return true;
         } else return false;
     };
@@ -39,7 +44,7 @@ public class TabManager {
         }
     };
 
-    // if file is already open, we will jump back to that tab
+    // TODO: use this method somewhere, if file is already open, we will jump back to that tab
     public static boolean isFileTabOpen(String fileName, String filePath) {
         String uniqueKey = genFileKey(fileName, filePath);
         return openTabs.containsKey(uniqueKey);
