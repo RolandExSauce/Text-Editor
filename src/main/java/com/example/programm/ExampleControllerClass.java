@@ -84,6 +84,10 @@ public class ExampleControllerClass extends Application {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
                 LayoutHelpers.highlightWordSequenceFound(tabPane, tabFileMap, "", codeArea);
+            } else {
+                //TODO: ask prof ?
+                //Or like this ?
+                    LayoutHelpers.highlightWordSequenceFound(tabPane, tabFileMap, newValue, codeArea);
             }
         });
 
