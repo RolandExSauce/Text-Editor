@@ -3,7 +3,6 @@ import com.example.programm.backend.DTO.FileInfo;
 import com.example.programm.backend.Utils.FileUtils;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
 import java.util.Objects;
@@ -45,26 +44,6 @@ public class FileService {
                     codeArea.clear();
                     codeArea.replaceText(fileInfo.fileContent());
                 }
-            }
-        }
-    };
-    /********************************************************************************************************************/
-    //create a new file/or open existing file and tab
-    public static void createOrOpenFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage, TextArea textArea) {
-        FileInfo fileInfo = FileUtils.createOrOpenFileAndGetContent(primaryStage);
-        if (fileInfo != null) {
-            //boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
-            boolean added = TabManager.addFileToOpenTabs(fileInfo);
-            if (added) {
-                Tab newTab = new Tab(fileInfo.fileName());
-                newTab.setOnClosed(e -> closeFile(tabPane, tabFileMap, newTab));
-                tabPane.getTabs().add(newTab);
-                tabFileMap.put(newTab, fileInfo.filePath());
-                //set the text area where file content will be displayed for newly added tab
-                if(tabPane.getSelectionModel().getSelectedItem() == newTab){
-                    textArea.setText(fileInfo.fileContent());
-                };
-                //TabManager.printOpenTabs(); //to debug
             }
         }
     };
