@@ -10,14 +10,19 @@ public class TabManager {
     // stores file key and filename, file key is created with filePath+fileName
     private static final Map<String, FileInfo> openTabs = new HashMap<>();
 
+    //retrieve file info based on it's tab
+    public static FileInfo geFileInfo(String filePath){
+        for(FileInfo fileInfo : openTabs.values()){
+            if(fileInfo.filePath().equals(filePath)) return fileInfo;
+        }
+        return null;
+    };
+    /********************************************************************************************************************/
     // add a new tab
-    public static boolean addFileToOpenTabs(
-        // String fileName, String filePath,
-        FileInfo fileInfo
-    ) {
+    public static boolean addFileToOpenTabs(FileInfo fileInfo) {
         String fileKey = genFileKey(fileInfo.fileName(), fileInfo.filePath());
         if (openTabs.size() >= MAX_TABS) {
-            System.out.println("error: maximum number of tabs reached."); //will prompt a error dialog message
+            System.out.println("error: maximum number of tabs reached."); //TODO: will prompt a error dialog message
             return false; // cannot add more tabs
         }
 
@@ -29,11 +34,10 @@ public class TabManager {
             return true;
         } else return false;
     };
-
+    /********************************************************************************************************************/
     // remove a tab
     public static boolean removeFileFromOpenTabs(String fileName, String filePath) {
         String uniqueKey = genFileKey(fileName, filePath);
-
         if (openTabs.containsKey(uniqueKey)) {
             openTabs.remove(uniqueKey);
             System.out.println("tab removed: " + fileName);
@@ -43,13 +47,13 @@ public class TabManager {
             return false; // tab not found
         }
     };
-
+    /********************************************************************************************************************/
     // TODO: use this method somewhere, if file is already open, we will jump back to that tab
     public static boolean isFileTabOpen(String fileName, String filePath) {
         String uniqueKey = genFileKey(fileName, filePath);
         return openTabs.containsKey(uniqueKey);
     };
-
+    /********************************************************************************************************************/
     // TODO: remove this later if everything works ?
     //  print all open tabs, will be removed, just for debugging currently
     public static void printOpenTabs() {
@@ -62,7 +66,7 @@ public class TabManager {
             });
         }
     };
-
+    /********************************************************************************************************************/
     // generate a unique key by combining filePath and fileName
     private static String genFileKey(String fileName, String filePath) {
         return filePath + "::" + fileName; // use "::" as the delimiter

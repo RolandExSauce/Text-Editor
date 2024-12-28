@@ -1,8 +1,8 @@
 module com.example.programm {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.fxmisc.richtext;
     requires javafx.web;
-
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
@@ -13,7 +13,7 @@ module com.example.programm {
     requires kotlin.stdlib;
     requires java.prefs;
     requires annotations;
-    requires static lombok;
+    //requires static lombok; //if records don't do the job then maybe use lombok
     //requires kotlin.stdlib; // Add this line if Kotlin is required by a dependency
     opens com.example.programm.frontend.controllers to javafx.fxml; // Allow access for FXML
     exports com.example.programm.frontend.controllers;

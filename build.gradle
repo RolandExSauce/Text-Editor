@@ -45,6 +45,7 @@ dependencies {
     // JavaFX dependencies
     implementation "org.openjfx:javafx-controls:23.0.1"
     implementation "org.openjfx:javafx-fxml:23.0.1"
+    implementation 'org.fxmisc.richtext:richtextfx:0.10.9'
 
     // Lombok dependencies
     //compileOnly 'org.projectlombok:lombok:1.18.36'
