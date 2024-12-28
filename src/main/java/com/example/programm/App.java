@@ -9,7 +9,6 @@ import java.util.Objects;
 
 
 public class App extends Application {
-
     @Override
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/com/example/programm/fxml/main.fxml")));

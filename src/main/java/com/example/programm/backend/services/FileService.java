@@ -3,30 +3,54 @@ import com.example.programm.backend.DTO.FileInfo;
 import com.example.programm.backend.Utils.FileUtils;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.CodeArea;
+import java.util.Objects;
 import java.util.Map;
 
 //utility class to interact with controllers, will interact with <currently unknown, waiting for frontend>
 public class FileService {
 
-    //open new file and a tab
-    public static void openFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage) {
+    //save file
+    public static void saveFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage, CodeArea codeArea) {
+        // Get the current tab
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+
+        // get the file path for the selected tab
+        String filePath = tabFileMap.get(selectedTab);
+
+        // retrieve fileInfo from tab manager
+        FileInfo fileInfo = TabManager.geFileInfo(filePath);
+
+        // update FileInfo with the current CodeArea content
+        String updatedContent = codeArea.getText();
+        fileInfo = new FileInfo(Objects.requireNonNull(fileInfo).filePath(), updatedContent);
+        FileUtils.saveChangesToFile(fileInfo);
+    };
+    /********************************************************************************************************************/
+    // Open a new file and create a tab
+    public static void openFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage, CodeArea codeArea) {
         FileInfo fileInfo = FileUtils.openFileAndGetContent(primaryStage);
         if (fileInfo != null) {
-            //boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
             boolean added = TabManager.addFileToOpenTabs(fileInfo);
             if (added) {
                 Tab newTab = new Tab(fileInfo.fileName());
                 newTab.setOnClosed(e -> closeFile(tabPane, tabFileMap, newTab));
                 tabPane.getTabs().add(newTab);
                 tabFileMap.put(newTab, fileInfo.filePath());
-                //TabManager.printOpenTabs(); //to debug
+
+                // Set CodeArea content to the file content
+                if (tabPane.getSelectionModel().getSelectedItem() == newTab) {
+                    codeArea.clear();
+                    codeArea.replaceText(fileInfo.fileContent());
+                }
             }
         }
     };
-
+    /********************************************************************************************************************/
     //create a new file/or open existing file and tab
-    public static void createOrOpenFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage) {
+    public static void createOrOpenFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage, TextArea textArea) {
         FileInfo fileInfo = FileUtils.createOrOpenFileAndGetContent(primaryStage);
         if (fileInfo != null) {
             //boolean added = TabManager.addFileToOpenTabs(fileInfo.fileName(), fileInfo.filePath());
@@ -36,27 +60,48 @@ public class FileService {
                 newTab.setOnClosed(e -> closeFile(tabPane, tabFileMap, newTab));
                 tabPane.getTabs().add(newTab);
                 tabFileMap.put(newTab, fileInfo.filePath());
+                //set the text area where file content will be displayed for newly added tab
+                if(tabPane.getSelectionModel().getSelectedItem() == newTab){
+                    textArea.setText(fileInfo.fileContent());
+                };
                 //TabManager.printOpenTabs(); //to debug
             }
         }
     };
-
-
+    /********************************************************************************************************************/
     //close a file and it's tab
+    public static void createOrOpenFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage, CodeArea codeArea) {
+        FileInfo fileInfo = FileUtils.createOrOpenFileAndGetContent(primaryStage);
+        if (fileInfo != null) {
+            boolean added = TabManager.addFileToOpenTabs(fileInfo);
+            if (added) {
+                Tab newTab = new Tab(fileInfo.fileName());
+                newTab.setOnClosed(e -> closeFile(tabPane, tabFileMap, newTab));
+                tabPane.getTabs().add(newTab);
+                tabFileMap.put(newTab, fileInfo.filePath());
+
+                // Set CodeArea content to the file content
+                if (tabPane.getSelectionModel().getSelectedItem() == newTab) {
+                    codeArea.clear();
+                    codeArea.replaceText(fileInfo.fileContent());
+                }
+            }
+        }
+    };
+    /********************************************************************************************************************/
+    // Close a file and its tab
     private static void closeFile(TabPane tabPane, Map<Tab, String> tabFileMap, Tab tab) {
         String filePath = tabFileMap.get(tab);
         if (filePath != null) {
-                FileUtils.closeFileRessource(filePath);
-                String fileName = tab.getText();
-                boolean removed = TabManager.removeFileFromOpenTabs(fileName, filePath);
-                if (removed) {
-                    tabPane.getTabs().remove(tab);
-                    tabFileMap.remove(tab);
-                    //TabManager.printOpenTabs(); //to debug
-                }
+            FileUtils.closeFileRessource(filePath);
+            String fileName = tab.getText();
+            boolean removed = TabManager.removeFileFromOpenTabs(fileName, filePath);
+            if (removed) {
+                tabPane.getTabs().remove(tab);
+                tabFileMap.remove(tab);
+            }
         } else {
-            //should of course not happen ?
-            System.out.println("error: no file associated with selected tab.");
+            System.out.println("Error: No file associated with the selected tab.");
         }
     };
 }

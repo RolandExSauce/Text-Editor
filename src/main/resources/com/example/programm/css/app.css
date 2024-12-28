@@ -1,0 +1,30 @@
+.root {
+    -fx-background-color: #111111;
+}
+
+.label {
+    -fx-font-size: 20;
+    -fx-font-family: "Lucida Console";
+    -fx-text-fill: white;
+    -fx-alignment: center; /* Ensures the text aligns properly */
+}
+
+#titleLabel {
+    -fx-font-size: 40;
+    -fx-alignment: center; /* Center text horizontally and vertically */
+}
+
+.highlighted {
+    -fx-background-color: yellow;
+}
+
+
+
+.highlight {
+    -rtfx-background-color: lightgreen; /* Background color */
+    -fx-fill: green; /* Text color */
+    -fx-font-weight: bold; /* Bold text */
+}
+
+
+
