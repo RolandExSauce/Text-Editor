@@ -1,5 +1,5 @@
-package com.example.programm.backend.Utils;
-import com.example.programm.backend.DTO.FileInfo;
+package com.solideditor.programm.backend.Utils;
+import com.solideditor.programm.backend.DTO.FileInfo;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.nio.charset.StandardCharsets;
