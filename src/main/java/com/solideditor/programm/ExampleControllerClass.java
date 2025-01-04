@@ -1,8 +1,8 @@
-package com.example.programm;
-import com.example.programm.backend.DTO.FileInfo;
-import com.example.programm.backend.Utils.LayoutHelpers;
-import com.example.programm.backend.services.FileService;
-import com.example.programm.backend.services.TabManager;
+package com.solideditor.programm;
+import com.solideditor.programm.backend.DTO.FileInfo;
+import com.solideditor.programm.backend.Utils.LayoutHelpers;
+import com.solideditor.programm.backend.services.FileService;
+import com.solideditor.programm.backend.services.TabManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;

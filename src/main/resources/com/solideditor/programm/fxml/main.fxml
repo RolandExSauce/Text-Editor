@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.programm.frontend.controllers.EditController"
+      fx:controller="com.solideditor.programm.frontend.controllers.EditController"
       alignment="CENTER" spacing="10.0" prefHeight="400.0" prefWidth="600.0">
     <Label fx:id="welcomeText" text="Welcome to JavaFX!" />
     <Button text="Click Me" onAction="#onHelloButtonClick" />

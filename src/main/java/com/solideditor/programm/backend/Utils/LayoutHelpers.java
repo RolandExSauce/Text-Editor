@@ -1,6 +1,6 @@
-package com.example.programm.backend.Utils;
-import com.example.programm.backend.DTO.FileInfo;
-import com.example.programm.backend.services.TabManager;
+package com.solideditor.programm.backend.Utils;
+import com.solideditor.programm.backend.DTO.FileInfo;
+import com.solideditor.programm.backend.services.TabManager;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.fxmisc.richtext.CodeArea;

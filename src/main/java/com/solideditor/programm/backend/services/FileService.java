@@ -1,6 +1,6 @@
-package com.example.programm.backend.services;
-import com.example.programm.backend.DTO.FileInfo;
-import com.example.programm.backend.Utils.FileUtils;
+package com.solideditor.programm.backend.services;
+import com.solideditor.programm.backend.DTO.FileInfo;
+import com.solideditor.programm.backend.Utils.FileUtils;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -48,7 +48,7 @@ public class FileService {
         }
     };
     /********************************************************************************************************************/
-    //close a file and it's tab
+    //Create a new file or open an existing one and create a tab
     public static void createOrOpenFile(TabPane tabPane, Map<Tab, String> tabFileMap, Stage primaryStage, CodeArea codeArea) {
         FileInfo fileInfo = FileUtils.createOrOpenFileAndGetContent(primaryStage);
         if (fileInfo != null) {

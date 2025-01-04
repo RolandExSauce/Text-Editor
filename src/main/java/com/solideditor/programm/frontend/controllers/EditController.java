@@ -1,4 +1,4 @@
-package com.example.programm.frontend.controllers;
+package com.solideditor.programm.frontend.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

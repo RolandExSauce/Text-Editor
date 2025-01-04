@@ -1,5 +1,5 @@
-package com.example.programm.backend.DTO;
-import com.example.programm.backend.Utils.FileHelpers;
+package com.solideditor.programm.backend.DTO;
+import com.solideditor.programm.backend.Utils.FileHelpers;
 
 
 // encapsulate file data as dto

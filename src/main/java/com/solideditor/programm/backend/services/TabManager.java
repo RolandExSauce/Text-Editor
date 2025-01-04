@@ -1,5 +1,5 @@
-package com.example.programm.backend.services;
-import com.example.programm.backend.DTO.FileInfo;
+package com.solideditor.programm.backend.services;
+import com.solideditor.programm.backend.DTO.FileInfo;
 import java.util.HashMap;
 import java.util.Map;
 
