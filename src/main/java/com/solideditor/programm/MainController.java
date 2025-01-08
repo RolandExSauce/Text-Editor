@@ -1,5 +1,4 @@
-package com.example.programm.frontend.controllers;
-
+package com.solideditor.programm;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;

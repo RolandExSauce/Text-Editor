@@ -1,4 +1,4 @@
-package com.example.programm;
+package com.solideditor.programm;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,10 +9,10 @@ import java.util.Objects;
 
 
 public class App extends Application {
-
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/com/example/programm/fxml/main.fxml")));
+         Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/com/solideditor/programm/fxml/main.fxml")));
+
         //set icon
         stage.setTitle("Stable Edit");
         stage.setScene(new Scene(root));

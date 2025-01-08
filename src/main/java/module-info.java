@@ -1,8 +1,8 @@
-module com.example.programm {
+module com.solideditor.programm {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.fxmisc.richtext;
     requires javafx.web;
-
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
@@ -10,9 +10,12 @@ module com.example.programm {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
-    //requires kotlin.stdlib; // Add this line if Kotlin is required by a dependency
-    opens com.example.programm.frontend.controllers to javafx.fxml; // Allow access for FXML
-    exports com.example.programm.frontend.controllers;
-    opens com.example.programm to javafx.fxml;
-    exports com.example.programm;
+    requires kotlin.stdlib;
+    requires java.prefs;
+    requires org.jetbrains.annotations;
+    //requires static lombok; //if records don't do the job then maybe use lombok
+    opens com.solideditor.programm.frontend.controllers to javafx.fxml; // Allow access for FXML
+    exports com.solideditor.programm.frontend.controllers;
+    opens com.solideditor.programm to javafx.fxml;
+    exports com.solideditor.programm;
 }
