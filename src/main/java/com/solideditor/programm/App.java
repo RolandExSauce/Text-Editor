@@ -11,13 +11,13 @@ import java.util.Objects;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-         Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/com/solideditor/programm/fxml/main.fxml")));
+         Parent root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("/com/solideditor/programm/fxml/main.fxml")));
 
         //set icon
         stage.setTitle("Stable Edit");
         stage.setScene(new Scene(root));
         stage.show();
-    };
+    }
 
     public static void main(String[] args) {
         launch(args);
