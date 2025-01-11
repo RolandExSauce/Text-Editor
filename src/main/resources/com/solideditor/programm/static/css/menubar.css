@@ -1,0 +1,21 @@
+/* General ComboBox styling */
+.combo-box {
+    -fx-pref-width: 500px; /* Increase width */
+}
+
+/* Specific ComboBox by fx:id */
+#fontsComboBox {
+    -fx-pref-width: 500px; /* Apply desired width */
+    -fx-background-radius: 10;
+}
+
+/* Icons */
+.image-view {
+    -fx-fit-width: 24px; /* Adjust size for all icons */
+    -fx-fit-height: 24px;
+}
+
+/* HBox spacing */
+.hbox {
+    -fx-spacing: 20px; /* Adds space between items */
+}
