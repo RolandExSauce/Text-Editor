@@ -138,24 +138,30 @@ public class FileHelpers {
 
     // method to update the tab indicator based on the save state
     public static void updateTabIfFileSavedIndicator(Tab tab, boolean isModified) {
+        if (tab == null || tab.getGraphic() == null) {
+            System.err.println("Tab or Tab graphic is null! Cannot update indicator.");
+            return;
+        }
+
         if (tab.getGraphic() instanceof Circle indicator) {
             indicator.setFill(isModified ? Color.DARKGRAY : Color.TRANSPARENT);
+        } else {
+            System.err.println("Tab graphic is not a Circle. Cannot update indicator.");
         }
     };
     /******************************************************************************************************************/
     // check if file content has changed
-    public static void trackIfChangesMade(FileInfo fileInfo, String newContent, Tab tab) {
+    public static void trackIfChangesMade(FileInfo fileInfo, String currentContent, Tab tab) {
         if (fileInfo == null || tab == null) {
             throw new IllegalArgumentException("FileInfo and Tab cannot be null.");
         };
 
-        String filePath = fileInfo.filePath();
-        String currentContent = Files.exists(Path.of(filePath)) ? readFileContent(filePath) : "";
+        String savedContent = Files.exists(Path.of(fileInfo.filePath()))
+                ? readFileContent(fileInfo.filePath())
+                : "";
+        boolean hasChanges = !currentContent.equals(savedContent);
 
-        // Determine if changes are made
-        boolean hasChanges = !currentContent.equals(newContent);
-
-        // Update the tab's indicator based on the save state
+        // Update the tab's file is saved state indicator
         updateTabIfFileSavedIndicator(tab, hasChanges);
     };
     /******************************************************************************************************************/

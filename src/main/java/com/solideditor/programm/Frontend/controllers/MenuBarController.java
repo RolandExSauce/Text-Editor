@@ -48,13 +48,7 @@ public class MenuBarController {
     private void onOpenFileClicked() {
         if (IConnectApp != null) {
             if (tabPane != null && tabFileMap != null) {
-                //System.out.println("tabpane before: "+tabPane);
-                //System.out.println("tabFileMap: "+ tabFileMap);
-                //System.out.println("first table file map not null: "+tabFileMap);
                 FileIOService.openFile(IConnectApp);
-                //System.out.println("tabFileMap after: "+ tabFileMap); //TODO: works
-                //System.out.println("tabpane after: "+tabPane);
-
             }
         }
     };

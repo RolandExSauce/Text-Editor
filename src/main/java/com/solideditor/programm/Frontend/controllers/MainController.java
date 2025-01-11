@@ -43,7 +43,7 @@ public class MainController {
         codeAreaContainer.getChildren().add(codeArea);
 
         // Set the CodeArea in IConnectApp
-        IConnectApp.setCodeArea(this.codeArea);
+        IConnectApp.setCodeArea(codeArea);
     }
 
     private void loadIncludedFXML(String fxmlPath, VBox targetContainer) {

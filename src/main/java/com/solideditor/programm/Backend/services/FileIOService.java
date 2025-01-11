@@ -50,10 +50,10 @@ public class FileIOService {
         //update the fileInfo in TabManagerService, so when switching tabs content is also updated
         TabManagerService.updateFileInfo(filePath, updatedContent);
 
-        //update the tab indicator to transparent (saved state)
+        // Mark the file as saved by updating the tab indicator
         FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
 
-        System.out.println("File saved: " + filePath);
+        //System.out.println("File saved: " + filePath);
     };
     /******************************************************************************************************************/
     // Open a new file and create a tab

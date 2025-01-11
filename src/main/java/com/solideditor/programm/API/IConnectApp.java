@@ -1,9 +1,10 @@
 package com.solideditor.programm.API;
 import com.solideditor.programm.App;
 import com.solideditor.programm.Backend.DTO.FileInfo;
+import com.solideditor.programm.Backend.Utils.FileHelpers;
+import com.solideditor.programm.Backend.Utils.LayoutHelpers;
 import com.solideditor.programm.Backend.services.TabManagerService;
 import com.solideditor.programm.Frontend.Tools.GetFontsFromJSON;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
@@ -17,8 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
+// Interface Class to bridge functionalities from Backend Services and Frontend Controllers
 public class IConnectApp {
-    private final ChangeListener<String> codeAreaChangeListener;
     private static final String pathToJSONFonts = "/com/solideditor/programm/static/fonts.json";
     private final List<String> fonts; // Store loaded fonts
     private ComboBox<String> fontComboBox;
@@ -26,81 +28,49 @@ public class IConnectApp {
     private TabPane tabPane;
     private final Map<Tab, String> tabFileMap = new HashMap<>();
     private CodeArea codeArea;
-
     private Stage primaryStage;
     private String unsavedContent = "";
 
     public IConnectApp() {
         // Load fonts from JSON or use defaults
         this.fonts = loadFonts();
-
-        // Initialize the codeAreaChangeListener
-        this.codeAreaChangeListener = IConnectAppListeners
-                .createCodeAreaChangeListener(tabPane, tabFileMap, codeArea, new String[]{unsavedContent});
     };
 
-    // Helper method to load fonts
+    // Helper method to load fonts from GetFontsFromJSON class
     private List<String> loadFonts() {
         try (InputStream resourceStream = Objects.requireNonNull(App.class.getResourceAsStream(pathToJSONFonts))) {
             return GetFontsFromJSON.appFontsFromStream(resourceStream);
         } catch (Exception e) {
-            System.err.println("Error loading fonts from JSON: " + e.getMessage());
-            return List.of("Arial", "Times New Roman", "Verdana", "Georgia");
+            return List.of("Arial", "Times New Roman", "Verdana", "Georgia"); // default fonts on failure
         }
     };
 
-
-    //Set CodeArea
+    /* Setters to set references for global usage *********************************************************************/
     public void setCodeArea(CodeArea codeArea) {
-        if (codeArea == null) {
-            throw new IllegalArgumentException("CodeArea cannot be null");
-        }
+        if (codeArea == null) throw new IllegalArgumentException("CodeArea cannot be null");
         this.codeArea = codeArea;
-
-        // Add change listener for the CodeArea
         addCodeAreaChangeListener();
-        //System.out.println("CodeArea set successfully in IConnectApp.");
     };
 
-
-    // TabPane setup
     public void setTabPane(TabPane tabPane) {
-        if (tabPane == null) {
-            throw new IllegalArgumentException("TabPane cannot be null");
-        }
+        if (tabPane == null) throw new IllegalArgumentException("TabPane cannot be null");
         this.tabPane = tabPane;
         detectTabPaneChanges();
-
-        if (codeArea != null) {
-            addCodeAreaChangeListener();
-        }
-
-        if (searchTxtField != null) {
-            addSearchTxtFieldListener();
-        }
     };
-
 
     public void setSearchTxtField(TextField txtField) {
-        //System.out.println("Setting searchTxtField: " + txtField);
+        if (txtField == null) throw new IllegalArgumentException("Search TextField cannot be null");
         this.searchTxtField = txtField;
-
-        // Add listener if TabPane is already set
-        if (searchTxtField != null) {
-            addSearchTxtFieldListener();
-        }
+        addSearchTxtFieldListener();
     };
 
-
-    // ComboBox setup
     public void setFontsComboBox(ComboBox<String> comboBox) {
         this.fontComboBox = comboBox;
         if (fontComboBox != null) {
             fontComboBox.setItems(FXCollections.observableArrayList(fonts));
             if (!fonts.isEmpty()) {
-                fontComboBox.setValue(fonts.getFirst()); // Default font
+                fontComboBox.setValue(fonts.getFirst());
             }
-
             fontComboBox.setOnAction(event -> {
                 String selectedFont = fontComboBox.getValue();
                 System.out.println("Selected font: " + selectedFont);
@@ -110,7 +80,11 @@ public class IConnectApp {
         }
     };
 
-    // Utility methods
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    };
+
+    /* Getters to hold references to use globally *************************************************************************/
     public TabPane getTabPane() {
         return tabPane;
     };
@@ -123,66 +97,90 @@ public class IConnectApp {
         return primaryStage;
     };
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    };
-
     public Map<Tab, String> getTabFileMap() {
         return tabFileMap;
     };
-
+    /**********************************************************************************************************************/
+    // Listener for CodeArea changes
     public void addCodeAreaChangeListener() {
-        codeArea.textProperty().addListener(
-                IConnectAppListeners.createCodeAreaChangeListener(tabPane, tabFileMap, codeArea, new String[]{unsavedContent})
-        );
-    };
+        if (codeArea != null && tabPane != null) {
+            codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
+                System.out.println("old value: " + oldValue);
+                System.out.println("new value: " + newValue);
 
-    public void addSearchTxtFieldListener() {
-        IConnectAppListeners.addSearchTxtFieldListener(searchTxtField, tabPane, tabFileMap, codeArea);
-    };
+                // Get the currently selected tab
+                Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                if (selectedTab != null) {
+                    String filePath = tabFileMap.get(selectedTab);
+                    if (filePath != null) {
+                        FileInfo fileInfo = TabManagerService.getFileInfo(filePath);
+                        if (fileInfo != null) {
+                            // Update the tab's indicator based on changes
+                            boolean hasChanges = !newValue.equals(fileInfo.fileContent());
+                            FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
 
-    public void detectTabPaneChanges() {
-        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-
-            if (newTab != null) {
-                String newFilePath = tabFileMap.get(newTab);
-//                System.out.println("Tab switched. New file path: " + newFilePath);
-                if (newFilePath != null) {
-
-                    System.out.println("File path: "+ newFilePath);
-                    FileInfo fileInfo = TabManagerService.getFileInfo(newFilePath);
-
-                    //TODO: info is null ????
-                    System.out.println("info from switched tab: "+ fileInfo);
-
-                    if (fileInfo != null) {
-                        String newContent = fileInfo.fileContent();
-
-                        if (!newContent.equals(codeArea.getText())) { // Update only if different
-
-                            unsavedContent = newContent;
-
-                            // Temporarily remove listener during updates
-                            codeArea.textProperty().removeListener(codeAreaChangeListener);
-
-                            // Update CodeArea content
-                            codeArea.clear();
-                            codeArea.replaceText(newContent);
-
-                            // Reattach listener
-                            codeArea.textProperty().addListener(codeAreaChangeListener);
+                            // Save unsaved content in TabManagerService for persistence
+                            TabManagerService.saveUnsavedContent(filePath, newValue);
                         }
-                    } else {
-                        codeArea.clear();
-                        unsavedContent = "";
                     }
                 }
-            } else {
-                // Clear CodeArea if no tab is selected
-                codeArea.clear();
-                unsavedContent = "";
-            }
-        });
+            });
+        } else {
+            System.err.println("CodeArea or TabPane is null! Cannot add listener.");
+        }
     };
 
+
+    // Listener for Search TextField changes
+    public void addSearchTxtFieldListener() {
+        if (searchTxtField != null) {
+            searchTxtField.textProperty().addListener((observable, oldValue, newValue) -> {
+                System.out.println("being typed: " + newValue);
+                if (newValue == null || newValue.isEmpty()) {
+                    LayoutHelpers.highlightWordSequenceFound(tabPane, tabFileMap, "", codeArea);
+                } else {
+                    LayoutHelpers.highlightWordSequenceFound(tabPane, tabFileMap, newValue, codeArea);
+                }
+            });
+        } else {
+            System.err.println("Search TextField is null! Cannot add listener.");
+        }
+    };
+
+    // Detect changes on TabPane
+    public void detectTabPaneChanges() {
+        if (tabPane != null) {
+            tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+                if (oldTab != null) {
+                    // Save unsaved content of the current tab before switching
+                    String oldFilePath = tabFileMap.get(oldTab);
+                    if (oldFilePath != null) {
+                        TabManagerService.saveUnsavedContent(oldFilePath, codeArea.getText());
+                    }
+                };
+
+                if (newTab != null) {
+                    String newFilePath = tabFileMap.get(newTab);
+                    if (newFilePath != null) {
+                        //System.out.println("File path: " + newFilePath);
+                        FileInfo fileInfo = TabManagerService.getFileInfo(newFilePath);
+
+                        // Check for unsaved content first
+                        String unsavedContent = TabManagerService.getUnsavedContent(newFilePath);
+                        String contentToLoad = (unsavedContent != null) ? unsavedContent : Objects.requireNonNull(fileInfo).fileContent();
+
+                        if (!contentToLoad.equals(codeArea.getText())) {
+                            codeArea.clear();
+                            codeArea.replaceText(contentToLoad);
+                        }
+                    }
+                } else {
+                    // Clear CodeArea if no tab is selected
+                    codeArea.clear();
+                }
+            });
+        } else {
+            System.err.println("TabPane is null! Cannot detect changes.");
+        }
+    };
 }

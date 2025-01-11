@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// Utility to load fonts from a JSON file or resource
+// Utility Class to load fonts from a JSON file
 public class GetFontsFromJSON {
-
     /**
      * Reads a JSON file containing fonts from an InputStream and returns a list of font names.
      * @param inputStream the InputStream of the JSON file
@@ -16,7 +15,7 @@ public class GetFontsFromJSON {
      */
     public static List<String> appFontsFromStream(InputStream inputStream) {
         List<String> fonts = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper(); // Use Jackson for parsing
+        ObjectMapper mapper = new ObjectMapper(); // use Jackson for parsing
 
         try {
             JsonNode rootNode = mapper.readTree(inputStream); // Read JSON
@@ -28,9 +27,9 @@ public class GetFontsFromJSON {
                     fonts.add(fontName);
 
                     // Optional: Print additional font details
-//                    String style = fontNode.get("style").asText();
-//                    System.out.println("Font name: " + fontName);
-//                    System.out.println("Font style: " + style);
+                    // String style = fontNode.get("style").asText();
+                    // System.out.println("Font name: " + fontName);
+                    // System.out.println("Font style: " + style);
                 }
             }
         } catch (IOException e) {
