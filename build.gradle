@@ -43,6 +43,9 @@ javafx {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
+
     implementation 'org.jetbrains:annotations:24.0.1' //jet brain annotations, maybe use lombok annotations ?
     // JavaFX dependencies
     implementation "org.openjfx:javafx-controls:23.0.1"

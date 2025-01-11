@@ -1,0 +1,14 @@
+{
+  "fonts": [
+    { "fontName": "Arial", "style": "Sans-serif" },
+    { "fontName": "Times New Roman", "style": "Serif" },
+    { "fontName": "Verdana", "style": "Sans-serif" },
+    { "fontName": "Georgia", "style": "Serif" },
+    { "fontName": "Lucida Console", "style": "Monospace" },
+    { "fontName": "Segoe UI", "style": "Sans-serif" },
+    { "fontName": "Open Sans", "style": "Sans-serif" },
+    { "fontName": "Calibri", "style": "Sans-serif" },
+    { "fontName": "Garamond", "style": "Serif" },
+    { "fontName": "Palatino Linotype", "style": "Serif" }
+  ]
+}

@@ -1,0 +1,13 @@
+/* TODO: style maybe more */
+
+.root {
+    -fx-border-style: solid;
+}
+
+
+/* will be used to highlight found words */
+.highlight {
+    -rtfx-background-color: lightgreen; /* Background color */
+    -fx-fill: green; /* Text color */
+    -fx-font-weight: bold; /* Bold text */
+}

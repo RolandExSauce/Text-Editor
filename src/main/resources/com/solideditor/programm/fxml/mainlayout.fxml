@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<!-- ****************************************************************************************************************-->
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.solideditor.programm.Frontend.controllers.MainController"
+            stylesheets="@/com/solideditor/programm/css/mainLayout.css"
+>
+    <top>
+        <!-- Placeholder for dynamically loaded titlebar and menubar -->
+        <VBox fx:id="titleBarMenuBarContainer"/>
+    </top>
+    <center>
+        <!-- Placeholder for dynamically added CodeArea -->
+        <VBox fx:id="codeAreaContainer"/>
+    </center>
+    <bottom>
+        <!-- Placeholder for dynamically loaded footerbar -->
+        <VBox fx:id="bottomContainer"/>
+    </bottom>
+</BorderPane>
