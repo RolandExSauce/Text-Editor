@@ -62,6 +62,7 @@ public class LayoutHelpers {
             return;
         }
 
+        //TODO: use this positions somewhere, make method return something
         List<Integer> positions;
         try {
             positions = FileHelpers.findSubstringPositions(content, txtToSearch);

@@ -8,17 +8,21 @@ public record FileInfo(String filePath, String fileContent, String fileName, Str
     // Overloaded constructor with default values
     public FileInfo(String filePath) {
         this(filePath,
-                FileHelpers.readFileContent(filePath),
-                FileHelpers.getFileNameFromPath(filePath),
-                FileHelpers.getFileTypeByExtension(filePath));
+                filePath != null ? FileHelpers.readFileContent(filePath) : null,
+                filePath != null ? FileHelpers.getFileNameFromPath(filePath) : null,
+                filePath != null ? FileHelpers.getFileTypeByExtension(filePath) : null
+        );
     };
 
     public FileInfo(String filePath, String fileContent) {
         this(filePath,
                 fileContent,
-                FileHelpers.getFileNameFromPath(filePath),
-                FileHelpers.getFileTypeByExtension(filePath));
+                filePath != null ? FileHelpers.getFileNameFromPath(filePath) : null,
+                filePath != null ? FileHelpers.getFileTypeByExtension(filePath) : null
+        );
     }
 };
 
+//Adjusted to include null cuz FileInfo used in TabEntry cuz we want to be able to create file (creates a tab)
+//but no guarantee user will also save that file
 

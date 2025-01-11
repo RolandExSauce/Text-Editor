@@ -10,7 +10,7 @@
       style="-fx-background-color: #1D2128;"
       fx:controller="com.solideditor.programm.Frontend.controllers.TitleBarController"
       xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      stylesheets="@/com/solideditor/programm/css/titlebar.css"
+      stylesheets="@/com/solideditor/programm/static/css/titlebar.css"
 >
     <HBox prefHeight="0.0" prefWidth="362.0" style="-fx-background-color: #1D2128;">
         <TabPane fx:id="tabPane" accessibleRole="BUTTON" cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0"

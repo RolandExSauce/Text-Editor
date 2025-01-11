@@ -5,7 +5,7 @@
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.solideditor.programm.Frontend.controllers.MainController"
-            stylesheets="@/com/solideditor/programm/css/mainLayout.css"
+            stylesheets="@/com/solideditor/programm/static/css/mainLayout.css"
 >
     <top>
         <!-- Placeholder for dynamically loaded titlebar and menubar -->

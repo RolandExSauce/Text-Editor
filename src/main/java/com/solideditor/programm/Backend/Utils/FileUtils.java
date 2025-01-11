@@ -9,9 +9,10 @@ import java.io.*;
 
 //utility class to handle all file related operations, will interact with FileService class
 public class FileUtils {
-    // create file method
-    public static FileInfo createOrOpenFileAndGetContent(Stage mainStage) {
-        FileChooser fileChooser = FileHelpers.getFileChooser("Create/Replace File");
+
+    // save a new file "under XY dir" method
+    public static FileInfo saveNewFileUnderDirAndGetFileContent(Stage mainStage) {
+        FileChooser fileChooser = FileHelpers.getFileChooser("Create New File Or Replace File Content");
         File file = fileChooser.showSaveDialog(mainStage);
 
         // check if file selected
@@ -30,6 +31,7 @@ public class FileUtils {
             }
         } else return null; // return null on cancel
     };
+    //TODO: actually change this ?
     //I've modified "createOrOpenFileAndGetContent" so that if we select an existing file
     //instead of creating a new one it simply opens that file instead of a "creation failing error" =>
     //in this sense it does actually get the job done for "openFileAndGetContent" as well, but
@@ -47,7 +49,6 @@ public class FileUtils {
         } else return null; //on cancel
     };
     /******************************************************************************************************************/
-    //TODO: Update this to also "save under"
     // save changes to file
     public static void saveChangesToFile(FileInfo fileInfo) {
         // Validate input

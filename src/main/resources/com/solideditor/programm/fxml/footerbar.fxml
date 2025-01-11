@@ -5,7 +5,7 @@
 <!-- ****************************************************************************************************************-->
 <HBox prefHeight="14.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.solideditor.programm.Frontend.controllers.FooterBarController"
-      stylesheets="@/com/solideditor/programm/css/footerbar.css"
+      stylesheets="@/com/solideditor/programm/static/css/footerbar.css"
 >
     <HBox prefHeight="100.0" prefWidth="200.0">
         <Label fx:id="label_Words" text="Wörter: 0" textFill="WHITE"/>

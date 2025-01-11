@@ -35,7 +35,25 @@ public class MenuBarController {
     public ComboBox<String> getComboBox(){ return fontsComboBox; };
 
 
+    //TODO: load fonts from IConnectApp, but init comboBox here ?
+    @FXML
+    public void initialize() {
+        // Add sample items
+        fontsComboBox.getItems().addAll("Short", "Medium-length item", "A very long selected item that adjusts width");
+
+        // Bind width dynamically to the selected item's size
+        fontsComboBox.prefWidthProperty().bind(
+                fontsComboBox.getEditor().textProperty().length().multiply(7) // Adjust multiplier to fit your font size
+                        .add(30) // Padding for dropdown arrow and padding
+        );
+
+        // Set a default selected item (optional)
+        fontsComboBox.getSelectionModel().select(0);
+    };
+
+
     //used in MainController, primarily for getting the tabPane set through TitleBarController
+    //and other stuffs like tabFileMap used for global access
     //TODO: put this in other layer ?
     public void setMainUtilities(IConnectApp IConnectApp) {
         this.IConnectApp = IConnectApp;
@@ -55,10 +73,10 @@ public class MenuBarController {
     /******************************************************************************************************************/
     //create new file, if user selects existing file, open that one
     @FXML
-    private void onCreateOrOpenFileClicked() {
+    private void onCreateFileClicked() {
         if (IConnectApp != null) {
             if (tabPane != null && tabFileMap != null) {
-                FileIOService.createOrOpenFile(IConnectApp);
+                FileIOService.createNewFile(IConnectApp);
             }
         }
     };
@@ -70,7 +88,6 @@ public class MenuBarController {
                 FileIOService.saveFile(IConnectApp);
             }
         }
-        // Add logic to save the content of the current CodeArea to a file
     };
     /******************************************************************************************************************/
     @FXML
@@ -80,7 +97,7 @@ public class MenuBarController {
     };
     /******************************************************************************************************************/
     @FXML
-    private void onSearch() {
+    private void onSearchTxtInFileClicked() {
         System.out.println("Search initiated!");
         // Implement search logic in the CodeArea
     };

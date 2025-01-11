@@ -11,9 +11,44 @@ import java.util.Map;
 
 //TODO: remove duplicate code: tabPane, tabFileMap, codeArea, etc...
 
+
 //utility class to interact with controllers, will interact with <currently unknown, waiting for frontend>
 public class FileIOService {
 
+    public static void saveAsFile(IConnectApp IConnectApp) {
+        TabPane tabPane = IConnectApp.getTabPane();
+        Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
+        CodeArea codeArea = IConnectApp.getCodeArea();
+        Stage primaryStage = IConnectApp.getPrimaryStage();
+
+        // Get the currently selected tab
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab == null) {
+            System.out.println("No tab selected to save.");
+            return;
+        }
+
+        // Open a "Save As" dialog to get the file path
+        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(primaryStage);
+        if (fileInfo != null) {
+            // Save the current content to the specified file path
+            String updatedContent = codeArea.getText();
+            FileUtils.saveChangesToFile(new FileInfo(fileInfo.filePath(), updatedContent));
+
+            // Update TabManagerService with the new file information
+            TabManagerService.updateFileInfo(fileInfo.filePath(), updatedContent);
+
+            // Update the tab title and file mapping
+            selectedTab.setText(fileInfo.fileName());
+            tabFileMap.put(selectedTab, fileInfo.filePath());
+
+            // Mark the tab as saved
+            FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
+        } else {
+            System.out.println("Save operation canceled.");
+        }
+    };
+    /******************************************************************************************************************/
     //save file
     public static void saveFile(IConnectApp IConnectApp) {
         TabPane tabPane = IConnectApp.getTabPane();
@@ -56,7 +91,7 @@ public class FileIOService {
         //System.out.println("File saved: " + filePath);
     };
     /******************************************************************************************************************/
-    // Open a new file and create a tab
+    // Open a file and add to tabPane
     public static void openFile(IConnectApp IConnectApp) {
         TabPane tabPane = IConnectApp.getTabPane();
         Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
@@ -68,7 +103,6 @@ public class FileIOService {
             // Check if the file is already open using TabManagerService
             Tab existingTab = TabManagerService.getOpenTab(fileInfo.fileName(), fileInfo.filePath());
             if (existingTab != null) {
-                //System.out.println("Tab already open for file: " + fileInfo.filePath());
                 // Ensure the existing tab is visible in the TabPane
                 if (!tabPane.getTabs().contains(existingTab)) {
                     tabPane.getTabs().add(existingTab);
@@ -76,11 +110,11 @@ public class FileIOService {
                 tabPane.getSelectionModel().select(existingTab);
                 tabPane.requestFocus();
                 return;
-            }
+            };
 
             // If not open, create a new tab and add it using TabManagerService
             Tab newTab = FileHelpers.createTabWithIfFileSavedIndicator(fileInfo.fileName());
-            Tab addedTab = TabManagerService.addFileToOpenTabs(fileInfo, newTab);
+            Tab addedTab = TabManagerService.addFileMaybeHasPathToOpenTabs(fileInfo, newTab);
 
             if (addedTab != null) {
                 // Set up tab behavior and add to TabPane
@@ -100,36 +134,34 @@ public class FileIOService {
         }
     };
     /******************************************************************************************************************/
-    //Create a new file or open an existing one and create a tab
-    public static void createOrOpenFile(IConnectApp IConnectApp) {
+    //Create a new file with a default Tab
+    public static void createNewFile(IConnectApp IConnectApp) {
         TabPane tabPane = IConnectApp.getTabPane();
         Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
         CodeArea codeArea = IConnectApp.getCodeArea();
-        Stage primaryStage = IConnectApp.getPrimaryStage();
-        FileInfo fileInfo = FileUtils.createOrOpenFileAndGetContent(primaryStage);
-        if (fileInfo != null) {
-            Tab existingTab = TabManagerService.getOpenTab(fileInfo.fileName(), fileInfo.filePath());
-            if (existingTab != null) {
-                // Re-add and select existing tab if not already in TabPane
-                if (!tabPane.getTabs().contains(existingTab)) {
-                    tabPane.getTabs().add(existingTab);
-                }
-                tabPane.getSelectionModel().select(existingTab);
-                tabPane.requestFocus();
-            } else {
-                // Create a new tab
-                Tab newTab = new Tab(fileInfo.fileName());
-                newTab.setOnClosed(e -> closeFile(IConnectApp, newTab));
-                tabPane.getTabs().add(newTab);
-                tabPane.getSelectionModel().select(newTab);
-                tabFileMap.put(newTab, fileInfo.filePath());
 
-                // Update CodeArea content
-                codeArea.clear();
-                codeArea.replaceText(fileInfo.fileContent());
-            }
+        // Create a new unsaved tab
+        Tab addedTab = TabManagerService.createUnsavedTabAndAddToOpenTabs();
+        if (addedTab != null) {
+            // Add the tab to the TabPane
+            tabPane.getTabs().add(addedTab);
+            tabPane.getSelectionModel().select(addedTab);
+
+            // on tab is closed
+            addedTab.setOnClosed(e -> closeFile(IConnectApp, addedTab));
+
+            // Map the tab to its state in tabFileMap (use null for unsaved files)
+            tabFileMap.put(addedTab, null);
+
+            // Set up the content for the CodeArea (empty for unsaved tabs)
+            codeArea.clear();
+
+            // Save initial empty content in TabManagerService
+            TabManagerService.saveUnsavedContent(null, "");
+
+        } else {
+            System.out.println("Error: Could not create or add a new unsaved tab.");
         }
-
     };
     /******************************************************************************************************************/
     // Close a file and its tab
@@ -150,7 +182,7 @@ public class FileIOService {
             boolean resourceClosed = FileUtils.closeFileRessource(filePath);
             if (!resourceClosed) {
                 System.out.println("Warning: Could not close file resource for " + filePath);
-            }
+            };
 
             // Remove the tab from TabManagerService and mappings
             String fileName = tab.getText();

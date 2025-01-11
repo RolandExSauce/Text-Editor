@@ -29,8 +29,6 @@ public class IConnectApp {
     private final Map<Tab, String> tabFileMap = new HashMap<>();
     private CodeArea codeArea;
     private Stage primaryStage;
-    private String unsavedContent = "";
-
     public IConnectApp() {
         // Load fonts from JSON or use defaults
         this.fonts = loadFonts();
@@ -64,10 +62,25 @@ public class IConnectApp {
         addSearchTxtFieldListener();
     };
 
+
+    // TODO: but init comboBox in MenuBarController ?
     public void setFontsComboBox(ComboBox<String> comboBox) {
         this.fontComboBox = comboBox;
         if (fontComboBox != null) {
+
             fontComboBox.setItems(FXCollections.observableArrayList(fonts));
+
+
+            // Bind width dynamically to the selected item's size
+            fontComboBox.prefWidthProperty().bind(
+                    fontComboBox.getEditor().textProperty().length().multiply(1000) // Adjust multiplier to fit your font size
+                            .add(30) // Padding for dropdown arrow and padding
+            );
+
+            // Set a default selected item (optional)
+            fontComboBox.getSelectionModel().select(0);
+
+
             if (!fonts.isEmpty()) {
                 fontComboBox.setValue(fonts.getFirst());
             }
@@ -79,12 +92,11 @@ public class IConnectApp {
             System.err.println("fontComboBox is null!");
         }
     };
-
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     };
 
-    /* Getters to hold references to use globally *************************************************************************/
+    /* Getters to hold references to use globally *********************************************************************/
     public TabPane getTabPane() {
         return tabPane;
     };
@@ -100,16 +112,15 @@ public class IConnectApp {
     public Map<Tab, String> getTabFileMap() {
         return tabFileMap;
     };
-    /**********************************************************************************************************************/
-    // Listener for CodeArea changes
+    /******************************************************************************************************************/
+    //Listener for CodeArea changes
     public void addCodeAreaChangeListener() {
         if (codeArea != null && tabPane != null) {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("old value: " + oldValue);
-                System.out.println("new value: " + newValue);
-
                 // Get the currently selected tab
                 Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+//                System.out.println("Current selected Tab: "+ selectedTab);
+
                 if (selectedTab != null) {
                     String filePath = tabFileMap.get(selectedTab);
                     if (filePath != null) {
@@ -129,8 +140,7 @@ public class IConnectApp {
             System.err.println("CodeArea or TabPane is null! Cannot add listener.");
         }
     };
-
-
+    /******************************************************************************************************************/
     // Listener for Search TextField changes
     public void addSearchTxtFieldListener() {
         if (searchTxtField != null) {
@@ -146,7 +156,7 @@ public class IConnectApp {
             System.err.println("Search TextField is null! Cannot add listener.");
         }
     };
-
+    /******************************************************************************************************************/
     // Detect changes on TabPane
     public void detectTabPaneChanges() {
         if (tabPane != null) {
@@ -167,7 +177,8 @@ public class IConnectApp {
 
                         // Check for unsaved content first
                         String unsavedContent = TabManagerService.getUnsavedContent(newFilePath);
-                        String contentToLoad = (unsavedContent != null) ? unsavedContent : Objects.requireNonNull(fileInfo).fileContent();
+                        String contentToLoad = (unsavedContent != null) ? unsavedContent :
+                                Objects.requireNonNull(fileInfo).fileContent();
 
                         if (!contentToLoad.equals(codeArea.getText())) {
                             codeArea.clear();
