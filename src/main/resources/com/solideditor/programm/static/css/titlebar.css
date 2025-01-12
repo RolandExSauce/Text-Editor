@@ -1,1 +1,88 @@
-/* TODO: style maybe more */
+/* General HBox styles for the Title Bar */
+.title-bar {
+    -fx-background-color: #1D2128;
+        -fx-padding: 10px 10px 0.5px 30px;
+        -fx-spacing: 10px;
+}
+
+/* TabPane styles */
+.tab-pane *.tab-header-background {
+    -fx-background-color: #1D2128; /* Same color as the title bar */
+     -fx-padding-bottom: 15px;
+    -fx-effect: none; /* Removes the inner shadow effect */
+    -fx-border-color: transparent; /* Optional: Removes any border if present */
+}
+
+.tab .tab-label {
+    -fx-text-fill: whitesmoke; /* Explicitly set the text color for unselected tabs */
+}
+
+
+/* Tab styles */
+.tab {
+    -fx-focus-color: transparent;
+    -fx-background-radius: 7 7 0 0;
+    -fx-pref-width: 180px; /* Preferred width */
+    -fx-min-width: 180px;  /* Minimum width */
+    -fx-font-size: 15px;
+    -fx-background-color: transparent; /* Transparent background for unselected tabs */
+    -fx-border-color: #5a5a5a; /* Slight border to distinguish unselected tabs */
+    -fx-border-width: 0 0 1px 0; /* Border only at the bottom */
+}
+
+.tab:selected {
+    -fx-background-radius: 7 7 0 0;
+    -fx-background-color: white; /* White background for the selected tab */
+    -fx-border-color: transparent; /* No border for the selected tab */
+    -fx-focus-color: transparent; /* Makes the focus ring transparent */
+    -fx-faint-focus-color: transparent; /* Removes the faint focus glow */
+}
+
+
+
+.tab:selected .tab-label {
+    -fx-text-fill: black; /* Text color for the selected tab */
+}
+
+
+/* Button styles */
+.title-bar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white; /* Default text color for buttons */
+    -fx-font-size: 12px; /* Font size for buttons */
+    -fx-padding: 2 5;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: hand; /* Pointer cursor for hover */
+}
+
+.title-bar-button:hover {
+    -fx-background-color: #2A2E35; /* Slightly darker background on hover */
+}
+
+/* Close Button */
+.title-bar-button-close {
+    -fx-background-color: white; /* Background color for the button */
+    -fx-text-fill: #1D2128; /* Color for the "✖" symbol */
+    -fx-padding: 0; /* No inner padding */
+    -fx-border-radius: 50%; /* Ensures circular border shape */
+    -fx-background-radius: 50%; /* Ensures circular background shape */
+    -fx-border-color: white; /* White border around the button */
+    -fx-border-width: 0.5; /* Thin border to minimize the circle size */
+    -fx-focus-color: transparent; /* Removes focus highlight */
+    -fx-faint-focus-color: transparent; /* Removes faint focus glow */
+    -fx-alignment: center; /* Centers the "✖" */
+    -fx-min-width: 20px; /* Smaller width for the button */
+    -fx-min-height: 20px; /* Smaller height for the button */
+    -fx-pref-width: 20px; /* Preferred smaller width */
+    -fx-pref-height: 20px; /* Preferred smaller height */
+    -fx-translate-y: 3px; /*push button down slightly*/
+    -fx-font-size: 12px; /* Font size for "✖" */
+}
+
+/* Close Button Hover State */
+.title-bar-button-close:hover {
+    -fx-background-color: #D32F2F; /* Red background for hover effect */
+    -fx-text-fill: white; /* Keeps text white */
+}
+

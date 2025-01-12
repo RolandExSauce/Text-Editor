@@ -1,4 +1,8 @@
-/* General ComboBox styling */
+.menu-bar {
+    -fx-spacing: 20px; /* Space between buttons */
+    -fx-margin: 50px 0px 0px 0px;
+}
+
 .combo-box {
     -fx-pref-width: 500px; /* Increase width */
 }

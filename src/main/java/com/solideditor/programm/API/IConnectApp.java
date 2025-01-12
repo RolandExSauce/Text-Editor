@@ -23,24 +23,15 @@ import java.util.Objects;
 public class IConnectApp {
     private static final String pathToJSONFonts = "/com/solideditor/programm/static/fonts.json";
     private final List<String> fonts; // Store loaded fonts
-    private ComboBox<String> fontComboBox;
     private TextField searchTxtField;
     private TabPane tabPane;
     private final Map<Tab, String> tabFileMap = new HashMap<>();
     private CodeArea codeArea;
     private Stage primaryStage;
-    public IConnectApp() {
-        // Load fonts from JSON or use defaults
-        this.fonts = loadFonts();
-    };
 
-    // Helper method to load fonts from GetFontsFromJSON class
-    private List<String> loadFonts() {
-        try (InputStream resourceStream = Objects.requireNonNull(App.class.getResourceAsStream(pathToJSONFonts))) {
-            return GetFontsFromJSON.appFontsFromStream(resourceStream);
-        } catch (Exception e) {
-            return List.of("Arial", "Times New Roman", "Verdana", "Georgia"); // default fonts on failure
-        }
+    //no arg constructor to init some values
+    public IConnectApp() {
+        this.fonts = loadFonts();
     };
 
     /* Setters to set references for global usage *********************************************************************/
@@ -62,36 +53,6 @@ public class IConnectApp {
         addSearchTxtFieldListener();
     };
 
-
-    // TODO: but init comboBox in MenuBarController ?
-    public void setFontsComboBox(ComboBox<String> comboBox) {
-        this.fontComboBox = comboBox;
-        if (fontComboBox != null) {
-
-            fontComboBox.setItems(FXCollections.observableArrayList(fonts));
-
-
-            // Bind width dynamically to the selected item's size
-            fontComboBox.prefWidthProperty().bind(
-                    fontComboBox.getEditor().textProperty().length().multiply(1000) // Adjust multiplier to fit your font size
-                            .add(30) // Padding for dropdown arrow and padding
-            );
-
-            // Set a default selected item (optional)
-            fontComboBox.getSelectionModel().select(0);
-
-
-            if (!fonts.isEmpty()) {
-                fontComboBox.setValue(fonts.getFirst());
-            }
-            fontComboBox.setOnAction(event -> {
-                String selectedFont = fontComboBox.getValue();
-                System.out.println("Selected font: " + selectedFont);
-            });
-        } else {
-            System.err.println("fontComboBox is null!");
-        }
-    };
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     };
@@ -112,6 +73,8 @@ public class IConnectApp {
     public Map<Tab, String> getTabFileMap() {
         return tabFileMap;
     };
+
+    public List<String> getFonts() { return fonts; };
     /******************************************************************************************************************/
     //Listener for CodeArea changes
     public void addCodeAreaChangeListener() {
@@ -134,6 +97,24 @@ public class IConnectApp {
                             TabManagerService.saveUnsavedContent(filePath, newValue);
                         }
                     }
+
+                    else {
+                        // Handle unsaved tabs (no file path)
+                        String unsavedTabName = "unsaved::" + selectedTab.getText(); // Construct key for unsaved tabs
+
+                        // Retrieve unsaved content from TabManagerService
+                        String unsavedContent = TabManagerService.getUnsavedContentForUnsavedFiles(unsavedTabName);
+
+                        // Check if the content has changed
+                        boolean hasChanges = !newValue.equals(unsavedContent);
+
+                        // Update the tab's indicator based on changes
+                        FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
+
+                        // Save the updated content in TabManagerService
+                        TabManagerService.saveUnsavedContent(unsavedTabName, newValue);
+                    };
+
                 }
             });
         } else {
@@ -171,12 +152,17 @@ public class IConnectApp {
 
                 if (newTab != null) {
                     String newFilePath = tabFileMap.get(newTab);
+
+
+                    //If a tab is saved (file was opened)
                     if (newFilePath != null) {
+
+                        String newKey = tabFileMap.get(newTab);
                         //System.out.println("File path: " + newFilePath);
                         FileInfo fileInfo = TabManagerService.getFileInfo(newFilePath);
 
                         // Check for unsaved content first
-                        String unsavedContent = TabManagerService.getUnsavedContent(newFilePath);
+                        String unsavedContent = TabManagerService.getUnsavedContentForSavedFiles(newKey);
                         String contentToLoad = (unsavedContent != null) ? unsavedContent :
                                 Objects.requireNonNull(fileInfo).fileContent();
 
@@ -185,6 +171,27 @@ public class IConnectApp {
                             codeArea.replaceText(contentToLoad);
                         }
                     }
+
+                    //If a tab is not saved (file was not opened)
+                    else {
+                        // Handle unsaved tabs (no file path)
+                        String unsavedTabName = "unsaved::"+newTab.getText(); //for unsaved "unsaved::" + tabName is key
+
+                        // Load unsaved content for the tab
+                        String unsavedContent = TabManagerService.getUnsavedContentForUnsavedFiles(unsavedTabName);
+
+                        System.out.println("got unsaved content: "+unsavedContent);
+
+                        // Default to empty content if no unsaved content is found
+                        String contentToLoad = (unsavedContent != null) ? unsavedContent : "";
+
+                        // Update the CodeArea only if the content has changed
+                        if (!contentToLoad.equals(codeArea.getText())) {
+                            codeArea.clear();
+                            codeArea.replaceText(contentToLoad);
+                        }
+                    }
+
                 } else {
                     // Clear CodeArea if no tab is selected
                     codeArea.clear();
@@ -192,6 +199,15 @@ public class IConnectApp {
             });
         } else {
             System.err.println("TabPane is null! Cannot detect changes.");
+        }
+    };
+    /******************************************************************************************************************/
+    // Helper method to load fonts from GetFontsFromJSON class
+    private List<String> loadFonts() {
+        try (InputStream resourceStream = Objects.requireNonNull(App.class.getResourceAsStream(pathToJSONFonts))) {
+            return GetFontsFromJSON.appFontsFromStream(resourceStream);
+        } catch (Exception e) {
+            return List.of("Arial", "Times New Roman", "Verdana", "Georgia"); // default fonts on failure
         }
     };
 }

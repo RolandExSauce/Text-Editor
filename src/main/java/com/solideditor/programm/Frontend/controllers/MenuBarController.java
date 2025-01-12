@@ -1,9 +1,15 @@
 package com.solideditor.programm.Frontend.controllers;
+
 import com.solideditor.programm.API.IConnectApp;
 import com.solideditor.programm.Backend.services.FileIOService;
+import com.solideditor.programm.Frontend.Tools.ControllerUtils;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.util.List;
 import java.util.Map;
+
 
 //Controller for interacting with buttons in menu bar
 public class MenuBarController {
@@ -17,7 +23,7 @@ public class MenuBarController {
     public Button btnNewFile;
     public Button btnOpenFile;
     @FXML
-    public TextField searchTxtField; //for search input in file
+    public TextField searchTxtField;
 
     //from central IConnectApp Class
     private IConnectApp IConnectApp;
@@ -25,40 +31,48 @@ public class MenuBarController {
     // References to shared resources
     private TabPane tabPane;
     private Map<Tab, String> tabFileMap;
+    /******************************************************************************************************************/
+    @FXML
+    public void initialize() {
+        // Check if fontsComboBox is available
+        if (fontsComboBox == null) {
+            System.err.println("fontsComboBox is null. Cannot initialize.");
+            return;
+        };
 
+        // Add a placeholder until fonts are provided
+        fontsComboBox.setItems(FXCollections.observableArrayList("Loading..."));
+
+        // Add a listener to handle ComboBox selection changes (if applicable later)
+        ControllerUtils.addComboBoxSelectionListener(fontsComboBox, () -> {
+            String selectedFont = fontsComboBox.getValue();
+            if (selectedFont != null) {
+                System.out.println("Selected font: " + selectedFont);
+                // Add logic to apply the selected font to the CodeArea or other UI components
+            }
+        });
+    };
+    /******************************************************************************************************************/
     public TextField getSearchTxtField() {
         return searchTxtField; // expose text field to other controllers (I think for now just MainController ?,
         // will be needed in order to reflect changes on codeArea
     };
-
-    //same for comboBox
-    public ComboBox<String> getComboBox(){ return fontsComboBox; };
-
-
-    //TODO: load fonts from IConnectApp, but init comboBox here ?
-    @FXML
-    public void initialize() {
-        // Add sample items
-        fontsComboBox.getItems().addAll("Short", "Medium-length item", "A very long selected item that adjusts width");
-
-        // Bind width dynamically to the selected item's size
-        fontsComboBox.prefWidthProperty().bind(
-                fontsComboBox.getEditor().textProperty().length().multiply(7) // Adjust multiplier to fit your font size
-                        .add(30) // Padding for dropdown arrow and padding
-        );
-
-        // Set a default selected item (optional)
-        fontsComboBox.getSelectionModel().select(0);
-    };
-
-
+    /******************************************************************************************************************/
     //used in MainController, primarily for getting the tabPane set through TitleBarController
     //and other stuffs like tabFileMap used for global access
-    //TODO: put this in other layer ?
     public void setMainUtilities(IConnectApp IConnectApp) {
         this.IConnectApp = IConnectApp;
         this.tabPane = IConnectApp.getTabPane();
         this.tabFileMap = IConnectApp.getTabFileMap();
+        List<String> fonts = IConnectApp.getFonts();
+
+        // Now initialize fontsComboBox since fonts are available
+        if (fontsComboBox != null && fonts != null && !fonts.isEmpty()) {
+            fontsComboBox.setItems(FXCollections.observableArrayList(fonts));
+            fontsComboBox.getSelectionModel().select(0); // Default to first font
+        } else {
+            System.err.println("Fonts or fontsComboBox is null or empty. Cannot populate ComboBox.");
+        }
     };
     /******************************************************************************************************************/
     //open file
@@ -94,12 +108,6 @@ public class MenuBarController {
     private void onPrintClicked() {
         System.out.println("Print button clicked!");
         // Add logic to print the content of the current CodeArea
-    };
-    /******************************************************************************************************************/
-    @FXML
-    private void onSearchTxtInFileClicked() {
-        System.out.println("Search initiated!");
-        // Implement search logic in the CodeArea
     };
     /******************************************************************************************************************/
     @FXML

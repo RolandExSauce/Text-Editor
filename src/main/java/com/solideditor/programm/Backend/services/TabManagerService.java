@@ -2,8 +2,11 @@ package com.solideditor.programm.Backend.services;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import javafx.scene.control.Tab;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import java.util.HashMap;
 import java.util.Map;
+
 
 //utility class for handling tab opening/closure, will interact with FileService class
 public class TabManagerService {
@@ -16,34 +19,56 @@ public class TabManagerService {
 
     /******************************************************************************************************************/
     // Add or update unsaved content
-    public static void saveUnsavedContent(String filePath, String content) {
-        for (Map.Entry<String, TabEntry> entry : openTabs.entrySet()) {
-            if (entry.getValue().fileInfo().filePath().equals(filePath)) {
-                Tab tab = entry.getValue().tab();
-                FileInfo fileInfo = entry.getValue().fileInfo();
-                openTabs.put(entry.getKey(), new TabEntry(tab, fileInfo, content));
-                return;
-            }
-        }
-    };
-    /******************************************************************************************************************/
-    // Get unsaved content for a file path
-//    public static String getUnsavedContent(String filePath) {
-//        for (TabEntry entry : openTabs.values()) {
-//            if (entry.fileInfo().filePath().equals(filePath)) {
-//                return entry.unsavedContent();
+//    public static void saveUnsavedContent(String filePathOrTabName, String content) {
+//        System.out.println("got file path/name: "+filePathOrTabName);
+//
+//        for (Map.Entry<String, TabEntry> entry : openTabs.entrySet()) {
+//            System.out.println("yes, save please"+entry.getValue().fileInfo());
+//
+//            if (entry.getValue().fileInfo().filePath().equals(filePathOrTabName)) {
+//
+//                System.out.println("yes coming until here");
+//
+//                Tab tab = entry.getValue().tab();
+//                FileInfo fileInfo = entry.getValue().fileInfo();
+//                openTabs.put(entry.getKey(), new TabEntry(tab, fileInfo, content));
+//                return;
 //            }
 //        }
-//        return null; // No unsaved content
 //    };
+
+    /******************************************************************************************************************/
+        public static void saveUnsavedContent(String filePathOrTabName, String content) {
+            for (Map.Entry<String, TabEntry> entry : openTabs.entrySet()) {
+                FileInfo fileInfo = entry.getValue().fileInfo();
+                // Match either the file path (for saved files) or the tab name (for unsaved tabs)
+                if ((fileInfo.filePath() != null && fileInfo.filePath().equals(filePathOrTabName))
+                        || (fileInfo.filePath() == null && entry.getKey().equals(filePathOrTabName))) {
+                    Tab tab = entry.getValue().tab();
+                    openTabs.put(entry.getKey(), new TabEntry(tab, fileInfo, content));
+                    return;
+                }
+            }
+        };
+    /******************************************************************************************************************/
+//     Get unsaved content for a file path
+    public static String getUnsavedContentForSavedFiles(String filePath) {
+        for (TabEntry entry : openTabs.values()) {
+            if (entry.fileInfo().filePath().equals(filePath)) {
+                return entry.unsavedContent();
+            }
+        }
+        return null; // No unsaved content
+    };
     //handle both scenarios: get unsaved content for a tab which is saved/or not saved yet (in case of new file)
-    public static String getUnsavedContent(String key) {
+    public static String getUnsavedContentForUnsavedFiles(String keyIsTabNameOrFilePath) {
         for (Map.Entry<String, TabEntry> entry : openTabs.entrySet()) {
             String fileKey = entry.getKey();
             // Check if the key matches either the file path or the tab name
-            if (fileKey.equals(key)) {
+            if (fileKey.equals(keyIsTabNameOrFilePath)) {
                 return entry.getValue().unsavedContent();
-            } else if (entry.getValue().fileInfo().filePath() != null && entry.getValue().fileInfo().filePath().equals(key)) {
+            } else if (entry.getValue().fileInfo().filePath() != null
+                    && entry.getValue().fileInfo().filePath().equals(keyIsTabNameOrFilePath)) {
                 return entry.getValue().unsavedContent();
             }
         }
@@ -51,7 +76,8 @@ public class TabManagerService {
     };
     /******************************************************************************************************************/
     // add a new tab with path
-    public static Tab addFileMaybeHasPathToOpenTabs(FileInfo fileInfo, Tab tab) {
+    public static Tab fileMaybeHasPathAddToOpenTabs(FileInfo fileInfo, Tab tab) {
+
         String fileKey = genFileKey(fileInfo.fileName(), fileInfo.filePath());
         if (openTabs.size() >= MAX_TABS) {
             System.out.println("Error: maximum number of tabs reached."); // TODO: Prompt an error dialog message
@@ -67,6 +93,20 @@ public class TabManagerService {
         }
     };
     /******************************************************************************************************************/
+    // Create a new tab with a graphic indicator
+    public static Tab createTabWithIfFileSavedIndicator(String tabTitle) {
+        Tab tab = new Tab(tabTitle);
+
+        // Create a circle to act as the save state indicator
+        Circle indicator = new Circle(5); // Radius of 5
+        indicator.setFill(Color.TRANSPARENT); // Initially transparent
+
+        // Set the circle as the tab's graphic
+        tab.setGraphic(indicator);
+
+        return tab;
+    };
+    /******************************************************************************************************************/
     //add a new tab without path, then if on clicked, will check and "save under"
     public static Tab createUnsavedTabAndAddToOpenTabs() {
         // Generate the name for the new unsaved tab
@@ -76,7 +116,13 @@ public class TabManagerService {
         FileInfo unsavedFileInfo = new FileInfo(null, null, tabName, null);
         Tab newUnsavedTab = new Tab(tabName); // Create a new Tab with the generated name
 
-        if (addFileMaybeHasPathToOpenTabs(unsavedFileInfo, newUnsavedTab) == null) {
+
+        // Set a graphic (e.g., a circle) to indicate save state
+        Circle indicator = new Circle(5); // Radius of 5
+        indicator.setFill(Color.TRANSPARENT); // Initially transparent
+        newUnsavedTab.setGraphic(indicator); // Set the graphic for the tab
+
+        if (fileMaybeHasPathAddToOpenTabs(unsavedFileInfo, newUnsavedTab) == null) {
             // If unsaved tab cannot be added, debug here
             System.out.println("Error: Could not add the new unsaved tab.");
             return null; // Return null if the tab couldn't be added

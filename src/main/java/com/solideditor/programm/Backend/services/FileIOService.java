@@ -113,17 +113,20 @@ public class FileIOService {
             };
 
             // If not open, create a new tab and add it using TabManagerService
-            Tab newTab = FileHelpers.createTabWithIfFileSavedIndicator(fileInfo.fileName());
-            Tab addedTab = TabManagerService.addFileMaybeHasPathToOpenTabs(fileInfo, newTab);
+            Tab newTab = TabManagerService.createTabWithIfFileSavedIndicator(fileInfo.fileName());
+            Tab addedTab = TabManagerService.fileMaybeHasPathAddToOpenTabs(fileInfo, newTab);
 
             if (addedTab != null) {
                 // Set up tab behavior and add to TabPane
                 addedTab.setOnClosed(e -> closeFile(IConnectApp, addedTab));
                 tabPane.getTabs().add(addedTab);
-                tabPane.getSelectionModel().select(addedTab);
 
                 // Map the tab to its file path for quick lookups
                 tabFileMap.put(addedTab, fileInfo.filePath());
+
+                //ONLY AFTER SETTING the tabFileMap we focus on that added tab
+                tabPane.getSelectionModel().select(addedTab);
+                tabPane.requestFocus();
 
                 // Set the content of the CodeArea
                 codeArea.clear();
@@ -140,12 +143,11 @@ public class FileIOService {
         Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
         CodeArea codeArea = IConnectApp.getCodeArea();
 
-        // Create a new unsaved tab
+        // Create a new unsaved tab with default name
         Tab addedTab = TabManagerService.createUnsavedTabAndAddToOpenTabs();
         if (addedTab != null) {
             // Add the tab to the TabPane
             tabPane.getTabs().add(addedTab);
-            tabPane.getSelectionModel().select(addedTab);
 
             // on tab is closed
             addedTab.setOnClosed(e -> closeFile(IConnectApp, addedTab));
@@ -153,12 +155,15 @@ public class FileIOService {
             // Map the tab to its state in tabFileMap (use null for unsaved files)
             tabFileMap.put(addedTab, null);
 
-            // Set up the content for the CodeArea (empty for unsaved tabs)
+            //ONLY AFTER SETTING the tabFileMap we focus on that added tab
+            tabPane.getSelectionModel().select(addedTab);
+            tabPane.requestFocus();
+
             codeArea.clear();
 
-            // Save initial empty content in TabManagerService
-            TabManagerService.saveUnsavedContent(null, "");
-
+            // Save initial empty content in TabManagerService, for unsaved file key has to match
+            TabManagerService.saveUnsavedContent("unsaved::"+addedTab.getText(), "");
+            //TabManagerService.saveUnsavedContent(addedTab.getText(), "");
         } else {
             System.out.println("Error: Could not create or add a new unsaved tab.");
         }

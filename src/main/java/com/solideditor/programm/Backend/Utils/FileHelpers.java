@@ -122,20 +122,6 @@ public class FileHelpers {
         return fileData.toString();
     };
     /******************************************************************************************************************/
-    // Create a new tab with a graphic indicator
-    public static Tab createTabWithIfFileSavedIndicator(String tabTitle) {
-        Tab tab = new Tab(tabTitle);
-
-        // Create a circle to act as the save state indicator
-        Circle indicator = new Circle(5); // Radius of 5
-        indicator.setFill(Color.TRANSPARENT); // Initially transparent
-
-        // Set the circle as the tab's graphic
-        tab.setGraphic(indicator);
-
-        return tab;
-    };
-
     // method to update the tab indicator based on the save state
     public static void updateTabIfFileSavedIndicator(Tab tab, boolean isModified) {
         if (tab == null || tab.getGraphic() == null) {
@@ -148,21 +134,6 @@ public class FileHelpers {
         } else {
             System.err.println("Tab graphic is not a Circle. Cannot update indicator.");
         }
-    };
-    /******************************************************************************************************************/
-    // check if file content has changed
-    public static void trackIfChangesMade(FileInfo fileInfo, String currentContent, Tab tab) {
-        if (fileInfo == null || tab == null) {
-            throw new IllegalArgumentException("FileInfo and Tab cannot be null.");
-        };
-
-        String savedContent = Files.exists(Path.of(fileInfo.filePath()))
-                ? readFileContent(fileInfo.filePath())
-                : "";
-        boolean hasChanges = !currentContent.equals(savedContent);
-
-        // Update the tab's file is saved state indicator
-        updateTabIfFileSavedIndicator(tab, hasChanges);
     };
     /******************************************************************************************************************/
     //find index positions of a search to text in a file

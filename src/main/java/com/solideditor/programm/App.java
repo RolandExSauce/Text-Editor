@@ -34,7 +34,7 @@ public class App extends Application {
 
         // make stage undecorated so that we can style
         stage.initStyle(StageStyle.UNDECORATED);
-        Scene scene = new Scene(root, 1000, 800);
+        Scene scene = new Scene(root, 1300, 800);
         stage.setScene(scene);
 
         // TODO: not working quite well, fix ? maybe ure own solution

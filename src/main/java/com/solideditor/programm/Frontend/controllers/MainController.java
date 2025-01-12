@@ -23,11 +23,7 @@ public class MainController {
 
     @FXML
     private VBox bottomContainer;
-
-    public void setPrimaryStage(Stage primaryStage) {
-        IConnectApp.setPrimaryStage(primaryStage); // Pass stage to IConnectApp
-    }
-
+    /******************************************************************************************************************/
     @FXML
     private void initialize() {
         loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
@@ -36,16 +32,21 @@ public class MainController {
 
         // add scrollbar
         ScrollPane scrollPane = new ScrollPane(codeArea);
-        scrollPane.setFitToWidth(true); // Ensure CodeArea fits horizontally
-        scrollPane.setFitToHeight(true); // Ensure CodeArea fits vertically
+        scrollPane.setFitToWidth(true); // ensure CodeArea fits horizontally
+        scrollPane.setFitToHeight(true); // ensure CodeArea fits vertically
 
         VBox.setVgrow(codeArea, Priority.ALWAYS); // allow the CodeArea to grow dynamically
         codeAreaContainer.getChildren().add(codeArea);
 
-        // Set the CodeArea in IConnectApp
+        // Set the CodeArea in IConnectApp for global access
         IConnectApp.setCodeArea(codeArea);
-    }
-
+    };
+    /******************************************************************************************************************/
+    public void setPrimaryStage(Stage primaryStage) {
+        IConnectApp.setPrimaryStage(primaryStage); // Pass stage to IConnectApp
+    };
+    /******************************************************************************************************************/
+    // load fxml and init some stuffs through controllers
     private void loadIncludedFXML(String fxmlPath, VBox targetContainer) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -56,18 +57,14 @@ public class MainController {
                 menuBarController.setMainUtilities(IConnectApp);
                 if (menuBarController.getSearchTxtField() != null) {
                     IConnectApp.setSearchTxtField(menuBarController.getSearchTxtField());
-                }
-
-                if (menuBarController.getComboBox() != null) {
-                    IConnectApp.setFontsComboBox(menuBarController.getComboBox());
-                }
-            }
+                };
+            };
 
             if (controller instanceof TitleBarController titleBarController) {
                 IConnectApp.setTabPane(titleBarController.getTabPane());
-            }
+            };
         } catch (IOException e) {
             //e.printStackTrace();
         }
-    }
+    };
 }

@@ -9,8 +9,9 @@
 <?import javafx.scene.text.Font?>
 <!-- ****************************************************************************************************************-->
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="50.0"
-      prefWidth="800.0" spacing="20.0"
+      prefWidth="800.0"
       fx:controller="com.solideditor.programm.Frontend.controllers.MenuBarController"
+      styleClass="menu-bar"
       style="-fx-background-color: #F2F2EE; -fx-background-radius: 10 10 0 0;" xmlns:fx="http://javafx.com/fxml/1"
       stylesheets="@/com/solideditor/programm/static/css/menubar.css"
 >
@@ -81,14 +82,14 @@
     <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="2000.0" spacing="10.0">
         <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="24.0" prefWidth="200.0"
               style="-fx-background-color: #ffffff; -fx-background-radius: 10;">
-            <Button mnemonicParsing="false" style="-fx-background-color: transparent;" onAction="#onSearchTxtInFileClicked">
+            <Button mnemonicParsing="false" style="-fx-background-color: transparent;">
                 <graphic>
                     <ImageView disable="true" fitHeight="24.0" fitWidth="24.0">
                         <Image url="@../static/icons/searchTxtInFile.png"/>
                     </ImageView>
                 </graphic>
             </Button>
-            <TextField fx:id="searchTxtField" prefHeight="26.0" promptText="|"
+            <TextField fx:id="searchTxtField" prefHeight="26.0" promptText="| Search for words in file"
                        style="-fx-background-color: transparent;"/>
         </HBox>
     </HBox>
