@@ -9,21 +9,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.util.Objects;
-
 
 //Entry class
 public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-//
-
-        // Initialize pathToJSON
-//
-        String p = String.valueOf(getClass().getResource("/com/solideditor/programm/static/fonts.json"));
-
-        System.out.println("json found: " + p);
-
+        //load main fxml file
         String mainFxmlFile = "/com/solideditor/programm/fxml/mainlayout.fxml";
         FXMLLoader loader = new FXMLLoader(getClass().getResource(mainFxmlFile));
         Parent root = loader.load();

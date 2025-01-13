@@ -20,6 +20,7 @@ module com.solideditor.programm {
     exports com.solideditor.programm.Frontend.controllers;
     opens com.solideditor.programm to javafx.fxml;
     exports com.solideditor.programm;
+    exports com.solideditor.programm.Backend.DTO;
     exports com.solideditor.programm.Frontend.Tools;
     opens com.solideditor.programm.Frontend.Tools to javafx.fxml;
     exports com.solideditor.programm.API;

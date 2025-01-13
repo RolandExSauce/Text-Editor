@@ -12,7 +12,8 @@ import java.io.IOException;
 
 // Main controller
 public class MainController {
-    private final IConnectApp IConnectApp = new IConnectApp(); // init the global IConnectApp
+    IConnectApp iConnectApp
+            = IConnectApp.getIconnectAppInstance();// get IConnectApp singleton instance
     private final CodeArea codeArea = new CodeArea(); // init CodeArea
 
     @FXML
@@ -38,12 +39,12 @@ public class MainController {
         VBox.setVgrow(codeArea, Priority.ALWAYS); // allow the CodeArea to grow dynamically
         codeAreaContainer.getChildren().add(codeArea);
 
-        // Set the CodeArea in IConnectApp for global access
-        IConnectApp.setCodeArea(codeArea);
+        // set CodeArea in IConnectApp for global access
+        iConnectApp.setCodeArea(codeArea);
     };
     /******************************************************************************************************************/
     public void setPrimaryStage(Stage primaryStage) {
-        IConnectApp.setPrimaryStage(primaryStage); // Pass stage to IConnectApp
+        iConnectApp.setPrimaryStage(primaryStage); // pass stage to IConnectApp for global access
     };
     /******************************************************************************************************************/
     // load fxml and init some stuffs through controllers
@@ -54,16 +55,18 @@ public class MainController {
             Object controller = loader.getController();
 
             if (controller instanceof MenuBarController menuBarController) {
-                menuBarController.setMainUtilities(IConnectApp);
                 if (menuBarController.getSearchTxtField() != null) {
-                    IConnectApp.setSearchTxtField(menuBarController.getSearchTxtField());
+                    iConnectApp.setSearchTxtField(menuBarController.getSearchTxtField());
                 };
             };
 
             if (controller instanceof TitleBarController titleBarController) {
-                IConnectApp.setTabPane(titleBarController.getTabPane());
+                //set default tab and tabPane from title bar controller
+                iConnectApp.setTabPane(titleBarController.getTabPane());
+                iConnectApp.setDefaultTab(titleBarController.getDefaultTab());
             };
         } catch (IOException e) {
+            //use to debug
             //e.printStackTrace();
         }
     };

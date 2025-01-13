@@ -1,24 +1,24 @@
 package com.solideditor.programm.Frontend.controllers;
 import javafx.application.Platform;
+import javafx.scene.control.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 
+
+//controller for interacting with title bar functionalities
 public class TitleBarController {
     @FXML
     private TabPane tabPane; // is bind with by fx:id
-    public Tab defaultTab;
+    @FXML
+    public Tab defaultTab; // is bind with fx:id
 
+    /* Getters ********************************************************************************************************/
     public TabPane getTabPane() {
         return tabPane; // expose TabPane to other controllers
     };
-
+    public Tab getDefaultTab () { return defaultTab; };
+    /******************************************************************************************************************/
     @FXML
-    private void minimizeWindow() {
-//        if (stage != null) {
-//            stage.setIconified(true);
-//        }
-    }
+    private void minimizeWindow() {}
 
     // Handles window maximization
     @FXML
@@ -37,7 +37,6 @@ public class TitleBarController {
 //            }
 //        }
     }
-
 
     // Handles window closing
     @FXML

@@ -55,10 +55,10 @@ public class FileUtils {
         if (fileInfo == null) {
             throw new IllegalArgumentException("FileInfo cannot be null");
         }
-        if (fileInfo.filePath() == null || fileInfo.filePath().isBlank()) {
+        if (fileInfo.filePathOrTempTabName() == null || fileInfo.filePathOrTempTabName().isBlank()) {
             throw new IllegalArgumentException("File path cannot be null or blank");
         }
-        Path filePath = Path.of(fileInfo.filePath());
+        Path filePath = Path.of(fileInfo.filePathOrTempTabName());
         // Check if the file exists
         if (!Files.exists(filePath)) {
             System.out.println("File does not exist"); //TODO: Prompt dialog

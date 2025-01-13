@@ -1,46 +1,42 @@
 package com.solideditor.programm.Backend.services;
 import com.solideditor.programm.API.IConnectApp;
 import com.solideditor.programm.Backend.DTO.FileInfo;
+import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.FileUtils;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.stage.Stage;
-import org.fxmisc.richtext.CodeArea;
-import java.util.Map;
-
-//TODO: remove duplicate code: tabPane, tabFileMap, codeArea, etc...
 
 
-//utility class to interact with controllers, will interact with <currently unknown, waiting for frontend>
+//file service class to interact with controllers
 public class FileIOService {
-
-    public static void saveAsFile(IConnectApp IConnectApp) {
-        TabPane tabPane = IConnectApp.getTabPane();
-        Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
-        CodeArea codeArea = IConnectApp.getCodeArea();
-        Stage primaryStage = IConnectApp.getPrimaryStage();
-
+    private static final IConnectApp iConnectApp
+            = IConnectApp.getIconnectAppInstance(); //get singleton instance
+    /******************************************************************************************************************/
+    //save new file under "xy dir" or replace file
+    public static void saveAsFile() {
         // Get the currently selected tab
-        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
             System.out.println("No tab selected to save.");
             return;
-        }
+        };
 
         // Open a "Save As" dialog to get the file path
-        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(primaryStage);
+        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(iConnectApp.getPrimaryStage());
         if (fileInfo != null) {
             // Save the current content to the specified file path
-            String updatedContent = codeArea.getText();
-            FileUtils.saveChangesToFile(new FileInfo(fileInfo.filePath(), updatedContent));
+            String updatedContent = iConnectApp.getCodeArea().getText();
+            FileUtils.saveChangesToFile(new FileInfo(fileInfo.filePathOrTempTabName(), updatedContent));
 
             // Update TabManagerService with the new file information
-            TabManagerService.updateFileInfo(fileInfo.filePath(), updatedContent);
+            TabManagerService.updateFileInfo(fileInfo.filePathOrTempTabName(), updatedContent);
 
             // Update the tab title and file mapping
             selectedTab.setText(fileInfo.fileName());
-            tabFileMap.put(selectedTab, fileInfo.filePath());
+            //TODO: will this work ?
+            //iConnectApp.getOpenTabs().put(selectedTab, fileInfo.filePathOrTempTabName());
+
+            iConnectApp.getOpenTabs().put(fileInfo.filePathOrTempTabName(), new TabEntry(selectedTab, fileInfo));
 
             // Mark the tab as saved
             FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
@@ -50,34 +46,25 @@ public class FileIOService {
     };
     /******************************************************************************************************************/
     //save file
-    public static void saveFile(IConnectApp IConnectApp) {
-        TabPane tabPane = IConnectApp.getTabPane();
-        Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
-        CodeArea codeArea = IConnectApp.getCodeArea();
-
+    public static void saveFile() {
         //get the current tab
-        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
             System.out.println("No tab selected to save.");
             return;
-        }
+        };
 
         //get the file path for the selected tab
-        String filePath = tabFileMap.get(selectedTab);
+        TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
+        String filePath = tabEntry.fileInfo().filePathOrTempTabName();
+
         if (filePath == null) {
             System.out.println("No file path associated with the selected tab.");
             return;
-        }
-
-        //retrieve fileInfo from tab manager
-        FileInfo fileInfo = TabManagerService.getFileInfo(filePath);
-        if (fileInfo == null) {
-            System.out.println("No FileInfo found for the file path: " + filePath);
-            return;
-        }
+        };
 
         //get the current content of the CodeArea
-        String updatedContent = codeArea.getText();
+        String updatedContent = iConnectApp.getCodeArea().getText();
 
         //save the changes to the file
         FileUtils.saveChangesToFile(new FileInfo(filePath, updatedContent));
@@ -87,123 +74,126 @@ public class FileIOService {
 
         // Mark the file as saved by updating the tab indicator
         FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
-
-        //System.out.println("File saved: " + filePath);
     };
     /******************************************************************************************************************/
-    // Open a file and add to tabPane
-    public static void openFile(IConnectApp IConnectApp) {
-        TabPane tabPane = IConnectApp.getTabPane();
-        Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
-        CodeArea codeArea = IConnectApp.getCodeArea();
-        Stage primaryStage = IConnectApp.getPrimaryStage();
-
-        FileInfo fileInfo = FileUtils.openFileAndGetContent(primaryStage);
+    // open file
+    public static void openFile() {
+        //first check tab limit
+        if (iConnectApp.isTabLimitReached()) {
+            System.out.println("OpenFile: Maximum tabs reached.");
+            return; // prevent opening a new tab
+        };
+        FileInfo fileInfo = FileUtils.openFileAndGetContent(iConnectApp.getPrimaryStage());
         if (fileInfo != null) {
-            // Check if the file is already open using TabManagerService
-            Tab existingTab = TabManagerService.getOpenTab(fileInfo.fileName(), fileInfo.filePath());
+            // Check if the file is already open
+            Tab existingTab = TabManagerService.getOpenTab(fileInfo.fileName(), fileInfo.filePathOrTempTabName());
             if (existingTab != null) {
                 // Ensure the existing tab is visible in the TabPane
-                if (!tabPane.getTabs().contains(existingTab)) {
-                    tabPane.getTabs().add(existingTab);
+                if (!iConnectApp.getTabPane().getTabs().contains(existingTab)) {
+                    iConnectApp.getTabPane().getTabs().add(existingTab);
                 }
-                tabPane.getSelectionModel().select(existingTab);
-                tabPane.requestFocus();
-                return;
-            };
+                iConnectApp.getTabPane().getSelectionModel().select(existingTab);
+                iConnectApp.getTabPane().requestFocus();
+            }
+            else {
+                // If not open, create a new tab and add it using TabManagerService
+                Tab newTab = TabManagerService.createTabWithIfFileSavedIndicator(fileInfo.fileName());
+                Tab addedTab = TabManagerService.openFileAndAddToOpenTabs(fileInfo, newTab);
 
-            // If not open, create a new tab and add it using TabManagerService
-            Tab newTab = TabManagerService.createTabWithIfFileSavedIndicator(fileInfo.fileName());
-            Tab addedTab = TabManagerService.fileMaybeHasPathAddToOpenTabs(fileInfo, newTab);
+                if (addedTab != null) {
+                    // Set up tab behavior and add to TabPane
+                    addedTab.setOnClosed(e -> closeFile(addedTab));
+                    iConnectApp.getTabPane().getTabs().add(addedTab);
 
-            if (addedTab != null) {
-                // Set up tab behavior and add to TabPane
-                addedTab.setOnClosed(e -> closeFile(IConnectApp, addedTab));
-                tabPane.getTabs().add(addedTab);
+                    //ONLY AFTER SETTING the tabFileMap we focus on that added tab
+                    iConnectApp.getTabPane().getSelectionModel().select(addedTab);
+                    iConnectApp.getTabPane().requestFocus();
 
-                // Map the tab to its file path for quick lookups
-                tabFileMap.put(addedTab, fileInfo.filePath());
-
-                //ONLY AFTER SETTING the tabFileMap we focus on that added tab
-                tabPane.getSelectionModel().select(addedTab);
-                tabPane.requestFocus();
-
-                // Set the content of the CodeArea
-                codeArea.clear();
-                codeArea.replaceText(fileInfo.fileContent());
-            } else {
-                System.out.println("Error: Could not add new tab for file: " + fileInfo.filePath());
+                    // Set the content of the CodeArea
+                    iConnectApp.getCodeArea().clear();
+                    iConnectApp.getCodeArea().replaceText(fileInfo.fileContent());
+                } else {
+                    System.out.println("Error: Could not add new tab for file: " + fileInfo.filePathOrTempTabName());
+                }
             }
         }
+        // System.out.println("Debug: Current number of open tabs after: " + iConnectApp.getOpenTabs().size());
     };
     /******************************************************************************************************************/
-    //Create a new file with a default Tab
-    public static void createNewFile(IConnectApp IConnectApp) {
-        TabPane tabPane = IConnectApp.getTabPane();
-        Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
-        CodeArea codeArea = IConnectApp.getCodeArea();
-
+    //create a new file
+    public static void createNewFile() {
+        //putting this here on the higher level works instead of doing it inside createUnsavedTabAndAddToOpenTabs
+        if (iConnectApp.isTabLimitReached()) {
+            System.out.println("createNewFile: Maximum tabs reached.");
+            return;
+        };
         // Create a new unsaved tab with default name
-        Tab addedTab = TabManagerService.createUnsavedTabAndAddToOpenTabs();
-        if (addedTab != null) {
-            // Add the tab to the TabPane
-            tabPane.getTabs().add(addedTab);
+        Tab addedUnsavedTab = TabManagerService.createUnsavedTabAndAddToOpenTabs();
 
-            // on tab is closed
-            addedTab.setOnClosed(e -> closeFile(IConnectApp, addedTab));
+        // Add the tab to the TabPane
+        iConnectApp.getTabPane().getTabs().add(addedUnsavedTab);
 
-            // Map the tab to its state in tabFileMap (use null for unsaved files)
-            tabFileMap.put(addedTab, null);
+        // on tab is closed
+        addedUnsavedTab.setOnClosed(e -> closeFile(addedUnsavedTab));
 
-            //ONLY AFTER SETTING the tabFileMap we focus on that added tab
-            tabPane.getSelectionModel().select(addedTab);
-            tabPane.requestFocus();
-
-            codeArea.clear();
-
-            // Save initial empty content in TabManagerService, for unsaved file key has to match
-            TabManagerService.saveUnsavedContent("unsaved::"+addedTab.getText(), "");
-            //TabManagerService.saveUnsavedContent(addedTab.getText(), "");
-        } else {
-            System.out.println("Error: Could not create or add a new unsaved tab.");
-        }
+        //ONLY AFTER SETTING the openTab map we focus on that added tab
+        iConnectApp.getTabPane().getSelectionModel().select(addedUnsavedTab);
+        iConnectApp.getTabPane().requestFocus();
+        iConnectApp.getCodeArea().clear();
     };
     /******************************************************************************************************************/
     // Close a file and its tab
-    private static void closeFile(IConnectApp IConnectApp, Tab tab) {
-        TabPane tabPane = IConnectApp.getTabPane();
-        Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
-
-        if (tab == null || tabPane == null || tabFileMap == null) {
-            //System.out.println("Error: Invalid state. Cannot close file.");
+    public static void closeFile(Tab tab) {
+        if (tab == null || iConnectApp.getTabPane() == null || iConnectApp.getOpenTabs() == null) {
+            System.out.println("Error: Invalid state. Cannot close file.");
             return;
         };
 
-        // Get the associated file path
-        String filePath = tabFileMap.get(tab);
+        // Get the associated TabEntry
+        TabEntry tabEntry = TabManagerService.getTabEntryByTab(tab);
+        if (tabEntry == null) {
+            System.out.println("Error: No TabEntry found for the given tab.");
+            return;
+        };
 
-        if (filePath != null) {
-            // Attempt to close the file resource
-            boolean resourceClosed = FileUtils.closeFileRessource(filePath);
-            if (!resourceClosed) {
-                System.out.println("Warning: Could not close file resource for " + filePath);
-            };
-
-            // Remove the tab from TabManagerService and mappings
-            String fileName = tab.getText();
-            boolean removedFromManager = TabManagerService.removeFileFromOpenTabs(fileName, filePath);
-
-            //also remove from tab pane
+        String filePathOrDefaultTabName = tabEntry.fileInfo().filePathOrTempTabName();
+        // Handle unsaved tabs, check if file tab name still has "unsaved::"
+        if (filePathOrDefaultTabName != null && filePathOrDefaultTabName.contains(iConnectApp.getPrefKeyForUnsavedFile())) {
+            // Remove from TabManagerService and mappings
+            boolean removedFromManager = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
             if (removedFromManager) {
-                tabPane.getTabs().remove(tab);
-                tabFileMap.remove(tab);
-                //System.out.println("Tab closed: " + fileName);
+                iConnectApp.getTabPane().getTabs().remove(tab);
+                iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
+            } else System.out.println("Failed to remove unsaved tab");
+
+        } else if (filePathOrDefaultTabName != null) {   // Handle saved tabs with a valid file path
+            // Attempt to close the file resource
+            boolean resourceClosed = FileUtils.closeFileRessource(filePathOrDefaultTabName);
+            if (!resourceClosed) {
+                System.out.println("Could not close file for" + filePathOrDefaultTabName); //If file is deleted in filesystem
+            }
+
+            // Remove from TabManagerService and mappings
+            boolean removedFromManager = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
+            if (removedFromManager) {
+                iConnectApp.getTabPane().getTabs().remove(tab);
+                iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
+                //System.out.println("Saved tab removed successfully: " + tab.getText());
             } else {
-                System.out.println("Error: Failed to remove tab from TabManagerService.");
+                System.out.println("Error: Failed to remove saved tab from TabManagerService.");
             }
         } else {
-            //System.out.println("Error: No file path associated with the selected tab. Performing cleanup.");
-            tabPane.getTabs().remove(tab);
+            // Handle edge case where no file path is associated
+            System.out.println("No file path associated with the tab. Removing from TabPane.");
+            iConnectApp.getTabPane().getTabs().remove(tab);
         }
+
+        // If all tabs are closed, reset the counter
+        if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
+            //System.out.println("TabPane and OpenTabs map are both empty.");
+            TabManagerService.resetUntitledTabCounter();
+            //System.out.println("All tabs closed. Counter reset.");
+        };
+
     };
 }

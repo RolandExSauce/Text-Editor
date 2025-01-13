@@ -48,7 +48,10 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="btnPrint" alignment="CENTER" mnemonicParsing="false" style="-fx-background-color: transparent;">
+        <Button fx:id="btnPrint" alignment="CENTER" mnemonicParsing="false"
+                style="-fx-background-color: transparent;"
+                onAction="#onPrintClicked"
+        >
             <graphic>
                 <ImageView fitHeight="24.0" fitWidth="24.0">
                     <Image url="@../static/icons/printFile.png"/>

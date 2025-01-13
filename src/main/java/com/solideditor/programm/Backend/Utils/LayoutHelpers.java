@@ -1,5 +1,5 @@
 package com.solideditor.programm.Backend.Utils;
-import com.solideditor.programm.Backend.DTO.FileInfo;
+import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.services.TabManagerService;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -11,7 +11,7 @@ public class LayoutHelpers {
 
     //method to highlight words found
     public static void highlightWordSequenceFound(
-            TabPane tabPane, Map<Tab, String> tabFileMap,
+            TabPane tabPane, Map<String, TabEntry>tabFileMap,
             String txtToSearch, CodeArea codeArea
     ) {
         // Step 1: Validate inputs
@@ -26,23 +26,24 @@ public class LayoutHelpers {
             System.err.println("No tab selected");
             return;
         }
-
         // Step 3: Get the file path associated with the selected tab
-        String filePath = tabFileMap.get(selectedTab);
+        TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
+
+        String filePath = tabEntry.fileInfo().filePathOrTempTabName();
         if (filePath == null) {
             System.err.println("No file path associated with the selected tab");
             return;
         }
 
         // Step 4: Get file info
-        FileInfo fileInfo = TabManagerService.getFileInfo(filePath);
-        if (fileInfo == null) {
-            System.err.println("FileInfo is null for file path: " + filePath);
-            return;
-        }
+//        FileInfo fileInfo = TabManagerService.getFileInfo(filePath);
+//        if (fileInfo == null) {
+//            System.err.println("FileInfo is null for file path: " + filePath);
+//            return;
+//        }
 
         // Step 5: Get content
-        String content = fileInfo.fileContent();
+        String content = tabEntry.fileInfo().fileContent();
         if (content == null) {
             System.err.println("File content is null for file path: " + filePath);
             return;

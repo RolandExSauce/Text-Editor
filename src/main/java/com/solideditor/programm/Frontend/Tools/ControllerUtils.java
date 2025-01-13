@@ -7,14 +7,11 @@ import java.util.List;
 // Utility class for controller-related helper methods
 public class ControllerUtils {
     /*FOR MENUBAR CONTROLLER*******************************************************************************************/
-    // Initialize a ComboBox with a list of items
+    // Initialize a ComboBox with a list of fonts
     public static void initializeComboBox(ComboBox<String> comboBox, List<String> items) {
         if (comboBox != null) {
             if (items != null && !items.isEmpty()) {
-                // Set items in the ComboBox
                 comboBox.setItems(FXCollections.observableArrayList(items));
-
-                // Set a default selected item
                 comboBox.getSelectionModel().select(0);
 
                 // Bind width dynamically to the selected item's size

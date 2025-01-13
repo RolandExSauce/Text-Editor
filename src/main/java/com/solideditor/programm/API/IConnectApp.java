@@ -1,12 +1,12 @@
 package com.solideditor.programm.API;
 import com.solideditor.programm.App;
 import com.solideditor.programm.Backend.DTO.FileInfo;
+import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.LayoutHelpers;
+import com.solideditor.programm.Backend.services.FileIOService;
 import com.solideditor.programm.Backend.services.TabManagerService;
 import com.solideditor.programm.Frontend.Tools.GetFontsFromJSON;
-import javafx.collections.FXCollections;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -19,19 +19,32 @@ import java.util.Map;
 import java.util.Objects;
 
 
+
 // Interface Class to bridge functionalities from Backend Services and Frontend Controllers
 public class IConnectApp {
+    private static final int MAX_OPEN_TABS = 5; //max number of opened tab files
+
+    //Also nice solution to use "::" cuz new files can't be saved using colon afaik, but only on WINDOWS ?
+    private static final String prefKeyForUnsavedFile = "unsaved::"; //just to stay consistent globally
+    private static final IConnectApp instance = new IConnectApp(); // IConnectApp Singleton instance
     private static final String pathToJSONFonts = "/com/solideditor/programm/static/fonts.json";
     private final List<String> fonts; // Store loaded fonts
     private TextField searchTxtField;
     private TabPane tabPane;
-    private final Map<Tab, String> tabFileMap = new HashMap<>();
+
+    // stores string key filename + TabEntry (contains Tab, FileInfo and maybe unsaved content)
+    private final Map<String, TabEntry> openTabs = new HashMap<>();
     private CodeArea codeArea;
     private Stage primaryStage;
 
-    //no arg constructor to init some values
-    public IConnectApp() {
-        this.fonts = loadFonts();
+    //return singleton instance, so that other classes can use the same instance
+    public static IConnectApp getIconnectAppInstance() {
+        return instance;
+    };
+
+    //no arg constructor to init some values, maybe add more
+    private IConnectApp() {
+        this.fonts = loadFonts(); //load fonts
     };
 
     /* Setters to set references for global usage *********************************************************************/
@@ -47,6 +60,21 @@ public class IConnectApp {
         detectTabPaneChanges();
     };
 
+    //set default tab and add it to open tabs
+    public void setDefaultTab(Tab defaultTab) {
+        if (defaultTab == null) throw new IllegalArgumentException("Default tab cannot be null");
+        // Generate the key for the default tab
+        String defaultTabKey = TabManagerService.genFileKey(defaultTab.getText(), null);
+        // Check if the tab is already in openTabs, if not add it
+        if (!openTabs.containsKey(defaultTabKey)) {
+            FileInfo unsavedFileInfo = new FileInfo(defaultTabKey, null, defaultTab.getText(), null);
+            openTabs.put(defaultTabKey, new TabEntry(defaultTab, unsavedFileInfo));
+        } else System.out.println("Default tab already exists in openTabs.");
+        // Add the default tab to the TabPane if it's not already there
+        if (!tabPane.getTabs().contains(defaultTab)) tabPane.getTabs().add(defaultTab);
+        defaultTab.setOnClosed(e -> FileIOService.closeFile(defaultTab));
+    };
+
     public void setSearchTxtField(TextField txtField) {
         if (txtField == null) throw new IllegalArgumentException("Search TextField cannot be null");
         this.searchTxtField = txtField;
@@ -56,65 +84,48 @@ public class IConnectApp {
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     };
-
     /* Getters to hold references to use globally *********************************************************************/
+    public boolean isTabLimitReached() {
+        return openTabs.size() >= MAX_OPEN_TABS;
+    };
+    public String getPrefKeyForUnsavedFile(){ return prefKeyForUnsavedFile; }
     public TabPane getTabPane() {
         return tabPane;
     };
-
     public CodeArea getCodeArea() {
         return codeArea;
     };
-
     public Stage getPrimaryStage() {
         return primaryStage;
     };
-
-    public Map<Tab, String> getTabFileMap() {
-        return tabFileMap;
+    public Map<String, TabEntry> getOpenTabs() {
+        return openTabs;
     };
-
     public List<String> getFonts() { return fonts; };
     /******************************************************************************************************************/
     //Listener for CodeArea changes
+    //TODO: for default tab graphic is null ???
     public void addCodeAreaChangeListener() {
         if (codeArea != null && tabPane != null) {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
                 // Get the currently selected tab
                 Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-//                System.out.println("Current selected Tab: "+ selectedTab);
+                //System.out.println("Current selected Tab: "+ selectedTab);
 
                 if (selectedTab != null) {
-                    String filePath = tabFileMap.get(selectedTab);
+                    TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
+                    if (tabEntry != null) {
+                    String filePath = tabEntry.fileInfo().filePathOrTempTabName();
                     if (filePath != null) {
-                        FileInfo fileInfo = TabManagerService.getFileInfo(filePath);
-                        if (fileInfo != null) {
-                            // Update the tab's indicator based on changes
-                            boolean hasChanges = !newValue.equals(fileInfo.fileContent());
-                            FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
-
-                            // Save unsaved content in TabManagerService for persistence
-                            TabManagerService.saveUnsavedContent(filePath, newValue);
-                        }
-                    }
-
-                    else {
-                        // Handle unsaved tabs (no file path)
-                        String unsavedTabName = "unsaved::" + selectedTab.getText(); // Construct key for unsaved tabs
-
-                        // Retrieve unsaved content from TabManagerService
-                        String unsavedContent = TabManagerService.getUnsavedContentForUnsavedFiles(unsavedTabName);
-
-                        // Check if the content has changed
-                        boolean hasChanges = !newValue.equals(unsavedContent);
-
+                        FileInfo fileInfo = tabEntry.fileInfo();
                         // Update the tab's indicator based on changes
+                        boolean hasChanges = !newValue.equals(fileInfo.fileContent());
                         FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
 
-                        // Save the updated content in TabManagerService
-                        TabManagerService.saveUnsavedContent(unsavedTabName, newValue);
+                        // Save unsaved content in TabManagerService for persistence
+                        TabManagerService.saveUnsavedContent(filePath, newValue);
                     };
-
+                }
                 }
             });
         } else {
@@ -128,9 +139,9 @@ public class IConnectApp {
             searchTxtField.textProperty().addListener((observable, oldValue, newValue) -> {
                 System.out.println("being typed: " + newValue);
                 if (newValue == null || newValue.isEmpty()) {
-                    LayoutHelpers.highlightWordSequenceFound(tabPane, tabFileMap, "", codeArea);
+                    LayoutHelpers.highlightWordSequenceFound(tabPane, openTabs, "", codeArea);
                 } else {
-                    LayoutHelpers.highlightWordSequenceFound(tabPane, tabFileMap, newValue, codeArea);
+                    LayoutHelpers.highlightWordSequenceFound(tabPane, openTabs, newValue, codeArea);
                 }
             });
         } else {
@@ -144,54 +155,44 @@ public class IConnectApp {
             tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
                 if (oldTab != null) {
                     // Save unsaved content of the current tab before switching
-                    String oldFilePath = tabFileMap.get(oldTab);
-                    if (oldFilePath != null) {
-                        TabManagerService.saveUnsavedContent(oldFilePath, codeArea.getText());
+                    TabEntry tabEntry = TabManagerService.getTabEntryByTab(oldTab);
+                    if (tabEntry != null) {
+                        String oldFilePath = tabEntry.fileInfo().filePathOrTempTabName();
+                        if (oldFilePath != null) {
+                            TabManagerService.saveUnsavedContent(oldFilePath, codeArea.getText());
+                        }
                     }
                 };
 
+                //if new tab is not null
                 if (newTab != null) {
-                    String newFilePath = tabFileMap.get(newTab);
+                    TabEntry tabEntry = TabManagerService.getTabEntryByTab(newTab);
+                    if (tabEntry != null) {
+                        String newFilePath = tabEntry.fileInfo().filePathOrTempTabName();
 
+                        //If a tab is saved (file was opened)
+                        if (newFilePath != null) {
+                            String openTabKey = tabEntry.fileInfo().filePathOrTempTabName();
+                            //System.out.println("File path: " + openTabKey);
+                            FileInfo fileInfo = tabEntry.fileInfo();
 
-                    //If a tab is saved (file was opened)
-                    if (newFilePath != null) {
+                            // Check for unsaved content first
+                            String unsavedContent = TabManagerService.getUnsavedContentForSavedFiles(openTabKey);
+                            String contentToLoad = (unsavedContent != null) ? unsavedContent :
+                                    Objects.requireNonNull(fileInfo).fileContent();
 
-                        String newKey = tabFileMap.get(newTab);
-                        //System.out.println("File path: " + newFilePath);
-                        FileInfo fileInfo = TabManagerService.getFileInfo(newFilePath);
+                            // check if content to load is null
+                            if (contentToLoad == null) {
+                                contentToLoad = ""; //just to avoid null pointer exc upon calling equals below
+                            };
 
-                        // Check for unsaved content first
-                        String unsavedContent = TabManagerService.getUnsavedContentForSavedFiles(newKey);
-                        String contentToLoad = (unsavedContent != null) ? unsavedContent :
-                                Objects.requireNonNull(fileInfo).fileContent();
-
-                        if (!contentToLoad.equals(codeArea.getText())) {
-                            codeArea.clear();
-                            codeArea.replaceText(contentToLoad);
+                            // Update CodeArea only if content differs
+                            if (!contentToLoad.equals(codeArea.getText())) {
+                                codeArea.clear();
+                                codeArea.replaceText(contentToLoad);
+                            };
                         }
                     }
-
-                    //If a tab is not saved (file was not opened)
-                    else {
-                        // Handle unsaved tabs (no file path)
-                        String unsavedTabName = "unsaved::"+newTab.getText(); //for unsaved "unsaved::" + tabName is key
-
-                        // Load unsaved content for the tab
-                        String unsavedContent = TabManagerService.getUnsavedContentForUnsavedFiles(unsavedTabName);
-
-                        System.out.println("got unsaved content: "+unsavedContent);
-
-                        // Default to empty content if no unsaved content is found
-                        String contentToLoad = (unsavedContent != null) ? unsavedContent : "";
-
-                        // Update the CodeArea only if the content has changed
-                        if (!contentToLoad.equals(codeArea.getText())) {
-                            codeArea.clear();
-                            codeArea.replaceText(contentToLoad);
-                        }
-                    }
-
                 } else {
                     // Clear CodeArea if no tab is selected
                     codeArea.clear();
