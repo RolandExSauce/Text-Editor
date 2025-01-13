@@ -13,33 +13,39 @@ public class FileIOService {
             = IConnectApp.getIconnectAppInstance(); //get singleton instance
     /******************************************************************************************************************/
     //save new file under "xy dir" or replace file
-    public static void saveAsFile() {
+    public static void saveUnsavedNewFile() {
         // Get the currently selected tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
             System.out.println("No tab selected to save.");
             return;
-        };
+        }
+
+        // Get the current text area text to save on file creation
+        String contentToSaveOnNewFile = iConnectApp.getCodeArea().getText();
 
         // Open a "Save As" dialog to get the file path
-        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(iConnectApp.getPrimaryStage());
+        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(iConnectApp.getPrimaryStage(), contentToSaveOnNewFile);
+
         if (fileInfo != null) {
-            // Save the current content to the specified file path
-            String updatedContent = iConnectApp.getCodeArea().getText();
-            FileUtils.saveChangesToFile(new FileInfo(fileInfo.filePathOrTempTabName(), updatedContent));
+            // Save file with the new info created
+            FileUtils.saveChangesToFile(new FileInfo(fileInfo.filePathOrTempTabName(), fileInfo.fileContent()));
 
             // Update TabManagerService with the new file information
-            TabManagerService.updateFileInfo(fileInfo.filePathOrTempTabName(), updatedContent);
+            TabManagerService.updateFileInfo(fileInfo.filePathOrTempTabName(), fileInfo.fileContent());
 
             // Update the tab title and file mapping
-            selectedTab.setText(fileInfo.fileName());
-            //TODO: will this work ?
-            //iConnectApp.getOpenTabs().put(selectedTab, fileInfo.filePathOrTempTabName());
+            String oldKey = iConnectApp.getPrefKeyForUnsavedFile() + selectedTab.getText();
+            String newKey = TabManagerService.genFileKey(fileInfo.fileName(), fileInfo.filePathOrTempTabName());
 
-            iConnectApp.getOpenTabs().put(fileInfo.filePathOrTempTabName(), new TabEntry(selectedTab, fileInfo));
+            selectedTab.setText(fileInfo.fileName()); // Update tab title
+            iConnectApp.getOpenTabs().remove(oldKey); // Remove old key
+            iConnectApp.getOpenTabs().put(newKey, new TabEntry(selectedTab, fileInfo)); // Add new key
 
             // Mark the tab as saved
             FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
+
+            System.out.println("File saved and tab updated successfully.");
         } else {
             System.out.println("Save operation canceled.");
         }
@@ -74,6 +80,32 @@ public class FileIOService {
 
         // Mark the file as saved by updating the tab indicator
         FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
+    };
+    /******************************************************************************************************************/
+    public static void saveFileOrSaveNewFileUnderDir(){
+
+        //get the current tab
+        Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
+        if (selectedTab == null) {
+            System.out.println("No tab selected to save.");
+            return;
+        };
+
+        //get the file path for the selected tab
+        TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
+        String fakePath = tabEntry.fileInfo().filePathOrTempTabName();
+
+        if (fakePath == null) {
+            System.out.println("path does not exist"); // IF WE LAND HERE => SOME ISSUES WITH DEFAULT TAB CREATION
+        }
+        else {
+            if(fakePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())){
+                saveUnsavedNewFile();
+            }
+            else {
+                saveFile();
+            }
+        };
     };
     /******************************************************************************************************************/
     // open file

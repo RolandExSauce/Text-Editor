@@ -82,7 +82,10 @@ public class MenuBarController {
         //System.out.println("in controller connect app: "+ iConnectApp);
         if (iConnectApp != null) {
             if (tabPane != null && openTabs != null) {
-                FileIOService.saveFile();
+                //FileIOService.saveFile();
+//                FileIOService.saveAsFile();
+
+                FileIOService.saveFileOrSaveNewFileUnderDir();
             };
         };
     };

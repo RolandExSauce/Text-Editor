@@ -22,16 +22,18 @@ import java.util.Objects;
 
 // Interface Class to bridge functionalities from Backend Services and Frontend Controllers
 public class IConnectApp {
+    private static final IConnectApp instance = new IConnectApp(); // IConnectApp Singleton instance
     private static final int MAX_OPEN_TABS = 5; //max number of opened tab files
 
     //Also nice solution to use "::" cuz new files can't be saved using colon afaik, but only on WINDOWS ?
     private static final String prefKeyForUnsavedFile = "unsaved::"; //just to stay consistent globally
-    private static final IConnectApp instance = new IConnectApp(); // IConnectApp Singleton instance
     private static final String pathToJSONFonts = "/com/solideditor/programm/static/fonts.json";
     private final List<String> fonts; // Store loaded fonts
     private TextField searchTxtField;
     private TabPane tabPane;
 
+    //IMPORTANT: FOR DEFAULT TABS, the key will include a prefix plus the tab name,
+    // NEED TO UPDATE TO "<ACTUAL FILEPATH>::<FILENAME>" ON SAVE NEW FILE
     // stores string key filename + TabEntry (contains Tab, FileInfo and maybe unsaved content)
     private final Map<String, TabEntry> openTabs = new HashMap<>();
     private CodeArea codeArea;

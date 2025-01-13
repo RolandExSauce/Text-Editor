@@ -75,11 +75,11 @@ public class TabManagerService {
             filePathOrTempTabName = genFileKey(tabName, null);
         } while (iConnectApp.getOpenTabs().containsKey(filePathOrTempTabName)); // ensure the key is unique
 
-        //IMPORTANT: THIS ONLY WORKS BECAUSE SAVING IS UPDATING ACCORDINGLY
         // Create FileInfo and Tab for the new unsaved file
         FileInfo unsavedFileInfo = new FileInfo(filePathOrTempTabName, null, tabName, null);
         newUnsavedTab = createTabWithIfFileSavedIndicator(tabName);
 
+        //IMPORTANT: THIS ONLY WORKS BECAUSE SAVING IS UPDATING ACCORDINGLY
         // Add the new tab to the openTabs map
         iConnectApp.getOpenTabs().put(filePathOrTempTabName, new TabEntry(newUnsavedTab, unsavedFileInfo));
 
@@ -150,6 +150,7 @@ public class TabManagerService {
     public static void updateFileInfo(String filePath, String newContent) {
         for ( Map.Entry<String, TabEntry> entry : iConnectApp.getOpenTabs().entrySet()) {
             if (entry.getValue().fileInfo().filePathOrTempTabName().equals(filePath)) {
+
                 Tab tab = entry.getValue().tab();
 
                 // Update the FileInfo with the new content

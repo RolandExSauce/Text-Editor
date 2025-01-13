@@ -84,7 +84,7 @@ public class FileHelpers {
     };
     /******************************************************************************************************************/
     // helper method to create FileInfo from a File record
-    public static <T> FileInfo createFileInfo(T input) {
+    public static <T> FileInfo provideFileInfo(T input) {
         if (input == null) {
             throw new IllegalArgumentException("Input cannot be null");
         }
@@ -96,8 +96,32 @@ public class FileHelpers {
         } else if (input instanceof File file) {
             if (!file.exists()) {
                 throw new IllegalArgumentException("File must exist");
+            } else {
+                return new FileInfo(file.getAbsolutePath());
             }
-            return new FileInfo(file.getAbsolutePath());
+
+        } else {
+            throw new IllegalArgumentException("Unsupported input type: " + input.getClass().getName());
+        }
+    };
+    /******************************************************************************************************************/
+    // Overloaded version with content
+    public static <T> FileInfo provideFileInfo(T input, String content) {
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+        if (input instanceof String filePath) {
+            if (filePath.isBlank()) {
+                throw new IllegalArgumentException("File path can't be blank");
+            }
+            return new FileInfo(filePath, content);
+        } else if (input instanceof File file) {
+            if (!file.exists()) {
+                throw new IllegalArgumentException("File must exist");
+            } else {
+                //System.out.println("File is opening: " + file.getAbsolutePath());
+                return new FileInfo(file.getAbsolutePath(), content);
+            }
         } else {
             throw new IllegalArgumentException("Unsupported input type: " + input.getClass().getName());
         }

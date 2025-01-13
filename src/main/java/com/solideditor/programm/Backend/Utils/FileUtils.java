@@ -11,8 +11,9 @@ import java.io.*;
 public class FileUtils {
 
     // save a new file "under XY dir" method
-    public static FileInfo saveNewFileUnderDirAndGetFileContent(Stage mainStage) {
-        FileChooser fileChooser = FileHelpers.getFileChooser("Create New File Or Replace File Content");
+    public static FileInfo saveNewFileUnderDirAndGetFileContent(Stage mainStage, String content) {
+        FileChooser fileChooser = FileHelpers //keep descriptive as possible
+                .getFileChooser("Create New File Or Replace existing File with new content");
         File file = fileChooser.showSaveDialog(mainStage);
 
         // check if file selected
@@ -20,23 +21,20 @@ public class FileUtils {
             FileHelpers.saveLastOpenedDir(file.getParentFile().getAbsolutePath());
             try {
                 // check if the file already exists
-                if (file.exists()) return FileHelpers.createFileInfo(file);
+                if (file.exists()) {
+                    // TODO: Customize the dialog to draw the user's attention even more effectively ?
+                    return FileHelpers.provideFileInfo(file, content); //override with new content
+                }
                 else {
-                    if (file.createNewFile()) return FileHelpers.createFileInfo(file);
+                    if (file.createNewFile()) return FileHelpers.provideFileInfo(file, content);
                     else return null; // file creation failed
                 }
             } catch (IOException e) {
-                System.err.println("error: " + e.getMessage());
+                //System.err.println("error: " + e.getMessage());
                 return null; // error during file creation
             }
         } else return null; // return null on cancel
     };
-    //TODO: actually change this ?
-    //I've modified "createOrOpenFileAndGetContent" so that if we select an existing file
-    //instead of creating a new one it simply opens that file instead of a "creation failing error" =>
-    //in this sense it does actually get the job done for "openFileAndGetContent" as well, but
-    //in explorer we get a message "file blabla already exists, do you want to replace it" ? so we don't want that on
-    //a select/open file operation actually
     /******************************************************************************************************************/
     // open a file and return its content
     public static FileInfo openFileAndGetContent(Stage mainStage) {
@@ -45,7 +43,7 @@ public class FileUtils {
         if (file != null) {
             FileHelpers.saveLastOpenedDir(file.getParentFile().getAbsolutePath());
             //String content = FileHelpers.readFileContent(file.getPath());
-            return FileHelpers.createFileInfo(file);
+            return FileHelpers.provideFileInfo(file);
         } else return null; //on cancel
     };
     /******************************************************************************************************************/
