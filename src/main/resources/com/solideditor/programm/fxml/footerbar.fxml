@@ -9,7 +9,7 @@
       stylesheets="@/com/solideditor/programm/static/css/footerbar.css"
 >
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Label fx:id="label_Words" text="Wörter: 0" textFill="WHITE"/>
+        <Label fx:id="wordCountLabel" text="Wörter: 0" textFill="WHITE"/>
     </HBox>
     <HBox prefHeight="100.0" prefWidth="200.0"/>
     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">

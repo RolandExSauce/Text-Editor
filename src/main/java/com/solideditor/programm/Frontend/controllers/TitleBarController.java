@@ -1,13 +1,27 @@
 package com.solideditor.programm.Frontend.controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.Stage;
 
 public class TitleBarController {
+    public Button btnMaximize;
     @FXML
     private TabPane tabPane; // is bind with by fx:id
     public Tab defaultTab;
+    private Stage primaryStage;
+
+    /**
+     * Verknüpft die Bühne (Stage) mit diesem Controller.
+     *
+     * @param primaryStage Die Hauptbühne der Anwendung.
+     */
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        System.out.println("Primary stage has been set: " + primaryStage);
+    }
 
     public TabPane getTabPane() {
         return tabPane; // expose TabPane to other controllers
@@ -22,20 +36,20 @@ public class TitleBarController {
 
     // Handles window maximization
     @FXML
-    private void maximizeWindow() {
-//        if (stage != null) {
-//            if (stage.isMaximized()) {
-//                // Restore window to previous size
-//                stage.setMaximized(false);
-//            } else {
-//                // Set the stage to full screen
-//                stage.setMaximized(true);
-//
-//                // Reset bounds to ensure it fills the screen
-//                stage.setHeight(stage.getScene().getWindow().getHeight());
-//                stage.setWidth(stage.getScene().getWindow().getWidth());
-//            }
-//        }
+    private void onMaximizeClicked() {
+        if (primaryStage != null) {
+            if (primaryStage.isMaximized()) {
+                // Restore to previous window size
+                primaryStage.setMaximized(false);
+                btnMaximize.setText("🗖"); // Update button text to "maximize"
+            } else {
+                // Maximize the window
+                primaryStage.setMaximized(true);
+                btnMaximize.setText("🗗"); // Update button text to "restore"
+            }
+        } else {
+            System.err.println("Primary stage is not set.");
+        }
     }
 
 

@@ -1,6 +1,6 @@
 .menu-bar {
     -fx-spacing: 20px; /* Space between buttons */
-    -fx-margin: 50px 0px 0px 0px;
+    -fx-background-color: #1C2128;
 }
 
 .combo-box {
@@ -9,7 +9,7 @@
 
 /* Specific ComboBox by fx:id */
 #fontsComboBox {
-    -fx-pref-width: 500px; /* Apply desired width */
+    -fx-pref-width: 150px; /* Apply desired width */
     -fx-background-radius: 10;
 }
 

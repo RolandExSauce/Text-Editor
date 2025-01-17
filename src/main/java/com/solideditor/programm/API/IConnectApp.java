@@ -28,17 +28,24 @@ public class IConnectApp {
     private final Map<Tab, String> tabFileMap = new HashMap<>();
     private CodeArea codeArea;
     private Stage primaryStage;
-
+    private static IConnectApp instance;
     //no arg constructor to init some values
     public IConnectApp() {
         this.fonts = loadFonts();
     };
 
+    public static IConnectApp getInstance() {
+        if (instance == null) {
+            instance = new IConnectApp();
+        }
+        return instance;
+    }
     /* Setters to set references for global usage *********************************************************************/
     public void setCodeArea(CodeArea codeArea) {
         if (codeArea == null) throw new IllegalArgumentException("CodeArea cannot be null");
         this.codeArea = codeArea;
         addCodeAreaChangeListener();
+
     };
 
     public void setTabPane(TabPane tabPane) {

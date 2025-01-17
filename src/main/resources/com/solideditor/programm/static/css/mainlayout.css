@@ -1,14 +1,20 @@
 .root {
     -fx-border-style: solid;
+    -fx-background-color: #1C2128;
 }
 
 .title-bar-menu-bar-container {
     -fx-spacing: 10px; /* Ensure there is space between children */
+
+
 }
 
 #titleBarMenuBarContainer > .titlebar {
-    -fx-padding: 10px 0 20px 0; /* Add padding to the bottom of the titlebar */
+
+
 }
+
+
 
 /* will be used to highlight found words */
 .highlight {

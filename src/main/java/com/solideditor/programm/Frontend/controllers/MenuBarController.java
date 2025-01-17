@@ -2,10 +2,12 @@ package com.solideditor.programm.Frontend.controllers;
 
 import com.solideditor.programm.API.IConnectApp;
 import com.solideditor.programm.Backend.services.FileIOService;
+import com.solideditor.programm.Frontend.Tools.ChangeFontUtils;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.fxmisc.richtext.CodeArea;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class MenuBarController {
     public Button btnOpenFile;
     @FXML
     public TextField searchTxtField;
+    public Label lableFoundAt;
 
     //from central IConnectApp Class
     private IConnectApp IConnectApp;
@@ -34,6 +37,8 @@ public class MenuBarController {
     /******************************************************************************************************************/
     @FXML
     public void initialize() {
+
+        initializeFont();
         // Check if fontsComboBox is available
         if (fontsComboBox == null) {
             System.err.println("fontsComboBox is null. Cannot initialize.");
@@ -118,9 +123,15 @@ public class MenuBarController {
     /******************************************************************************************************************/
     @FXML
     private void onChangeToBoldClicked() {
-        System.out.println("Bold style applied!");
-        //codeArea.setStyle("-fx-font-weight: bold;");
-    };
+        System.out.println("Bold-Button gedrückt!");
+
+        // Prüfen, ob die CodeArea verfügbar ist
+        if (IConnectApp != null && IConnectApp.getCodeArea() != null) {
+            ControllerUtils.makeTextBold(IConnectApp.getCodeArea());
+        } else {
+            System.err.println("CodeArea ist nicht initialisiert.");
+        }
+    }
     /******************************************************************************************************************/
     @FXML
     private void onChangeToItalicClicked() {
@@ -133,5 +144,25 @@ public class MenuBarController {
         System.out.println("Underline style applied!");
         //codeArea.setStyle("-fx-underline: true;");
     };
+    /******************************************************************************************************************/
+    @FXML
+    private void initializeFont() {
+        if (fontsComboBox != null) {
+            fontsComboBox.valueProperty().addListener((obs, oldFont, newFont) -> {
+                if (newFont != null && !newFont.isEmpty()) {
+                    System.out.println("Schriftart ausgewählt: " + newFont);
+
+                    // Anwenden des Fonts auf den markierten Text in der CodeArea
+                    if (IConnectApp != null && IConnectApp.getCodeArea() != null) {
+                        ChangeFontUtils.changeFontForSelectedText(IConnectApp.getCodeArea(), newFont);
+                    }
+                }
+            });
+        }
+
+    }
+
+
+
 
 }
