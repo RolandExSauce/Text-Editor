@@ -31,7 +31,7 @@
 
 .tab:selected {
     -fx-background-radius: 7 7 0 0;
-    -fx-background-color: white; /* White background for the selected tab */
+    -fx-background-color: #F2F2EE; /* White background for the selected tab */
     -fx-border-color: transparent; /* No border for the selected tab */
     -fx-focus-color: transparent; /* Makes the focus ring transparent */
     -fx-faint-focus-color: transparent; /* Removes the faint focus glow */

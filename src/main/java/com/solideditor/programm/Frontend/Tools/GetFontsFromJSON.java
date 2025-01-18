@@ -3,7 +3,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 // Utility Class to load fonts from a JSON file
@@ -11,10 +13,14 @@ public class GetFontsFromJSON {
     /**
      * Reads a JSON file containing fonts from an InputStream and returns a list of font names.
      * @param inputStream the InputStream of the JSON file
-     * @return a list of font names
+     * @return a map of font names
      */
-    public static List<String> appFontsFromStream(InputStream inputStream) {
+
+    //return Map<List<String>, List<String>>
+    public static Map<String, List<String>> appFontsFromStream(InputStream inputStream) {
         List<String> fonts = new ArrayList<>();
+        List<String> styles = new ArrayList<>();
+        Map<String, List<String>> fontMap = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper(); // use Jackson for parsing
 
         try {
@@ -24,18 +30,17 @@ public class GetFontsFromJSON {
             if (fontArray != null && fontArray.isArray()) {
                 for (JsonNode fontNode : fontArray) {
                     String fontName = fontNode.get("fontName").asText();
+                    String fontStyle = fontNode.get("style").asText();
                     fonts.add(fontName);
-
-                    // Optional: Print additional font details
-                    // String style = fontNode.get("style").asText();
-                    // System.out.println("Font name: " + fontName);
-                    // System.out.println("Font style: " + style);
+                    styles.add(fontStyle);
                 }
+                fontMap.put("fontNames", fonts);
+                fontMap.put("fontStyles", styles);
             }
         } catch (IOException e) {
             System.err.println("Error reading or parsing the JSON stream: " + e.getMessage());
         }
-        return fonts;
+        return fontMap;
     };
 
 }

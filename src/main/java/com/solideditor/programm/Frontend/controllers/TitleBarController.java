@@ -1,4 +1,5 @@
 package com.solideditor.programm.Frontend.controllers;
+<<<<<<< Updated upstream
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -6,10 +7,21 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
+=======
+import com.solideditor.programm.API.IConnectAppUtils;
+import javafx.scene.control.*;
+import javafx.fxml.FXML;
+import lombok.Getter;
+
+
+//controller class for interacting with title bar functionalities
+>>>>>>> Stashed changes
 public class TitleBarController {
     public Button btnMaximize;
     @FXML
+    @Getter
     private TabPane tabPane; // is bind with by fx:id
+<<<<<<< Updated upstream
     public Tab defaultTab;
     private Stage primaryStage;
 
@@ -27,6 +39,13 @@ public class TitleBarController {
         return tabPane; // expose TabPane to other controllers
     };
 
+=======
+
+    @FXML
+    @Getter
+    public Tab defaultTab; // is bind with fx:id
+    /******************************************************************************************************************/
+>>>>>>> Stashed changes
     @FXML
     private void minimizeWindow() {
 //        if (stage != null) {
@@ -56,6 +75,6 @@ public class TitleBarController {
     // Handles window closing
     @FXML
     private void closeWindow() {
-        Platform.exit();
-    }
+        IConnectAppUtils.graceFullShutDown();
+    };
 }

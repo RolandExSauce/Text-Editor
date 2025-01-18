@@ -12,13 +12,11 @@
 <!-- ****************************************************************************************************************-->
 
 <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="600.0" styleClass="title-bar" stylesheets="@/com/solideditor/programm/static/css/titlebar.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solideditor.programm.Frontend.controllers.TitleBarController">
-   <HBox alignment="BOTTOM_LEFT" minWidth="-Infinity" prefHeight="100.0" prefWidth="113.0">
-      <children>
-          <ImageView fitHeight="26.0" fitWidth="110.0">
-              <Image url="@../static/icons/SolidEdit.png"/>
-          </ImageView>
-      </children>
-   </HBox>
+    <HBox alignment="BOTTOM_LEFT" minWidth="-Infinity" prefHeight="100.0" prefWidth="113.0">
+        <ImageView fitHeight="26.0" fitWidth="110.0">
+            <Image url="@../static/icons/SolidEdit.png"/>
+        </ImageView>
+    </HBox>
 
     <!-- Left Side: Tabs -->
     <AnchorPane>

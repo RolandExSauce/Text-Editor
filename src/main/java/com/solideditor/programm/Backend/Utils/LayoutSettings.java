@@ -1,6 +1,7 @@
 package com.solideditor.programm.Backend.Utils;
 
-//TODO: use Builder pattern for layout class
 
+//layout settings class to adjust style related stuff on app
 public class LayoutSettings {
+
 }

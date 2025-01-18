@@ -11,7 +11,7 @@
 
 #titleBarMenuBarContainer > .titlebar {
 
-
+    -fx-padding: 10px 0 20px 0; /* Add padding to the bottom of the titlebar */
 }
 
 

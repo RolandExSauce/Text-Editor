@@ -1,6 +1,8 @@
 .menu-bar {
     -fx-spacing: 20px; /* Space between buttons */
     -fx-background-color: #1C2128;
+     -fx-margin: 80px 0px 0px 0px;
+        -fx-pref-width: 100%;
 }
 
 .combo-box {
@@ -22,4 +24,5 @@
 /* HBox spacing */
 .hbox {
     -fx-spacing: 20px; /* Adds space between items */
+     -fx-pref-width: 100%; /* Ensure full width */
 }

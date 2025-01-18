@@ -13,9 +13,9 @@ module com.solideditor.programm {
     requires com.almasb.fxgl.all;
     requires kotlin.stdlib;
     requires java.prefs;
+    requires static lombok;
     requires org.jetbrains.annotations;
     requires com.fasterxml.jackson.databind;
-    //requires static lombok; //if records don't do the job then maybe use lombok
     opens com.solideditor.programm.Frontend.controllers to javafx.fxml; // Allow access for FXML
     exports com.solideditor.programm.Frontend.controllers;
     opens com.solideditor.programm to javafx.fxml;
