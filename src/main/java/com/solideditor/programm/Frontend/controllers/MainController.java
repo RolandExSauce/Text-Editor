@@ -1,5 +1,5 @@
 package com.solideditor.programm.Frontend.controllers;
-
+import com.solideditor.programm.API.IConnectApp;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
@@ -12,9 +12,9 @@ import java.io.IOException;
 
 // Main controller
 public class MainController {
-    IConnectApp iConnectApp
-            = IConnectApp.getIconnectAppInstance();// get IConnectApp singleton instance
+    private final IConnectApp IConnectApp = com.solideditor.programm.API.IConnectApp.getInstance(); // init the global IConnectApp
     private final CodeArea codeArea = new CodeArea(); // init CodeArea
+    private Stage primaryStage;
 
     @FXML
     private VBox codeAreaContainer;
@@ -27,24 +27,30 @@ public class MainController {
     /******************************************************************************************************************/
     @FXML
     private void initialize() {
-        loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
-        loadIncludedFXML("/com/solideditor/programm/fxml/menubar.fxml", titleBarMenuBarContainer);
-        loadIncludedFXML("/com/solideditor/programm/fxml/footerbar.fxml", bottomContainer);
-
+//        IConnectApp.setPrimaryStage(primaryStage);
         // add scrollbar
         ScrollPane scrollPane = new ScrollPane(codeArea);
         scrollPane.setFitToWidth(true); // ensure CodeArea fits horizontally
         scrollPane.setFitToHeight(true); // ensure CodeArea fits vertically
 
+
+
         VBox.setVgrow(codeArea, Priority.ALWAYS); // allow the CodeArea to grow dynamically
         codeAreaContainer.getChildren().add(codeArea);
 
-        // set CodeArea in IConnectApp for global access
-        iConnectApp.setCodeArea(codeArea);
+        // Set the CodeArea in IConnectApp for global access
+        IConnectApp.setCodeArea(codeArea);
+
+        loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
+        loadIncludedFXML("/com/solideditor/programm/fxml/menubar.fxml", titleBarMenuBarContainer);
+        loadIncludedFXML("/com/solideditor/programm/fxml/footerbar.fxml", bottomContainer);
     };
     /******************************************************************************************************************/
     public void setPrimaryStage(Stage primaryStage) {
-        iConnectApp.setPrimaryStage(primaryStage); // pass stage to IConnectApp for global access
+        this.primaryStage = primaryStage;
+        IConnectApp.setPrimaryStage(primaryStage); // Pass stage to IConnectApp
+        System.out.println("IConnectApp: Primary stage set: " + primaryStage);
+        System.out.println("TitleBarController: Primary stage set: " + primaryStage);
     };
     /******************************************************************************************************************/
     // load fxml and init some stuffs through controllers
@@ -54,19 +60,29 @@ public class MainController {
             targetContainer.getChildren().add(loader.load());
             Object controller = loader.getController();
 
+
+            if (controller instanceof TitleBarController titleBarController) {
+                titleBarController.setPrimaryStage(primaryStage);
+                IConnectApp.setTabPane(titleBarController.getTabPane());
+            };
+
             if (controller instanceof MenuBarController menuBarController) {
+                menuBarController.setMainUtilities(IConnectApp);
                 if (menuBarController.getSearchTxtField() != null) {
-                    iConnectApp.setSearchTxtField(menuBarController.getSearchTxtField());
+                    IConnectApp.setSearchTxtField(menuBarController.getSearchTxtField());
                 };
             };
 
-            if (controller instanceof TitleBarController titleBarController) {
-                //set default tab and tabPane from title bar controller
-                iConnectApp.setTabPane(titleBarController.getTabPane());
-                iConnectApp.setDefaultTab(titleBarController.getDefaultTab());
-            };
+
+            if (controller instanceof FooterBarController footerBarController) {
+                if (IConnectApp.getCodeArea() != null) {
+                    footerBarController.setMainUtilities(IConnectApp);
+                } else {
+                    System.err.println("CodeArea ist noch nicht initialisiert.");
+                }
+
+            }
         } catch (IOException e) {
-            //use to debug
             //e.printStackTrace();
         }
     };

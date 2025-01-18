@@ -7,12 +7,8 @@ import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-<<<<<<< Updated upstream
 import org.fxmisc.richtext.CodeArea;
 
-=======
-import lombok.Getter;
->>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +24,7 @@ public class MenuBarController {
     public Button btnSave;
     public Button btnNewFile;
     public Button btnOpenFile;
-
     @FXML
-<<<<<<< Updated upstream
     public TextField searchTxtField;
     public Label lableFoundAt;
 
@@ -38,10 +32,6 @@ public class MenuBarController {
     private IConnectApp IConnectApp;
 
     // References to shared resources
-=======
-    @Getter
-    public TextField searchTxtField; //currently only exposed to Main controller
->>>>>>> Stashed changes
     private TabPane tabPane;
     private Map<Tab, String> tabFileMap;
     /******************************************************************************************************************/
@@ -68,7 +58,6 @@ public class MenuBarController {
         });
     };
     /******************************************************************************************************************/
-<<<<<<< Updated upstream
     public TextField getSearchTxtField() {
         return searchTxtField; // expose text field to other controllers (I think for now just MainController ?,
         // will be needed in order to reflect changes on codeArea
@@ -89,67 +78,35 @@ public class MenuBarController {
         } else {
             System.err.println("Fonts or fontsComboBox is null or empty. Cannot populate ComboBox.");
         }
-=======
-    // init stuff coming from IConnectApp
-    public void initMainUtilities() {
-        this.tabPane = iConnectApp.getTabPane();
-        this.openTabs = iConnectApp.getOpenTabs();
-        List<String> fonts = iConnectApp.getFonts();
-        ControllerUtils.initializeComboBox(fontsComboBox, fonts);
->>>>>>> Stashed changes
     };
     /******************************************************************************************************************/
     //open file
     @FXML
     private void onOpenFileClicked() {
-<<<<<<< Updated upstream
         if (IConnectApp != null) {
             if (tabPane != null && tabFileMap != null) {
                 FileIOService.openFile(IConnectApp);
             }
         }
-=======
-        if (iConnectApp != null) {
-            if (tabPane != null && openTabs != null) {
-                FileIOService.openFile();
-            };
-        };
->>>>>>> Stashed changes
     };
     /******************************************************************************************************************/
-    //create new file, if user selects existing file, open that one and overriding its content
+    //create new file, if user selects existing file, open that one
     @FXML
     private void onCreateFileClicked() {
-<<<<<<< Updated upstream
         if (IConnectApp != null) {
             if (tabPane != null && tabFileMap != null) {
                 FileIOService.createNewFile(IConnectApp);
             }
         }
-=======
-        if (iConnectApp != null) {
-            if (tabPane != null && openTabs != null) {
-                FileIOService.createNewFile();
-            };
-        };
->>>>>>> Stashed changes
     };
     /******************************************************************************************************************/
     @FXML
     private void onSaveFileClicked() {
-<<<<<<< Updated upstream
         if (IConnectApp != null) {
             if (tabPane != null && tabFileMap != null) {
                 FileIOService.saveFile(IConnectApp);
             }
         }
-=======
-        if (iConnectApp != null) {
-            if (tabPane != null && openTabs != null) {
-                FileIOService.saveFileOrSaveNewFileUnderDir();
-            };
-        };
->>>>>>> Stashed changes
     };
     /******************************************************************************************************************/
     @FXML

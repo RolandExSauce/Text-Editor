@@ -1,6 +1,5 @@
 package com.solideditor.programm.Backend.services;
 import com.solideditor.programm.API.IConnectApp;
-import com.solideditor.programm.API.IConnectAppUtils;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.FileUtils;
@@ -99,38 +98,7 @@ public class FileIOService {
         CodeArea codeArea = IConnectApp.getCodeArea();
         Stage primaryStage = IConnectApp.getPrimaryStage();
 
-<<<<<<< Updated upstream
         FileInfo fileInfo = FileUtils.openFileAndGetContent(primaryStage);
-=======
-        //get the current tab
-        Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
-        if (selectedTab == null) {
-            System.out.println("No tab selected to save.");
-            return;
-        };
-
-        //get the file path for the selected tab
-        TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
-        String fakePath = tabEntry.fileInfo().filePathOrTempTabName();
-
-        if (fakePath == null) {
-            System.out.println("path does not exist"); // IF WE LAND HERE => SOME ISSUES WITH DEFAULT TAB CREATION
-        }
-        else {
-            if(fakePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())) saveUnsavedNewFile();
-            else saveFile();
-        };
-    };
-    /******************************************************************************************************************/
-    // open file
-    public static void openFile() {
-        //first check tab limit
-        if (iConnectApp.isTabLimitReached()) {
-            System.out.println("OpenFile: Maximum tabs reached.");
-            return; // prevent opening a new tab
-        };
-        FileInfo fileInfo = FileUtils.openFileAndGetContent(iConnectApp.getPrimaryStage());
->>>>>>> Stashed changes
         if (fileInfo != null) {
             // Check if the file is already open using TabManagerService
             Tab existingTab = TabManagerService.getOpenTab(fileInfo.fileName(), fileInfo.filePath());
@@ -202,19 +170,12 @@ public class FileIOService {
     };
     /******************************************************************************************************************/
     // Close a file and its tab
-<<<<<<< Updated upstream
     private static void closeFile(IConnectApp IConnectApp, Tab tab) {
         TabPane tabPane = IConnectApp.getTabPane();
         Map<Tab, String> tabFileMap = IConnectApp.getTabFileMap();
 
         if (tab == null || tabPane == null || tabFileMap == null) {
             //System.out.println("Error: Invalid state. Cannot close file.");
-=======
-    public static void closeFile(Tab tab) {
-
-        if (tab == null || iConnectApp.getTabPane() == null || iConnectApp.getOpenTabs() == null) {
-            System.out.println("Error: Invalid state. Cannot close file.");
->>>>>>> Stashed changes
             return;
         };
 
@@ -244,14 +205,5 @@ public class FileIOService {
             //System.out.println("Error: No file path associated with the selected tab. Performing cleanup.");
             tabPane.getTabs().remove(tab);
         }
-<<<<<<< Updated upstream
-=======
-
-        // If all tabs are closed, reset the counter
-        if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
-            TabManagerService.resetUntitledTabCounter();
-            IConnectAppUtils.graceFullShutDown();
-        };
->>>>>>> Stashed changes
     };
 }
