@@ -1,21 +1,19 @@
 package com.solideditor.programm.Frontend.controllers;
-import javafx.application.Platform;
+import com.solideditor.programm.API.IConnectAppUtils;
 import javafx.scene.control.*;
 import javafx.fxml.FXML;
+import lombok.Getter;
 
 
-//controller for interacting with title bar functionalities
+//controller class for interacting with title bar functionalities
 public class TitleBarController {
     @FXML
+    @Getter
     private TabPane tabPane; // is bind with by fx:id
-    @FXML
-    public Tab defaultTab; // is bind with fx:id
 
-    /* Getters ********************************************************************************************************/
-    public TabPane getTabPane() {
-        return tabPane; // expose TabPane to other controllers
-    };
-    public Tab getDefaultTab () { return defaultTab; };
+    @FXML
+    @Getter
+    public Tab defaultTab; // is bind with fx:id
     /******************************************************************************************************************/
     @FXML
     private void minimizeWindow() {}
@@ -41,6 +39,6 @@ public class TitleBarController {
     // Handles window closing
     @FXML
     private void closeWindow() {
-        Platform.exit();
-    }
+        IConnectAppUtils.graceFullShutDown();
+    };
 }

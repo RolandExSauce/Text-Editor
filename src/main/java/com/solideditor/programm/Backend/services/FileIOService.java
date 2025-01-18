@@ -1,5 +1,6 @@
 package com.solideditor.programm.Backend.services;
 import com.solideditor.programm.API.IConnectApp;
+import com.solideditor.programm.API.IConnectAppUtils;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
@@ -99,12 +100,8 @@ public class FileIOService {
             System.out.println("path does not exist"); // IF WE LAND HERE => SOME ISSUES WITH DEFAULT TAB CREATION
         }
         else {
-            if(fakePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())){
-                saveUnsavedNewFile();
-            }
-            else {
-                saveFile();
-            }
+            if(fakePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())) saveUnsavedNewFile();
+            else saveFile();
         };
     };
     /******************************************************************************************************************/
@@ -176,6 +173,7 @@ public class FileIOService {
     /******************************************************************************************************************/
     // Close a file and its tab
     public static void closeFile(Tab tab) {
+
         if (tab == null || iConnectApp.getTabPane() == null || iConnectApp.getOpenTabs() == null) {
             System.out.println("Error: Invalid state. Cannot close file.");
             return;
@@ -222,10 +220,8 @@ public class FileIOService {
 
         // If all tabs are closed, reset the counter
         if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
-            //System.out.println("TabPane and OpenTabs map are both empty.");
             TabManagerService.resetUntitledTabCounter();
-            //System.out.println("All tabs closed. Counter reset.");
+            IConnectAppUtils.graceFullShutDown();
         };
-
     };
 }

@@ -7,15 +7,17 @@ import org.fxmisc.richtext.CodeArea;
 import java.util.List;
 import java.util.Map;
 
+
+//helper class for layout settings class
 public class LayoutHelpers {
 
     //method to highlight words found
     public static void highlightWordSequenceFound(
-            TabPane tabPane, Map<String, TabEntry>tabFileMap,
+            TabPane tabPane, Map<String, TabEntry>openTabs,
             String txtToSearch, CodeArea codeArea
     ) {
         // Step 1: Validate inputs
-        if (tabPane == null || tabFileMap == null || codeArea == null) {
+        if (tabPane == null || openTabs == null || codeArea == null) {
             System.err.println("Invalid input: TabPane, TabFileMap, or CodeArea is null");
             return;
         }
@@ -35,21 +37,14 @@ public class LayoutHelpers {
             return;
         }
 
-        // Step 4: Get file info
-//        FileInfo fileInfo = TabManagerService.getFileInfo(filePath);
-//        if (fileInfo == null) {
-//            System.err.println("FileInfo is null for file path: " + filePath);
-//            return;
-//        }
-
-        // Step 5: Get content
+        // Step 4: Get content
         String content = tabEntry.fileInfo().fileContent();
         if (content == null) {
             System.err.println("File content is null for file path: " + filePath);
             return;
         }
 
-        // Step 6: Clear existing styles
+        // Step 5: Clear existing styles
         try {
             codeArea.clearStyle(0, content.length());
         } catch (Exception e) {
@@ -57,13 +52,12 @@ public class LayoutHelpers {
             return;
         }
 
-        // Step 7: Find and highlight positions
+        // Step 6: Find and highlight positions
         if (txtToSearch == null || txtToSearch.isEmpty()) {
             System.out.println("Search text is empty. No highlighting applied.");
             return;
         }
 
-        //TODO: use this positions somewhere, make method return something
         List<Integer> positions;
         try {
             positions = FileHelpers.findSubstringPositions(content, txtToSearch);
@@ -72,7 +66,7 @@ public class LayoutHelpers {
             return;
         }
 
-        // Step 8: Apply styles
+        // Step 7: Apply styles
         for (int index : positions) {
             int endIndex = index + txtToSearch.length();
             if (endIndex <= content.length()) {

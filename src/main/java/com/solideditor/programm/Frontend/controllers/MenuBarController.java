@@ -5,6 +5,7 @@ import com.solideditor.programm.Backend.services.FileIOService;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import lombok.Getter;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +23,10 @@ public class MenuBarController {
     public Button btnSave;
     public Button btnNewFile;
     public Button btnOpenFile;
+
     @FXML
-    public TextField searchTxtField;
+    @Getter
+    public TextField searchTxtField; //currently only exposed to Main controller
     private TabPane tabPane;
     private Map<String, TabEntry> openTabs;
     /******************************************************************************************************************/
@@ -41,11 +44,6 @@ public class MenuBarController {
         });
     };
     /******************************************************************************************************************/
-    // expose text field to other controllers (for now just MainController)
-    public TextField getSearchTxtField() {
-        return searchTxtField;
-    };
-    /******************************************************************************************************************/
     // init stuff coming from IConnectApp
     public void initMainUtilities() {
         this.tabPane = iConnectApp.getTabPane();
@@ -57,7 +55,6 @@ public class MenuBarController {
     //open an existing file
     @FXML
     private void onOpenFileClicked() {
-        //System.out.println("in controller connect app: "+ iConnectApp);
         if (iConnectApp != null) {
             if (tabPane != null && openTabs != null) {
                 FileIOService.openFile();
@@ -65,26 +62,21 @@ public class MenuBarController {
         };
     };
     /******************************************************************************************************************/
-    //create new file, if user selects existing file, open that one
+    //create new file, if user selects existing file, open that one and overriding its content
     @FXML
     private void onCreateFileClicked() {
-        //System.out.println("in controller connect app: "+ iConnectApp);
         if (iConnectApp != null) {
             if (tabPane != null && openTabs != null) {
                 FileIOService.createNewFile();
-            }
-        }
+            };
+        };
     };
     /******************************************************************************************************************/
     //save a file with an existing path
     @FXML
     private void onSaveFileClicked() {
-        //System.out.println("in controller connect app: "+ iConnectApp);
         if (iConnectApp != null) {
             if (tabPane != null && openTabs != null) {
-                //FileIOService.saveFile();
-//                FileIOService.saveAsFile();
-
                 FileIOService.saveFileOrSaveNewFileUnderDir();
             };
         };

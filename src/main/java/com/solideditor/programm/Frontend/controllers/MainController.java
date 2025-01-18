@@ -27,9 +27,8 @@ public class MainController {
     /******************************************************************************************************************/
     @FXML
     private void initialize() {
-        loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
-        loadIncludedFXML("/com/solideditor/programm/fxml/menubar.fxml", titleBarMenuBarContainer);
-        loadIncludedFXML("/com/solideditor/programm/fxml/footerbar.fxml", bottomContainer);
+        // set CodeArea in IConnectApp for global access
+        iConnectApp.setCodeArea(codeArea);
 
         // add scrollbar
         ScrollPane scrollPane = new ScrollPane(codeArea);
@@ -39,8 +38,13 @@ public class MainController {
         VBox.setVgrow(codeArea, Priority.ALWAYS); // allow the CodeArea to grow dynamically
         codeAreaContainer.getChildren().add(codeArea);
 
-        // set CodeArea in IConnectApp for global access
-        iConnectApp.setCodeArea(codeArea);
+        loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
+        loadIncludedFXML("/com/solideditor/programm/fxml/menubar.fxml", titleBarMenuBarContainer);
+        loadIncludedFXML("/com/solideditor/programm/fxml/footerbar.fxml", bottomContainer);
+        // After loading FXML components, ensure TabPane is set in IConnectApp
+        if (iConnectApp.getTabPane() == null) {
+            System.err.println("TabPane is null after loading TitleBarController. Check FXML and controller.");
+        };
     };
     /******************************************************************************************************************/
     public void setPrimaryStage(Stage primaryStage) {
@@ -63,10 +67,10 @@ public class MainController {
             if (controller instanceof TitleBarController titleBarController) {
                 //set default tab and tabPane from title bar controller
                 iConnectApp.setTabPane(titleBarController.getTabPane());
-                iConnectApp.setDefaultTab(titleBarController.getDefaultTab());
+                iConnectApp.initDefaultTab(titleBarController.getDefaultTab());
             };
+
         } catch (IOException e) {
-            //use to debug
             //e.printStackTrace();
         }
     };
