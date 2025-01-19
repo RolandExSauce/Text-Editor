@@ -84,7 +84,6 @@ public class FileIOService {
     };
     /******************************************************************************************************************/
     public static void saveFileOrSaveNewFileUnderDir(){
-
         //get the current tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
@@ -109,6 +108,7 @@ public class FileIOService {
     public static void openFile() {
         //first check tab limit
         if (iConnectApp.isTabLimitReached()) {
+            //TODO: waiting to implement open dialog warning
             System.out.println("OpenFile: Maximum tabs reached.");
             return; // prevent opening a new tab
         };
@@ -153,6 +153,7 @@ public class FileIOService {
     public static void createNewFile() {
         //putting this here on the higher level works instead of doing it inside createUnsavedTabAndAddToOpenTabs
         if (iConnectApp.isTabLimitReached()) {
+            //TODO: waiting to implement open dialog warning
             System.out.println("createNewFile: Maximum tabs reached.");
             return;
         };
@@ -173,7 +174,6 @@ public class FileIOService {
     /******************************************************************************************************************/
     // Close a file and its tab
     public static void closeFile(Tab tab) {
-
         if (tab == null || iConnectApp.getTabPane() == null || iConnectApp.getOpenTabs() == null) {
             System.out.println("Error: Invalid state. Cannot close file.");
             return;
@@ -221,6 +221,11 @@ public class FileIOService {
         // If all tabs are closed, reset the counter
         if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
             TabManagerService.resetUntitledTabCounter();
+
+            //TODO: waiting to implement open dialog warning
+            //check if changes and then save and close based on yes, cancel, blabla
+            //FileHelpers.fileTabHasChanges(iConnectApp.getCodeArea().getText(),tabEntry);
+            // saveFile();
             IConnectAppUtils.graceFullShutDown();
         };
     };

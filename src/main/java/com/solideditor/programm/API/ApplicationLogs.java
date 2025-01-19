@@ -1,11 +1,14 @@
 package com.solideditor.programm.API;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import java.io.File;
 
 
 //to trace logs in file more effortlessly
 public class ApplicationLogs {
+    private static final String APPDATA_DIR_WIN = "\\AppData\\Local\\SolidEdit\\logs";
+    private static final String APPDATA_DIR_MAC = "/Library/Application Support/SolidEdit/logs";
+    private  static  final String APPDATA_DIR_UNIX_OR_OTHERS = "/.local/share/SolidEdit/logs";
     private static final Logger rootLogger;
     private static final Logger errorLogger;
 
@@ -30,7 +33,7 @@ public class ApplicationLogs {
     }
 
     private ApplicationLogs() {
-        // Prevent instantiation
+        // prevent instantiation
     };
 
     public static Logger getLogger() {
@@ -43,11 +46,11 @@ public class ApplicationLogs {
         String os = System.getProperty("os.name").toLowerCase();
 
         if (os.contains("win")) {
-            return userHome + "\\AppData\\Local\\SolidEdit\\logs";
+            return userHome + APPDATA_DIR_WIN;
         } else if (os.contains("mac")) {
-            return userHome + "/Library/Application Support/SolidEdit/logs";
+            return userHome + APPDATA_DIR_MAC;
         } else { // assume linux, unix or other os types
-            return userHome + "/.local/share/SolidEdit/logs";
+            return userHome + APPDATA_DIR_UNIX_OR_OTHERS;
         }
     };
 }

@@ -4,6 +4,8 @@ import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Backend.services.FileIOService;
 import com.solideditor.programm.Backend.services.TabManagerService;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -13,7 +15,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import lombok.Data;
 import org.fxmisc.richtext.CodeArea;
-import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ import java.util.Map;
 // Interface Class to bridge functionalities from Backend Services and Frontend Controllers
 @Data
 public class IConnectApp {
+
+    private final ObjectProperty<Stage> delayedStageForControllers = new SimpleObjectProperty<>();
 
     private static final IConnectApp instance = new IConnectApp(); // IConnectApp Singleton instance
 
@@ -52,11 +55,13 @@ public class IConnectApp {
     };
 
     //no arg constructor to init some values, maybe add more
-    private IConnectApp() {
-        this.fonts = LayoutSettings.loadFonts(); //load fonts
-    };
+    private IConnectApp() { this.fonts = LayoutSettings.loadFonts(); };
 
     /* Setters to set references for global usage *********************************************************************/
+    public void setUpStage(Stage stage){
+        setPrimaryStage(stage);
+        this.delayedStageForControllers.set(primaryStage);
+    };
     public void setUpCodeArea(CodeArea codeArea){
         if (codeArea == null) throw new IllegalArgumentException("CodeArea cannot be null");
         setCodeArea(codeArea);

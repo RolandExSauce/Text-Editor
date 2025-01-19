@@ -8,18 +8,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.Getter;
 import org.fxmisc.richtext.CodeArea;
-
 import java.util.List;
 import java.util.Map;
 
 
 //Controller for interacting with buttons in menu bar
 public class MenuBarController {
-
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); // get singleton instance
     @FXML
-    public ComboBox<String> fontsComboBox;
+    private ComboBox<String> fontsComboBox;
     public Button btnPrint;
     public Button btnSave;
     public Button btnNewFile;
@@ -27,11 +25,13 @@ public class MenuBarController {
 
     @FXML
     @Getter
-    public TextField searchTxtField; //currently only exposed to Main controller
-    public Label lableFoundAt;
+    private TextField searchTxtField; //currently only exposed to Main controller
+
+    @FXML
+    @Getter
+    private Label lableFoundAt;
     private TabPane tabPane;
     private Map<String, TabEntry> openTabs;
-
     private CodeArea codeArea;
     /******************************************************************************************************************/
     @FXML
@@ -41,7 +41,7 @@ public class MenuBarController {
             String selectedFont = fontsComboBox.getValue();
             if (selectedFont != null) {
                 LayoutSettings.changeFont(codeArea, selectedFont);
-            }
+            };
         });
     };
     /******************************************************************************************************************/
@@ -85,7 +85,5 @@ public class MenuBarController {
     };
     /******************************************************************************************************************/
     @FXML
-    private void onPrintClicked() {
-
-    };
+    private void onPrintClicked() {};
 };

@@ -1,5 +1,6 @@
 package com.solideditor.programm.Backend.Utils;
 import com.solideditor.programm.Backend.DTO.FileInfo;
+import com.solideditor.programm.Backend.DTO.TabEntry;
 import javafx.scene.control.Tab;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -144,6 +145,18 @@ public class FileHelpers {
             System.err.println("Error reading file: " + e.getMessage());
         }
         return fileData.toString();
+    };
+    /******************************************************************************************************************/
+    public static boolean fileTabHasChanges(String newValue, TabEntry tabEntry) {
+        FileInfo fileInfo = tabEntry.fileInfo();
+
+        //do this cuz unsavedFileInfo is created with content "null" but if codeArea is
+        //empty it equals a string "" that way graphic indicator is also updated for unsaved files correctly
+        String fileContent =
+                fileInfo.fileContent() == null ? "": fileInfo.fileContent();
+
+        // update the tab's indicator based on changes
+        return !newValue.equals(fileContent);
     };
     /******************************************************************************************************************/
     // method to update the tab indicator based on the save state

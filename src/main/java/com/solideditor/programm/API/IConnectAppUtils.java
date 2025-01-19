@@ -1,4 +1,5 @@
 package com.solideditor.programm.API;
+import java.util.concurrent.ScheduledExecutorService;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
@@ -11,8 +12,8 @@ import javafx.scene.control.TabPane;
 import org.fxmisc.richtext.CodeArea;
 import java.util.Objects;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 
 
 //extracted here to keep code clean
@@ -24,17 +25,13 @@ public class IConnectAppUtils {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
                 // Get the currently selected tab
                 Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-                //System.out.println("Current selected Tab: "+ selectedTab);
-
                 if (selectedTab != null) {
                     TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
                     if (tabEntry != null) {
                         String filePath = tabEntry.fileInfo().filePathOrTempTabName();
                         if (filePath != null) {
 
-                            FileInfo fileInfo = tabEntry.fileInfo();
-                            // Update the tab's indicator based on changes
-                            boolean hasChanges = !newValue.equals(fileInfo.fileContent());
+                            boolean hasChanges = FileHelpers.fileTabHasChanges(newValue, tabEntry);
 
                             FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
 
@@ -52,7 +49,7 @@ public class IConnectAppUtils {
             System.err.println("CodeArea or TabPane is null! Cannot add listener.");
         }
     };
-
+    /******************************************************************************************************************/
     //detect tab pane changes
     public static void detectTabPaneChanges(TabPane tabPane, CodeArea codeArea) {
         if (tabPane != null) {
@@ -67,7 +64,7 @@ public class IConnectAppUtils {
                         }
                     }
                 };
-
+                /******************************************************************************************************/
                 //if new tab is not null
                 if (newTab != null) {
                     TabEntry tabEntry = TabManagerService.getTabEntryByTab(newTab);
@@ -106,7 +103,7 @@ public class IConnectAppUtils {
             System.err.println("TabPane is null! Cannot detect changes.");
         }
     };
-
+    /******************************************************************************************************************/
     //exit app
     public static void graceFullShutDown(){
         // Create a ScheduledExecutorService for delayed execution
@@ -120,5 +117,4 @@ public class IConnectAppUtils {
             scheduler.shutdown(); //shut down scheduler
         }
     };
-
 }
