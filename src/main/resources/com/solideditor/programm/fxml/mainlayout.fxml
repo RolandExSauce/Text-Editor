@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+
 <!-- ****************************************************************************************************************-->
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@/com/solideditor/programm/static/css/mainlayout.css"
+            xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.solideditor.programm.Frontend.controllers.MainController"
-            stylesheets="@/com/solideditor/programm/static/css/mainlayout.css"
+            styleClass="main-container"
 >
     <top>
         <!-- Placeholder for dynamically loaded titlebar and menubar -->
-        <VBox fx:id="titleBarMenuBarContainer" styleClass="title-bar-menu-bar-container" spacing="10.0"/>
+        <VBox fx:id="titleBarMenuBarContainer" spacing="10.0" styleClass="title-bar-menu-bar-container">
+            <BorderPane.margin>
+            </BorderPane.margin>
+        </VBox>
 
     </top>
     <center>
         <!-- Placeholder for dynamically added CodeArea -->
-        <VBox fx:id="codeAreaContainer"/>
+        <VBox fx:id="codeAreaContainer">
+            <BorderPane.margin>
+                <Insets left="10.0" right="10.0" top="10.0"/>
+            </BorderPane.margin>
+
+        </VBox>
     </center>
     <bottom>
         <!-- Placeholder for dynamically loaded footerbar -->

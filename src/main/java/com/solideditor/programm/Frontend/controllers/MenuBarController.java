@@ -1,11 +1,14 @@
 package com.solideditor.programm.Frontend.controllers;
 import com.solideditor.programm.API.IConnectApp;
 import com.solideditor.programm.Backend.DTO.TabEntry;
+import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Backend.services.FileIOService;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.Getter;
+import org.fxmisc.richtext.CodeArea;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +19,6 @@ public class MenuBarController {
             = IConnectApp.getIconnectAppInstance(); // get singleton instance
     @FXML
     public ComboBox<String> fontsComboBox;
-    public Button btnBold;
-    public Button btnItalian;
-    public Button btnUnderline;
     public Button btnPrint;
     public Button btnSave;
     public Button btnNewFile;
@@ -27,28 +27,29 @@ public class MenuBarController {
     @FXML
     @Getter
     public TextField searchTxtField; //currently only exposed to Main controller
+    public Label lableFoundAt;
     private TabPane tabPane;
     private Map<String, TabEntry> openTabs;
+
+    private CodeArea codeArea;
     /******************************************************************************************************************/
     @FXML
     public void initialize() {
         initMainUtilities();
-        //TODO: update code Area here
         ControllerUtils.addComboBoxSelectionListener(fontsComboBox, () -> {
-            //String selectedFont = fontsComboBox.getValue();
-            /* for debug
+            String selectedFont = fontsComboBox.getValue();
             if (selectedFont != null) {
-                System.out.println("Selected font: " + selectedFont);
+                LayoutSettings.changeFont(codeArea, selectedFont);
             }
-            */
         });
     };
     /******************************************************************************************************************/
-    // init stuff coming from IConnectApp
-    public void initMainUtilities() {
+    // init stuff coming from IConnectApp and combo box
+    private void initMainUtilities() {
         this.tabPane = iConnectApp.getTabPane();
         this.openTabs = iConnectApp.getOpenTabs();
         List<String> fonts = iConnectApp.getFonts();
+        this.codeArea = iConnectApp.getCodeArea();
         ControllerUtils.initializeComboBox(fontsComboBox, fonts);
     };
     /******************************************************************************************************************/
@@ -83,26 +84,5 @@ public class MenuBarController {
     };
     /******************************************************************************************************************/
     @FXML
-    private void onPrintClicked() { };
-    /******************************************************************************************************************/
-    @FXML
-    private void onSelectFontClicked() {
-        System.out.println("Font change triggered!");
-    };
-    /******************************************************************************************************************/
-    @FXML
-    private void onChangeToBoldClicked() {
-        System.out.println("Bold style applied!");
-    };
-    /******************************************************************************************************************/
-    @FXML
-    private void onChangeToItalicClicked() {
-        System.out.println("Italic style applied!");
-    };
-    /******************************************************************************************************************/
-    @FXML
-    private void onUnderlineTxtClicked() {
-        System.out.println("Underline style applied!");
-    };
-
+    private void onPrintClicked() { /* IMPLEMENT PRINT ? */ };
 };

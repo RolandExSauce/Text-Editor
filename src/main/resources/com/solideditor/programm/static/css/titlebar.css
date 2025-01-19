@@ -1,14 +1,13 @@
 /* General HBox styles for the Title Bar */
 .title-bar {
-    -fx-background-color: #1D2128;
-        -fx-padding: 10px 10px 0.5px 30px;
+    -fx-background-color: #1C2128;
+        -fx-padding: 10px 10px -10px 30px;
         -fx-spacing: 10px;
 }
 
 /* TabPane styles */
 .tab-pane *.tab-header-background {
     -fx-background-color: #1D2128; /* Same color as the title bar */
-     -fx-padding-bottom: 15px;
     -fx-effect: none; /* Removes the inner shadow effect */
     -fx-border-color: transparent; /* Optional: Removes any border if present */
 }
@@ -32,12 +31,11 @@
 
 .tab:selected {
     -fx-background-radius: 7 7 0 0;
-    -fx-background-color: white; /* White background for the selected tab */
+    -fx-background-color: #F2F2EE; /* White background for the selected tab */
     -fx-border-color: transparent; /* No border for the selected tab */
     -fx-focus-color: transparent; /* Makes the focus ring transparent */
     -fx-faint-focus-color: transparent; /* Removes the faint focus glow */
 }
-
 
 
 .tab:selected .tab-label {

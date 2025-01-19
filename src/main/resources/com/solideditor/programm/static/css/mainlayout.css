@@ -1,14 +1,31 @@
 .root {
     -fx-border-style: solid;
+    -fx-background-color: #1C2128; /* Background color */
+    -fx-background-radius: 30px; /* Rounded corners */
+    -fx-border-radius: 30px;
+    -fx-border-width: 0;
+    -fx-border-color: red;
+    -fx-padding: 0; /* Remove any padding that could mimic a border */
+    -fx-effect: null; /* Disable any shadow effects */
 }
 
-.title-bar-menu-bar-container {
-    -fx-spacing: 10px; /* Ensure there is space between children */
+.main-container {}
+
+/* General styling for the CodeArea */
+.code-area {
+    -fx-font-size: 13px;             /* Default font size */
+    -fx-text-fill: black;            /* Default text color */
+    -fx-background-color: #f4f4f4;   /* Background color */
+    -fx-padding: 10px;               /* Padding around the text */
+    -fx-border-color: #cccccc;       /* Border color */
+    -fx-border-width: 1px;           /* Border width */
+    -fx-border-radius: 5px;          /* Rounded corners */
 }
 
 #titleBarMenuBarContainer > .titlebar {
-    -fx-padding: 10px 0 20px 0; /* Add padding to the bottom of the titlebar */
+    -fx-padding: 40px 0 40px 0; /* Add padding to the bottom of the titlebar */
 }
+
 
 /* will be used to highlight found words */
 .highlight {

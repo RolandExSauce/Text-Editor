@@ -9,13 +9,12 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-//TODO: fix
 
 //src: https://stackoverflow.com/questions/19455059/allow-user-to-resize-an-undecorated-stage
 public class ResizeHelper {
     public static void addResizeListener(Stage stage) {
         addResizeListener(stage, 0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
-    }
+    };
 
     public static void addResizeListener(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {
         ResizeListener resizeListener = new ResizeListener(stage);

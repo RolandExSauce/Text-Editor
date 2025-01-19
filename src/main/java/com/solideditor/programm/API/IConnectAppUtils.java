@@ -1,17 +1,14 @@
 package com.solideditor.programm.API;
-import com.solideditor.programm.App;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.services.TabManagerService;
-import com.solideditor.programm.Frontend.Tools.GetFontsFromJSON;
+import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.fxmisc.richtext.CodeArea;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,21 +17,9 @@ import java.util.concurrent.TimeUnit;
 
 //extracted here to keep code clean
 public class IConnectAppUtils {
-    private static final String pathToJSONFonts = "/com/solideditor/programm/static/fonts.json";
-
-    //load fonts from GetFontsFromJSON class
-    public static List<String> loadFonts() {
-        try (InputStream resourceStream = Objects.requireNonNull(App.class.getResourceAsStream(pathToJSONFonts))) {
-            Map<String, List<String>> fontMap = GetFontsFromJSON.appFontsFromStream(resourceStream);
-            return fontMap.getOrDefault("fontNames", List.of("Arial", "Times New Roman", "Verdana", "Georgia")); // default fonts on failure
-        } catch (Exception e) {
-            System.err.println("Failed to load fonts from JSON: " + e.getMessage());
-            return List.of("Arial", "Times New Roman", "Verdana", "Georgia"); // fallback fonts
-        }
-    };
 
     //add listener for code area
-    public static void addCodeAreaChangeListener(CodeArea codeArea, TabPane tabPane) {
+    public static void addCodeAreaChangeListener(CodeArea codeArea, TabPane tabPane, Label wordCount, Label signCount) {
         if (codeArea != null && tabPane != null) {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
                 // Get the currently selected tab
@@ -46,13 +31,20 @@ public class IConnectAppUtils {
                     if (tabEntry != null) {
                         String filePath = tabEntry.fileInfo().filePathOrTempTabName();
                         if (filePath != null) {
+
                             FileInfo fileInfo = tabEntry.fileInfo();
                             // Update the tab's indicator based on changes
                             boolean hasChanges = !newValue.equals(fileInfo.fileContent());
+
                             FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
 
                             // Save unsaved content in TabManagerService for persistence
                             TabManagerService.saveUnsavedContent(filePath, newValue);
+
+                            int wordCountValue = ControllerUtils.countWordsInCodeArea(newValue);
+
+                            wordCount.setText(String.valueOf(wordCountValue));
+                            signCount.setText(String.valueOf(newValue.length()));
                         };
                     }
                 }
@@ -61,7 +53,6 @@ public class IConnectAppUtils {
             System.err.println("CodeArea or TabPane is null! Cannot add listener.");
         }
     };
-
 
     //detect tab pane changes
     public static void detectTabPaneChanges(TabPane tabPane, CodeArea codeArea) {

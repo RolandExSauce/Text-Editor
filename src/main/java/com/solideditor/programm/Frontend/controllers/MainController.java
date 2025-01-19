@@ -1,5 +1,6 @@
 package com.solideditor.programm.Frontend.controllers;
 import com.solideditor.programm.API.IConnectApp;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
@@ -12,9 +13,9 @@ import java.io.IOException;
 
 // Main controller
 public class MainController {
-    IConnectApp iConnectApp
-            = IConnectApp.getIconnectAppInstance();// get IConnectApp singleton instance
-    private final CodeArea codeArea = new CodeArea(); // init CodeArea
+    private static final IConnectApp iConnectApp
+            = IConnectApp.getIconnectAppInstance(); //get IConnectApp singleton instance
+    private final CodeArea codeArea = new CodeArea(); //init CodeArea
 
     @FXML
     private VBox codeAreaContainer;
@@ -27,15 +28,14 @@ public class MainController {
     /******************************************************************************************************************/
     @FXML
     private void initialize() {
-        // set CodeArea in IConnectApp for global access
-        iConnectApp.setCodeArea(codeArea);
-
+        iConnectApp.setUpCodeArea(codeArea); // set CodeArea in IConnectApp for global access
         // add scrollbar
         ScrollPane scrollPane = new ScrollPane(codeArea);
         scrollPane.setFitToWidth(true); // ensure CodeArea fits horizontally
         scrollPane.setFitToHeight(true); // ensure CodeArea fits vertically
 
         VBox.setVgrow(codeArea, Priority.ALWAYS); // allow the CodeArea to grow dynamically
+        codeArea.getStyleClass().add("code-area");
         codeAreaContainer.getChildren().add(codeArea);
 
         loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
@@ -60,18 +60,39 @@ public class MainController {
 
             if (controller instanceof MenuBarController menuBarController) {
                 if (menuBarController.getSearchTxtField() != null) {
-                    iConnectApp.setSearchTxtField(menuBarController.getSearchTxtField());
+                    iConnectApp.setUpSearchTxtField(menuBarController.getSearchTxtField());
                 };
             };
 
             if (controller instanceof TitleBarController titleBarController) {
                 //set default tab and tabPane from title bar controller
-                iConnectApp.setTabPane(titleBarController.getTabPane());
+                iConnectApp.setUpTabPane(titleBarController.getTabPane());
                 iConnectApp.initDefaultTab(titleBarController.getDefaultTab());
+            };
+
+            if (controller instanceof FooterBarController footerBarController) {
+                iConnectApp.setWordCountAndSignCount(
+                        footerBarController.getWordCountLabel(),
+                        footerBarController.getSignCountLabel()
+                );
             };
 
         } catch (IOException e) {
             //e.printStackTrace();
         }
     };
+    
+    //TODO: implement here
+
+    public void onSave(ActionEvent actionEvent) {
+    }
+
+    public void onDiscard(ActionEvent actionEvent) {
+    }
+
+    public void onCancelDialog(ActionEvent actionEvent) {
+    }
+
+    public void onCloseDialog(ActionEvent actionEvent) {
+    }
 }

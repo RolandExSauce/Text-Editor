@@ -2,7 +2,6 @@ package com.solideditor.programm.Frontend.Tools;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
-//TODO: Not working properly
 //src: https://stackoverflow.com/questions/18792822/dragging-an-undecorated-stage-in-javafx
 public class EffectUtilities {
     public static void makeDraggable(final Stage stage, final Node byNode) {

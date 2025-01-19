@@ -1,13 +1,12 @@
 package com.solideditor.programm.Frontend.Tools;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-import java.util.List;
+import java.util.*;
 
 
 // Utility class for controller-related helper methods
 public class ControllerUtils {
     /*FOR MENUBAR CONTROLLER*******************************************************************************************/
-    // Initialize a ComboBox with a list of fonts
     public static void initializeComboBox(ComboBox<String> comboBox, List<String> items) {
         if (comboBox != null) {
             if (items != null && !items.isEmpty()) {
@@ -15,9 +14,9 @@ public class ControllerUtils {
                 comboBox.getSelectionModel().select(0);
 
                 // Bind width dynamically to the selected item's size
-                comboBox.prefWidthProperty().bind(
-                        comboBox.getEditor().textProperty().length().multiply(7) // Adjust multiplier as needed
-                                .add(30) // Padding for dropdown arrow and padding
+                comboBox.prefWidthProperty().bind(comboBox.getEditor().
+                        textProperty().length().multiply(7) // Adjust multiplier as needed
+                        .add(30) // Padding for dropdown arrow and padding
                 );
             } else {
                 System.err.println("Items list is null or empty. Cannot populate ComboBox.");
@@ -39,7 +38,14 @@ public class ControllerUtils {
             System.err.println("ComboBox is null! Cannot add listener.");
         }
     };
-    /******************************************************************************************************************/
-
+    /*FOR Footer Bar CONTROLLER****************************************************************************************/
+    public static int countWordsInCodeArea(String codeAreaTxt) {
+        // Entferne überflüssige Leerzeichen und zähle die Wörter
+        if (codeAreaTxt == null || codeAreaTxt.isBlank()) {
+            return 0;
+        };
+        String[] words = codeAreaTxt.trim().split("\\s+");
+        return words.length;
+    };
 }
 

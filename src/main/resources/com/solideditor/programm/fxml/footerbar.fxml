@@ -9,10 +9,18 @@
       stylesheets="@/com/solideditor/programm/static/css/footerbar.css"
 >
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Label fx:id="label_Words" text="Wörter: 0" textFill="WHITE"/>
+        <Label text="Signs: " textFill="WHITE"/>
+        <Label fx:id="signCountLabel" text="0" textFill="WHITE"/>
     </HBox>
+
+    <HBox prefHeight="100.0" prefWidth="200.0">
+        <Label text="Words: " textFill="WHITE"/>
+        <Label fx:id="wordCountLabel" text="0" textFill="WHITE"/>
+    </HBox>
+
+
     <HBox prefHeight="100.0" prefWidth="200.0"/>
     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-        <Slider fx:id="slider_zoom" value="50.0"/>
+        <Slider fx:id="sliderZoom" value="50.0"/>
     </HBox>
 </HBox>
