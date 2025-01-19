@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 
 
 //Entry class
-public class App extends Application {
-    private static final Logger logger = ApplicationLogs.getLogger();
+public class App extends Application {    private static final Logger logger = ApplicationLogs.getLogger();
+
 
     //TODO: start should handle exception then write in log, e.g logger.error
     @Override

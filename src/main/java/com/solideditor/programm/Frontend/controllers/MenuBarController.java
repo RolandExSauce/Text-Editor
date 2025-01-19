@@ -15,6 +15,7 @@ import java.util.Map;
 
 //Controller for interacting with buttons in menu bar
 public class MenuBarController {
+
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); // get singleton instance
     @FXML
@@ -84,5 +85,7 @@ public class MenuBarController {
     };
     /******************************************************************************************************************/
     @FXML
-    private void onPrintClicked() { /* IMPLEMENT PRINT ? */ };
+    private void onPrintClicked() {
+
+    };
 };
