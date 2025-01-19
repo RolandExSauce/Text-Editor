@@ -1,7 +1,6 @@
 package com.solideditor.programm.API;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
-import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Backend.services.FileIOService;
 import com.solideditor.programm.Backend.services.TabManagerService;
@@ -15,7 +14,6 @@ import javafx.stage.Stage;
 import lombok.Data;
 import org.fxmisc.richtext.CodeArea;
 import org.slf4j.Logger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +72,6 @@ public class IConnectApp {
 
     public void setUpTabPane(TabPane tabPane) {
         if (tabPane == null) throw new IllegalArgumentException("TabPane cannot be null");
-
         setTabPane(tabPane);
         detectTabPaneChanges();
         listenForCodeAreaChangesForOpenFile();
@@ -129,7 +126,7 @@ public class IConnectApp {
                     } else {
                         LayoutSettings.highlightWordSequenceFound(tabPane, newValue, codeArea);
                     };
-//                    FileHelpers.findWordInFileAndReturnPos(newValue);
+                //FileHelpers.findWordInFileAndReturnPos(newValue);
                 }
             });
         } else {

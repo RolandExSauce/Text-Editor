@@ -42,7 +42,6 @@ public class IConnectAppUtils {
                             TabManagerService.saveUnsavedContent(filePath, newValue);
 
                             int wordCountValue = ControllerUtils.countWordsInCodeArea(newValue);
-
                             wordCount.setText(String.valueOf(wordCountValue));
                             signCount.setText(String.valueOf(newValue.length()));
                         };

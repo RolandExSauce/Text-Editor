@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 
 
 //Entry class
-public class App extends Application {    private static final Logger logger = ApplicationLogs.getLogger();
+public class App extends Application {
+
+    private static final Logger logger = ApplicationLogs.getLogger();
 
 
     //TODO: start should handle exception then write in log, e.g logger.error
@@ -37,9 +39,9 @@ public class App extends Application {    private static final Logger logger = A
         root.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
             rect.setWidth(newValue.getWidth());
             rect.setHeight(newValue.getHeight());
-//
-//            System.out.println("Rectangle width: " + rect.getWidth());
-//            System.out.println("Rectangle height: " + rect.getHeight());
+
+        //System.out.println("Rectangle width: " + rect.getWidth());
+        //System.out.println("Rectangle height: " + rect.getHeight());
         });
         root.setClip(rect);
 

@@ -41,9 +41,11 @@ public class MainController {
         loadIncludedFXML("/com/solideditor/programm/fxml/titlebar.fxml", titleBarMenuBarContainer);
         loadIncludedFXML("/com/solideditor/programm/fxml/menubar.fxml", titleBarMenuBarContainer);
         loadIncludedFXML("/com/solideditor/programm/fxml/footerbar.fxml", bottomContainer);
+
         // After loading FXML components, ensure TabPane is set in IConnectApp
-        if (iConnectApp.getTabPane() == null) {
-            System.err.println("TabPane is null after loading TitleBarController. Check FXML and controller.");
+        if (iConnectApp.getTabPane() == null && iConnectApp.getCodeArea() == null) {
+            System.err.println("TabPane is null after loading checking corresponding controller/class.");
+            System.err.println("Code Area is null after loading checking corresponding controller/class.");
         };
     };
     /******************************************************************************************************************/
