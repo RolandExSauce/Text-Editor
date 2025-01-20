@@ -24,8 +24,8 @@ public class TabManagerService {
                     Tab tab = entry.getValue().tab();
                     iConnectApp.getOpenTabs().put(entry.getKey(), new TabEntry(tab, fileInfo, content));
                     return;
-                }
-            }
+                };
+            };
         };
     /******************************************************************************************************************/
     //Get unsaved content for a file path
@@ -50,17 +50,22 @@ public class TabManagerService {
         }
     };
     /******************************************************************************************************************/
-    // Create a new tab with a graphic indicator
-    public static Tab createTabWithIfFileSavedIndicator(String tabName) {
-        Tab tab = new Tab(tabName);
-        // Create a circle to act as the save state indicator
-        Circle indicator = new Circle(5); // Radius of 5
-        indicator.setFill(Color.TRANSPARENT); // Initially transparent
+    // Create a new tab with a graphic indicator or adjust a default one, e.g. default untitled tab
+    public static Tab createTabWithIfFileSavedIndicator(Object tabNameOrTab) {
+        Circle indicator = new Circle(4); // radius of 4
+        indicator.setFill(Color.TRANSPARENT); // default is transparent
 
-        // Set the circle as the tab's graphic
-        tab.setGraphic(indicator);
-
-        return tab;
+        if(tabNameOrTab instanceof Tab existingTabPassed){
+            existingTabPassed.setGraphic(indicator); //add circle to tab's graphic
+            return existingTabPassed;
+        };
+        //assume it's the tabName so create a new tab
+        if(tabNameOrTab instanceof String tabNamePassed) {
+            Tab newTab = new Tab(tabNamePassed);
+            newTab.setGraphic(indicator);
+            return newTab;
+        };
+        return null;
     };
     /******************************************************************************************************************/
     //add a new tab without path to create new file, then if save clicked => "save under"
@@ -136,7 +141,7 @@ public class TabManagerService {
             // Check if filePath is already in the format "unsaved::<fileName>" or "<path>::<fileName>"
             if (filePath.contains("::")) {
                 return filePath; // return as-is if it's already formatted
-            }
+            };
             return filePath + "::" + fileName; // Append fileName if not already included
         } else if (fileName.startsWith(iConnectApp.getPrefKeyForUnsavedFile())) {
             // Avoid duplicating the unsaved prefix
@@ -172,6 +177,17 @@ public class TabManagerService {
             if (entry.getValue().tab().equals(tab)) return entry.getValue();
         };
         return null; // no tab entry found
+    };
+
+    // Helper method to check if FileInfo exists in openTabs
+    public static FileInfo findFileInfoInOpenTabs(String filePath) {
+        for (TabEntry tabEntry : iConnectApp.getOpenTabs().values()) {
+            FileInfo fileInfo = tabEntry.fileInfo();
+            if (fileInfo.filePathOrTempTabName().equals(filePath)) {
+                return fileInfo;
+            }
+        }
+        return null;
     };
 }
 

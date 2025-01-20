@@ -28,7 +28,6 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(mainFxmlFile));
         Parent root = loader.load();
 
-        //TODO: not working, still seeing a little border white
         // Apply clipping to enforce rounded corners
         Rectangle rect = new Rectangle();
         rect.setArcHeight(30.0);
@@ -39,9 +38,6 @@ public class App extends Application {
         root.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
             rect.setWidth(newValue.getWidth());
             rect.setHeight(newValue.getHeight());
-
-        //System.out.println("Rectangle width: " + rect.getWidth());
-        //System.out.println("Rectangle height: " + rect.getHeight());
         });
         root.setClip(rect);
 
@@ -54,10 +50,7 @@ public class App extends Application {
         scene.setFill(Color.TRANSPARENT);
 
         stage.initStyle(StageStyle.TRANSPARENT);
-
         stage.setScene(scene);
-
-
         stage.setTitle("SolidEdit");
 
         // Add resize and drag functionality

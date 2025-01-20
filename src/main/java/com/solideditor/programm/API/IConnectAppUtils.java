@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
-
 //extracted here to keep code clean
 public class IConnectAppUtils {
 
@@ -30,9 +29,7 @@ public class IConnectAppUtils {
                     if (tabEntry != null) {
                         String filePath = tabEntry.fileInfo().filePathOrTempTabName();
                         if (filePath != null) {
-
                             boolean hasChanges = FileHelpers.fileTabHasChanges(newValue, tabEntry);
-
                             FileHelpers.updateTabIfFileSavedIndicator(selectedTab, hasChanges);
 
                             // Save unsaved content in TabManagerService for persistence
@@ -42,8 +39,8 @@ public class IConnectAppUtils {
                             wordCount.setText(String.valueOf(wordCountValue));
                             signCount.setText(String.valueOf(newValue.length()));
                         };
-                    }
-                }
+                    };
+                };
             });
         } else {
             System.err.println("CodeArea or TabPane is null! Cannot add listener.");
@@ -61,8 +58,8 @@ public class IConnectAppUtils {
                         String oldFilePath = tabEntry.fileInfo().filePathOrTempTabName();
                         if (oldFilePath != null) {
                             TabManagerService.saveUnsavedContent(oldFilePath, codeArea.getText());
-                        }
-                    }
+                        };
+                    };
                 };
                 /******************************************************************************************************/
                 //if new tab is not null
@@ -86,22 +83,21 @@ public class IConnectAppUtils {
                             if (contentToLoad == null) {
                                 contentToLoad = ""; //just to avoid null pointer exc upon calling equals below
                             };
-
                             // Update CodeArea only if content differs
                             if (!contentToLoad.equals(codeArea.getText())) {
                                 codeArea.clear();
                                 codeArea.replaceText(contentToLoad);
                             };
-                        }
-                    }
+                        };
+                    };
                 } else {
                     // Clear CodeArea if no tab is selected
                     codeArea.clear();
-                }
+                };
             });
         } else {
             System.err.println("TabPane is null! Cannot detect changes.");
-        }
+        };
     };
     /******************************************************************************************************************/
     //exit app
@@ -115,6 +111,6 @@ public class IConnectAppUtils {
                 });
             }, 400, TimeUnit.MILLISECONDS);
             scheduler.shutdown(); //shut down scheduler
-        }
+        };
     };
-}
+};

@@ -1,6 +1,7 @@
 package com.solideditor.programm.Backend.Utils;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
+import com.solideditor.programm.Backend.services.TabManagerService;
 import javafx.scene.control.Tab;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 //helper class for FileUtils class
 public class FileHelpers {
+
     // Preferences to save and load the last opened directory
     private static final Preferences prefs = Preferences.userNodeForPackage(FileHelpers.class);
     public static final String LAST_OPENED_DIR_KEY = "lastOpenedDir";
@@ -84,45 +86,56 @@ public class FileHelpers {
         return path.getFileName().toString();
     };
     /******************************************************************************************************************/
-    // helper method to create FileInfo from a File record
-    public static <T> FileInfo provideFileInfo(T input) {
+    // helper methods to provide FileInfo from existing file or return existing one from a File record
+    public static <T> FileInfo provideExistingFileInfoOrCreate(T input) {
         if (input == null) {
             throw new IllegalArgumentException("Input cannot be null");
-        }
+        };
         if (input instanceof String filePath) {
             if (filePath.isBlank()) {
                 throw new IllegalArgumentException("File path can't be blank");
-            }
-            return new FileInfo(filePath);
+            };
+            // Check if FileInfo already exists in openTabs
+            FileInfo existingFileInfo = TabManagerService.findFileInfoInOpenTabs(filePath);
+            return existingFileInfo != null ? existingFileInfo : new FileInfo(filePath);
+
         } else if (input instanceof File file) {
             if (!file.exists()) {
                 throw new IllegalArgumentException("File must exist");
-            } else {
-                return new FileInfo(file.getAbsolutePath());
-            }
-
+            };
+            String absolutePath = file.getAbsolutePath();
+            // Check if FileInfo already exists in openTabs
+            FileInfo existingFileInfo = TabManagerService.findFileInfoInOpenTabs(absolutePath);
+            return existingFileInfo != null ? existingFileInfo : new FileInfo(absolutePath);
         } else {
             throw new IllegalArgumentException("Unsupported input type: " + input.getClass().getName());
         }
     };
-    /******************************************************************************************************************/
-    // Overloaded version with content
-    public static <T> FileInfo provideFileInfo(T input, String content) {
+
+    public static <T> FileInfo provideExistingFileInfoOrCreate(T input, String content) {
         if (input == null) {
             throw new IllegalArgumentException("Input cannot be null");
         }
+
         if (input instanceof String filePath) {
             if (filePath.isBlank()) {
                 throw new IllegalArgumentException("File path can't be blank");
-            }
-            return new FileInfo(filePath, content);
+            };
+
+            // Check if FileInfo already exists in openTabs
+            FileInfo existingFileInfo = TabManagerService.findFileInfoInOpenTabs(filePath);
+            return existingFileInfo != null ? existingFileInfo : new FileInfo(filePath, content);
+
         } else if (input instanceof File file) {
             if (!file.exists()) {
                 throw new IllegalArgumentException("File must exist");
-            } else {
-                //System.out.println("File is opening: " + file.getAbsolutePath());
-                return new FileInfo(file.getAbsolutePath(), content);
-            }
+            };
+
+            String absolutePath = file.getAbsolutePath();
+            // Check if FileInfo already exists in openTabs
+            FileInfo existingFileInfo = TabManagerService.findFileInfoInOpenTabs(absolutePath);
+            return existingFileInfo != null ? existingFileInfo : new FileInfo(absolutePath, content);
+
         } else {
             throw new IllegalArgumentException("Unsupported input type: " + input.getClass().getName());
         }
@@ -202,7 +215,7 @@ public class FileHelpers {
             if (!positions.isEmpty()) {
                 rowPositions.put(row + 1, positions); // Store row (1-based) and column indexes
             }
-        }
+        };
         return rowPositions;
     };
 }

@@ -2,7 +2,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-
 <!-- ****************************************************************************************************************-->
 <BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@/com/solideditor/programm/static/css/mainlayout.css"
             xmlns="http://javafx.com/javafx/23.0.1"

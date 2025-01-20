@@ -10,14 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import lombok.Data;
 import org.fxmisc.richtext.CodeArea;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 // Interface Class to bridge functionalities from Backend Services and Frontend Controllers
@@ -81,42 +80,28 @@ public class IConnectApp {
         detectTabPaneChanges();
         listenForCodeAreaChangesForOpenFile();
     };
-
-    // Zoom-Funktion hinzufügen
-    public void applyZoom(double scale) {
-        if (codeArea != null) {
-            double fontSize = scale * 14; // Standard-Schriftgröße = 14px
-            codeArea.setStyle("-fx-font-size: " + fontSize + "px;");
-//            System.out.println("Zoom angewendet: Schriftgröße auf " + fontSize + " gesetzt.");
-        } else {
-            System.err.println("CodeArea ist null! Zoom kann nicht angewendet werden.");
-        }
-    }
     /******************************************************************************************************************/
-    //set default tab and add it to open tabs
+    //set default tab and add it to open tabs map
     public void initDefaultTab(Tab defaultTab) {
         if (defaultTab == null) throw new IllegalArgumentException("Default tab cannot be null");
-        String dfTabName = defaultTab.getText();
-
-        // Create a circle to act as the save state indicator
-        Circle indicator = new Circle(5); // Radius of 5
-        indicator.setFill(Color.TRANSPARENT); // Initially transparent
-
-        // Set the circle as the tab's graphic
-        defaultTab.setGraphic(indicator);
+        String defaultTabName = defaultTab.getText();
+        Tab defaultTabWithIndicator =
+                TabManagerService.createTabWithIfFileSavedIndicator(defaultTab);
 
         // Generate the key for the default tab
-        String defaultTabKey = TabManagerService.genFileKey(dfTabName, null);
+        String defaultTabKey = TabManagerService.genFileKey(defaultTabName, null);
 
         // Check if the tab is already in openTabs, if not add it
         if (!openTabs.containsKey(defaultTabKey)) {
             FileInfo unsavedFileInfo = new FileInfo(defaultTabKey,
-                    null, dfTabName, null);
-            openTabs.put(defaultTabKey, new TabEntry(defaultTab, unsavedFileInfo));
+                    null, defaultTabName, null);
+            openTabs.put(defaultTabKey, new TabEntry(defaultTabWithIndicator, unsavedFileInfo));
         } else System.out.println("Default tab already exists in openTabs.");
         // Add the default tab to the TabPane if it's not already there
-        if (!tabPane.getTabs().contains(defaultTab)) tabPane.getTabs().add(defaultTab);
-        defaultTab.setOnClosed(e -> FileIOService.closeFile(defaultTab));
+        if (!tabPane.getTabs().contains(defaultTabWithIndicator)) tabPane
+                .getTabs().add(defaultTabWithIndicator);
+        Objects.requireNonNull(defaultTabWithIndicator)
+                .setOnClosed(e -> FileIOService.closeFile(defaultTabWithIndicator));
     };
     /******************************************************************************************************************/
     public void setUpSearchTxtField(TextField txtField) {
@@ -164,4 +149,4 @@ public class IConnectApp {
             IConnectAppUtils.addCodeAreaChangeListener(codeArea, tabPane, wordCountLabel, signCountLabel);
         };
     };
-}
+};

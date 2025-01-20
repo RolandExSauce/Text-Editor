@@ -13,43 +13,34 @@ public class FileIOService {
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); //get singleton instance
     /******************************************************************************************************************/
-    //save new file under "xy dir" or replace file
+    //save new file under "xy dir" or replace file existing file with new content
     public static void saveUnsavedNewFile() {
         // Get the currently selected tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
             System.out.println("No tab selected to save.");
             return;
-        }
+        };
 
         // Get the current text area text to save on file creation
-        String contentToSaveOnNewFile = iConnectApp.getCodeArea().getText();
+        String contentToSave  = iConnectApp.getCodeArea().getText();
 
         // Open a "Save As" dialog to get the file path
-        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(iConnectApp.getPrimaryStage(), contentToSaveOnNewFile);
+        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(iConnectApp.getPrimaryStage(), contentToSave );
 
-        if (fileInfo != null) {
-            // Save file with the new info created
-            FileUtils.saveChangesToFile(new FileInfo(fileInfo.filePathOrTempTabName(), fileInfo.fileContent()));
-
-            // Update TabManagerService with the new file information
-            TabManagerService.updateFileInfo(fileInfo.filePathOrTempTabName(), fileInfo.fileContent());
-
-            // Update the tab title and file mapping
-            String oldKey = iConnectApp.getPrefKeyForUnsavedFile() + selectedTab.getText();
-            String newKey = TabManagerService.genFileKey(fileInfo.fileName(), fileInfo.filePathOrTempTabName());
-
-            selectedTab.setText(fileInfo.fileName()); // Update tab title
-            iConnectApp.getOpenTabs().remove(oldKey); // Remove old key
-            iConnectApp.getOpenTabs().put(newKey, new TabEntry(selectedTab, fileInfo)); // Add new key
-
-            // Mark the tab as saved
-            FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false);
-
-            System.out.println("File saved and tab updated successfully.");
-        } else {
+        if (fileInfo == null) {
             System.out.println("Save operation canceled.");
-        }
+            return;
+        };
+
+        String newKey = TabManagerService.genFileKey(fileInfo.fileName(), fileInfo.filePathOrTempTabName());
+        String oldKey = iConnectApp.getPrefKeyForUnsavedFile() + selectedTab.getText();
+
+        // update the openTabs map
+        iConnectApp.getOpenTabs().put(newKey, new TabEntry(selectedTab, fileInfo));
+        iConnectApp.getOpenTabs().remove(oldKey); // remove old key
+        selectedTab.setText(fileInfo.fileName()); // update tab title
+        FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false); // Mark as saved
     };
     /******************************************************************************************************************/
     //save file

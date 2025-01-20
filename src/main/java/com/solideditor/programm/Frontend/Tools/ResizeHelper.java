@@ -12,10 +12,6 @@ import javafx.stage.Stage;
 
 //src: https://stackoverflow.com/questions/19455059/allow-user-to-resize-an-undecorated-stage
 public class ResizeHelper {
-    public static void addResizeListener(Stage stage) {
-        addResizeListener(stage, 0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
-    };
-
     public static void addResizeListener(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {
         ResizeListener resizeListener = new ResizeListener(stage);
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, resizeListener);
@@ -32,7 +28,7 @@ public class ResizeHelper {
         ObservableList<Node> children = stage.getScene().getRoot().getChildrenUnmodifiable();
         for (Node child : children) {
             addListenerDeeply(child, resizeListener);
-        }
+        };
     };
 
     private static void addListenerDeeply(Node node, EventHandler<MouseEvent> listener) {
@@ -45,9 +41,9 @@ public class ResizeHelper {
             ObservableList<Node> children = parent.getChildrenUnmodifiable();
             for (Node child : children) {
                 addListenerDeeply(child, listener);
-            }
-        }
-    }
+            };
+        };
+    };
 
     static class ResizeListener implements EventHandler<MouseEvent> {
         private final Stage stage;
@@ -111,7 +107,7 @@ public class ResizeHelper {
                     cursorEvent = Cursor.S_RESIZE;
                 } else {
                     cursorEvent = Cursor.DEFAULT;
-                }
+                };
                 scene.setCursor(cursorEvent);
             } else if (MouseEvent.MOUSE_EXITED.equals(mouseEventType) || MouseEvent.MOUSE_EXITED_TARGET.equals(mouseEventType)) {
                 scene.setCursor(Cursor.DEFAULT);
@@ -127,13 +123,13 @@ public class ResizeHelper {
                             if (stage.getHeight() > minHeight || mouseEventY < 0) {
                                 setStageHeight(stage.getY() - mouseEvent.getScreenY() + stage.getHeight());
                                 stage.setY(mouseEvent.getScreenY());
-                            }
+                            };
                         } else {
                             if (stage.getHeight() > minHeight || mouseEventY + startY - stage.getHeight() > 0) {
                                 setStageHeight(mouseEventY + startY);
-                            }
-                        }
-                    }
+                            };
+                        };
+                    };
 
                     if (!Cursor.N_RESIZE.equals(cursorEvent) && !Cursor.S_RESIZE.equals(cursorEvent)) {
                         double minWidth = stage.getMinWidth() > (border * 2) ? stage.getMinWidth() : (border * 2);
@@ -142,29 +138,28 @@ public class ResizeHelper {
                             if (stage.getWidth() > minWidth || mouseEventX < 0) {
                                 setStageWidth(stage.getX() - mouseEvent.getScreenX() + stage.getWidth());
                                 stage.setX(mouseEvent.getScreenX());
-                            }
+                            };
                         } else {
                             if (stage.getWidth() > minWidth || mouseEventX + startX - stage.getWidth() > 0) {
                                 setStageWidth(mouseEventX + startX);
-                            }
-                        }
-                    }
-                }
+                            };
+                        };
+                    };
+                };
 
-            }
-        }
+            };
+        };
 
         private void setStageWidth(double width) {
             width = Math.min(width, maxWidth);
             width = Math.max(width, minWidth);
             stage.setWidth(width);
-        }
+        };
 
         private void setStageHeight(double height) {
             height = Math.min(height, maxHeight);
             height = Math.max(height, minHeight);
             stage.setHeight(height);
-        }
-
-    }
+        };
+    };
 }

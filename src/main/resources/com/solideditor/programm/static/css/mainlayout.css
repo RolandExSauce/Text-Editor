@@ -4,7 +4,7 @@
     -fx-background-radius: 30px; /* Rounded corners */
     -fx-border-radius: 30px;
     -fx-border-width: 0;
-    -fx-border-color: red;
+    -fx-border-color: #1C2128;
     -fx-padding: 0; /* Remove any padding that could mimic a border */
     -fx-effect: null; /* Disable any shadow effects */
 }

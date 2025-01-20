@@ -23,10 +23,14 @@ public class FileUtils {
                 // check if the file already exists
                 if (file.exists()) {
                     // TODO: Customize the dialog to draw the user's attention even more effectively ?
-                    return FileHelpers.provideFileInfo(file, content); //override with new content
+                    return FileHelpers.provideExistingFileInfoOrCreate(file, content); //override with new content
                 }
                 else {
-                    if (file.createNewFile()) return FileHelpers.provideFileInfo(file, content);
+                    if (file.createNewFile()) {
+                        FileInfo createdFileInfo = FileHelpers.provideExistingFileInfoOrCreate(file, content);
+                        saveChangesToFile(createdFileInfo);
+                        return createdFileInfo;
+                    }
                     else return null; // file creation failed
                 }
             } catch (IOException e) {
@@ -42,8 +46,7 @@ public class FileUtils {
         File file = fileChooser.showOpenDialog(mainStage);
         if (file != null) {
             FileHelpers.saveLastOpenedDir(file.getParentFile().getAbsolutePath());
-            //String content = FileHelpers.readFileContent(file.getPath());
-            return FileHelpers.provideFileInfo(file);
+            return FileHelpers.provideExistingFileInfoOrCreate(file);
         } else return null; //on cancel
     };
     /******************************************************************************************************************/

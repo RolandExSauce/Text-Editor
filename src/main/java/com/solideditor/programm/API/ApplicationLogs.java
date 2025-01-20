@@ -30,7 +30,7 @@ public class ApplicationLogs {
         //init loggers
         rootLogger = LoggerFactory.getLogger("GlobalLogger");
         errorLogger = LoggerFactory.getLogger("ERROR_LOGGER");
-    }
+    };
 
     private ApplicationLogs() {
         // prevent instantiation
@@ -53,6 +53,6 @@ public class ApplicationLogs {
             return userHome + APPDATA_DIR_UNIX_OR_OTHERS;
         }
     };
-}
+};
 
 
