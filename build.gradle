@@ -43,15 +43,20 @@ javafx {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:24.0.1' //jet brain annotations, maybe use lombok annotations ?
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.1.0-alpha1'
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.12'
+    implementation 'ch.qos.logback:logback-classic:1.4.12'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
+    implementation 'org.jetbrains:annotations:24.0.1'
+
     // JavaFX dependencies
     implementation "org.openjfx:javafx-controls:23.0.1"
     implementation "org.openjfx:javafx-fxml:23.0.1"
     implementation 'org.fxmisc.richtext:richtextfx:0.10.9'
 
     // Lombok dependencies
-    //compileOnly 'org.projectlombok:lombok:1.18.36'
-    //annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
     // Additional libraries
     implementation 'org.controlsfx:controlsfx:11.1.2'
@@ -62,8 +67,8 @@ dependencies {
     implementation 'eu.hansolo:tilesfx:11.48'
     implementation 'com.github.almasb:fxgl:17.3'
 
-    //testCompileOnly 'org.projectlombok:lombok:1.18.36'
-    //testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 
     // JUnit dependencies
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"

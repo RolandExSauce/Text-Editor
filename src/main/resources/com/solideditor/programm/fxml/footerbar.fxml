@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<!-- ****************************************************************************************************************-->
+<HBox prefHeight="14.0" styleClass="footer-bar" stylesheets="@/com/solideditor/programm/static/css/footerbar.css"
+      xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.solideditor.programm.Frontend.controllers.FooterBarController">
+    <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="18.0">
+        <HBox.margin>
+            <Insets left="10.0"/>
+        </HBox.margin>
+        <HBox minWidth="-Infinity" prefHeight="100.0" prefWidth="200.0">
+            <Label text="Signs: " textFill="WHITE"/>
+            <Label fx:id="signCountLabel" text="0" textFill="WHITE"/>
+        </HBox>
+
+        <HBox minWidth="-Infinity" prefHeight="100.0" prefWidth="200.0">
+            <Label text="Words: " textFill="WHITE"/>
+            <Label fx:id="wordCountLabel" text="0" textFill="WHITE"/>
+        </HBox>
+    </HBox>
+    <HBox alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="1470.0">
+        <Label text="-"/>
+        <Slider fx:id="zoomSlider" max="2.0" min="0.5" value="1.0"/>
+        <Label text="+"/>
+        <HBox.margin>
+            <Insets right="20.0"/>
+        </HBox.margin>
+    </HBox>
+</HBox>

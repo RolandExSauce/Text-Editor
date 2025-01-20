@@ -1,0 +1,29 @@
+.menu-bar {
+    -fx-spacing: 20px; /* Space between buttons */
+    -fx-background-color: #1C2128;
+     -fx-margin: 80px 0px 0px 0px;
+     -fx-pref-width: 100%;
+     -fx-background-color: transparent;
+}
+
+.combo-box {
+    -fx-pref-width: 500px; /* Increase width */
+}
+
+/* Specific ComboBox by fx:id */
+#fontsComboBox {
+    -fx-pref-width: 150px; /* Apply desired width */
+    -fx-background-radius: 10;
+}
+
+/* Icons */
+.image-view {
+    -fx-fit-width: 24px; /* Adjust size for all icons */
+    -fx-fit-height: 24px;
+}
+
+/* HBox spacing */
+.hbox {
+    -fx-spacing: 20px; /* Adds space between items */
+     -fx-pref-width: 100%; /* Ensure full width */
+}

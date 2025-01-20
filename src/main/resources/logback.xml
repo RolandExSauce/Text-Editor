@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 
 
 <configuration>
     <!-- Use the platform-specific log directory -->
     <property name="LOG_DIR" value="${LOG_DIR}" />
 
+=======
+<configuration>
+    <!-- Use the platform-specific log directory -->
+    <property name="LOG_DIR" value="${LOG_DIR}"/>
+^
+>>>>>>> dev
     <!-- File appender: General logs -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_DIR}/application.log</file>
@@ -24,11 +31,21 @@
 
     <!-- Root logger configuration -->
     <root level="INFO">
+<<<<<<< HEAD
         <appender-ref ref="FILE" />
+=======
+        <appender-ref ref="FILE"/>
+>>>>>>> dev
     </root>
 
     <!-- Logger configuration for errors -->
     <logger name="ERROR_LOGGER" level="ERROR" additivity="false">
+<<<<<<< HEAD
         <appender-ref ref="ERROR_FILE" />
     </logger>
 </configuration>
+=======
+        <appender-ref ref="ERROR_FILE"/>
+    </logger>
+</configuration>
+>>>>>>> dev

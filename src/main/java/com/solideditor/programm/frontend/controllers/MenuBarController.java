@@ -1,48 +1,89 @@
-package com.solideditor.programm.frontend.controllers;
-
+package com.solideditor.programm.Frontend.controllers;
+import com.solideditor.programm.API.IConnectApp;
+import com.solideditor.programm.Backend.DTO.TabEntry;
+import com.solideditor.programm.Backend.Utils.LayoutSettings;
+import com.solideditor.programm.Backend.services.FileIOService;
+import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.stage.Stage;
+import javafx.scene.control.*;
+import lombok.Getter;
+import org.fxmisc.richtext.CodeArea;
+import java.util.List;
+import java.util.Map;
 
+
+//Controller for interacting with buttons in menu bar
 public class MenuBarController {
+    private static final IConnectApp iConnectApp
+            = IConnectApp.getIconnectAppInstance(); // get singleton instance
+    @FXML
+    private ComboBox<String> fontsComboBox;
+    public Button btnPrint;
+    public Button btnSave;
+    public Button btnNewFile;
+    public Button btnOpenFile;
 
     @FXML
-    public void onPrintClicked() {
-        // Load dialog 1 (max-tab-limit-dialog)
-        showDialog("static/fxml/max-tab-limit-dialog.fxml", "Max Tab Limit Dialog");
-    }
-
-    private void showDialog(String fxmlPath, String title) {
-        try {
-            Stage dialog = new Stage();
-            dialog.setTitle(title);
-            // Load FXML and show the dialog (simplified for brevity)
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    @Getter
+    private TextField searchTxtField; //currently only exposed to Main controller
 
     @FXML
-    public void onCloseDialog() {
-        // Close the current dialog
-        ((Stage) ((Button) event.getSource()).getScene().getWindow()).close();
-    }
-
+    @Getter
+    private Label lableFoundAt;
+    private TabPane tabPane;
+    private Map<String, TabEntry> openTabs;
+    private CodeArea codeArea;
+    /******************************************************************************************************************/
     @FXML
-    public void onSave() {
-        // Save logic
-        System.out.println("Changes saved");
-    }
-
+    public void initialize() {
+        initMainUtilities();
+        ControllerUtils.addComboBoxSelectionListener(fontsComboBox, () -> {
+            String selectedFont = fontsComboBox.getValue();
+            if (selectedFont != null) {
+                LayoutSettings.changeFont(codeArea, selectedFont);
+            };
+        });
+    };
+    /******************************************************************************************************************/
+    // init stuff coming from IConnectApp and combo box
+    private void initMainUtilities() {
+        this.tabPane = iConnectApp.getTabPane();
+        this.openTabs = iConnectApp.getOpenTabs();
+        List<String> fonts = iConnectApp.getFonts();
+        this.codeArea = iConnectApp.getCodeArea();
+        ControllerUtils.initializeComboBox(fontsComboBox, fonts);
+    };
+    /******************************************************************************************************************/
+    //open an existing file
     @FXML
-    public void onDiscard() {
-        // Discard changes logic
-        System.out.println("Changes discarded");
-    }
-
+    private void onOpenFileClicked() {
+        if (iConnectApp != null) {
+            if (tabPane != null && openTabs != null) {
+                FileIOService.openFile();
+            };
+        };
+    };
+    /******************************************************************************************************************/
+    //create new file, if user selects existing file, open that one and overriding its content
     @FXML
-    public void onCancelDialog() {
-        // Close the dialog
-        onCloseDialog();
-    }
-}
+    private void onCreateFileClicked() {
+        if (iConnectApp != null) {
+            if (tabPane != null && openTabs != null) {
+                FileIOService.createNewFile();
+            };
+        };
+    };
+    /******************************************************************************************************************/
+    //save a file with an existing path
+    @FXML
+    private void onSaveFileClicked() {
+        if (iConnectApp != null) {
+            if (tabPane != null && openTabs != null) {
+                FileIOService.saveFileOrSaveNewFileUnderDir();
+            };
+        };
+    };
+    /******************************************************************************************************************/
+    @FXML
+    private void onPrintClicked() {};
+};
