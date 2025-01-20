@@ -13,7 +13,7 @@
       style="-fx-background-color: Transparent;" styleClass="menu-bar"
       stylesheets="@/com/solideditor/programm/static/css/menubar.css" xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.solideditor.programm.Frontend.controllers.MenuBarController">
+      fx:controller="com.solideditor.programm.Frontend.Controllers.MenuBarController">
     <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="8000.0"
           style="-fx-background-color: #F2F2EE; -fx-background-radius: 5;">
         <HBox.margin>

@@ -2,7 +2,7 @@ package com.solideditor.programm;
 import com.solideditor.programm.API.ApplicationLogs;
 import com.solideditor.programm.Frontend.Tools.EffectUtilities;
 import com.solideditor.programm.Frontend.Tools.ResizeHelper;
-import com.solideditor.programm.Frontend.controllers.MainController;
+import com.solideditor.programm.Frontend.Controllers.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

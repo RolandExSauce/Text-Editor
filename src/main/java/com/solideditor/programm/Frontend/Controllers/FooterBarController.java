@@ -1,4 +1,4 @@
-package com.solideditor.programm.Frontend.controllers;
+package com.solideditor.programm.Frontend.Controllers;
 import com.solideditor.programm.API.IConnectApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
