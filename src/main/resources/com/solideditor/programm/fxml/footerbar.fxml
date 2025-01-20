@@ -6,7 +6,7 @@
 <!-- ****************************************************************************************************************-->
 <HBox prefHeight="14.0" styleClass="footer-bar" stylesheets="@/com/solideditor/programm/static/css/footerbar.css"
       xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.solideditor.programm.Frontend.controllers.FooterBarController">
+      fx:controller="com.solideditor.programm.Frontend.Controllers.FooterBarController">
     <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="18.0">
         <HBox.margin>
             <Insets left="10.0"/>

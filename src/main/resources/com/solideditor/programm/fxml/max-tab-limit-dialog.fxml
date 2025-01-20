@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <!-- ****************************************************************************************************************-->
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.solideditor.programm.Frontend.controllers.MainController"
+           fx:controller="com.solideditor.programm.Frontend.Controllers.MainController"
            stylesheets="@/com/solideditor/programm/static/css/mainlayout.css">
     <VBox alignment="CENTER">
         <Label text="Max Tab Limit Reached!" id="dialog-title" />
