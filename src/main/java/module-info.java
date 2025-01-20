@@ -18,12 +18,6 @@ module com.solideditor.programm {
     requires com.fasterxml.jackson.databind;
     requires org.slf4j;
     opens com.solideditor.programm.Frontend.Controllers to javafx.fxml; // Allow access for FXML
-    exports com.solideditor.programm.Frontend.Controllers;
     opens com.solideditor.programm to javafx.fxml;
     exports com.solideditor.programm;
-    exports com.solideditor.programm.Backend.DTO;
-    exports com.solideditor.programm.Frontend.Tools;
-    opens com.solideditor.programm.Frontend.Tools to javafx.fxml;
-    exports com.solideditor.programm.API;
-    opens com.solideditor.programm.API to javafx.fxml;
 }
