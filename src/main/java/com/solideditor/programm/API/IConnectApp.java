@@ -81,6 +81,17 @@ public class IConnectApp {
         detectTabPaneChanges();
         listenForCodeAreaChangesForOpenFile();
     };
+
+    // Zoom-Funktion hinzufügen
+    public void applyZoom(double scale) {
+        if (codeArea != null) {
+            double fontSize = scale * 14; // Standard-Schriftgröße = 14px
+            codeArea.setStyle("-fx-font-size: " + fontSize + "px;");
+//            System.out.println("Zoom angewendet: Schriftgröße auf " + fontSize + " gesetzt.");
+        } else {
+            System.err.println("CodeArea ist null! Zoom kann nicht angewendet werden.");
+        }
+    }
     /******************************************************************************************************************/
     //set default tab and add it to open tabs
     public void initDefaultTab(Tab defaultTab) {

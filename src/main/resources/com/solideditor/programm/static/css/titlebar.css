@@ -25,8 +25,8 @@
     -fx-min-width: 180px;  /* Minimum width */
     -fx-font-size: 15px;
     -fx-background-color: transparent; /* Transparent background for unselected tabs */
-    -fx-border-color: #5a5a5a; /* Slight border to distinguish unselected tabs */
-    -fx-border-width: 0 0 1px 0; /* Border only at the bottom */
+    -fx-border-color: transparent #5a5a5a transparent transparent; /* Transparent oben, links und unten, farbe rechts */
+    -fx-border-width: 0 1px 0 0; /* Kein Rand oben, unten und links, balken rechts */
 }
 
 .tab:selected {
@@ -42,6 +42,11 @@
     -fx-text-fill: black; /* Text color for the selected tab */
 }
 
+/* Balken zwischen den Tabs */
+/*.tab-pane *.tab-header-area .tab {*/
+/*    -fx-border-color: transparent #5a5a5a transparent #5a5a5a; !* Balken unter jedem Tab *!*/
+/*    -fx-border-width: 0 1px 0 1px; !* Dünner Balken unten *!*/
+/*}*/
 
 /* Button styles */
 .title-bar-button {
@@ -62,7 +67,7 @@
 .title-bar-button-close {
     -fx-background-color: white; /* Background color for the button */
     -fx-text-fill: #1D2128; /* Color for the "✖" symbol */
-    -fx-padding: 0; /* No inner padding */
+    -fx-padding: 0 0 0 0; /* No inner padding */
     -fx-border-radius: 50%; /* Ensures circular border shape */
     -fx-background-radius: 50%; /* Ensures circular background shape */
     -fx-border-color: white; /* White border around the button */
@@ -74,7 +79,7 @@
     -fx-min-height: 20px; /* Smaller height for the button */
     -fx-pref-width: 20px; /* Preferred smaller width */
     -fx-pref-height: 20px; /* Preferred smaller height */
-    -fx-translate-y: 3px; /*push button down slightly*/
+    -fx-translate-y: 0px; /*push button down slightly*/
     -fx-font-size: 12px; /* Font size for "✖" */
 }
 

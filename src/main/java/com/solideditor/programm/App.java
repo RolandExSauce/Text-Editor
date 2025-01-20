@@ -33,6 +33,7 @@ public class App extends Application {
         Rectangle rect = new Rectangle();
         rect.setArcHeight(30.0);
         rect.setArcWidth(30.0);
+        root.setClip(rect);
 
         // Bind the rectangle's dimensions to the layout bounds of the root
         root.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
@@ -53,8 +54,10 @@ public class App extends Application {
         scene.setFill(Color.TRANSPARENT);
 
         stage.initStyle(StageStyle.TRANSPARENT);
-        stage.initStyle(StageStyle.UNDECORATED);
+
         stage.setScene(scene);
+
+
         stage.setTitle("SolidEdit");
 
         // Add resize and drag functionality

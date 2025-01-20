@@ -3,6 +3,7 @@
     -fx-padding: 5px 10px; /* Padding inside the entire footer bar */
     -fx-spacing: 10px; /* Spacing between children in the footer bar */
     -fx-alignment: center; /* Aligns content centrally */
+    -fx-min-width: 100%;
 }
 
 .footer-bar Label {
