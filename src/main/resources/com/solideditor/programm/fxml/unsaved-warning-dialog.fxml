@@ -1,18 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<!-- ****************************************************************************************************************-->
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="401.0" prefWidth="602.0"
+            stylesheets="@/com/solideditor/programm/static/css/dialog/unsaved-warning-dialog.css"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.solideditor.programm.Frontend.Controllers.DialogController">
-    <VBox alignment="CENTER"/>
-    <Label id="dialog-title" layoutX="218.0" layoutY="174.0" text="You have unsaved changes!"/>
-    <HBox layoutX="212.0" layoutY="210.0" spacing="10">
-        <Button onAction="#onSave" text="Save"/>
-        <Button onAction="#onDiscard" prefHeight="27.0" prefWidth="64.0" text="Discard"/>
-        <Button onAction="#onCancelDialog" text="Cancel"/>
-    </HBox>
+    <VBox alignment="CENTER" layoutX="157.0" layoutY="149.0" prefHeight="117.0" prefWidth="287.0" spacing="5">
+        <HBox alignment="CENTER" prefHeight="93.0" prefWidth="335.0">
+            <ImageView fitHeight="20.0" fitWidth="20.0">
+                <Image url="@../static/icons/warning.png"/>
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+            </ImageView>
+            <Label id="dialog-title" prefHeight="47.0" prefWidth="234.0" text="You have unsaved changes">
+                <font>
+                    <Font name="Helvetica" size="27.0"/>
+                </font>
+            </Label>
+            <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="27.0" layoutY="39.0">
+                <image>
+                    <Image url="@../static/icons/warning.png"/>
+                </image>
+            </ImageView>
+        </HBox>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#onSave" text="Save">
+                <HBox.margin>
+                    <Insets right="10.0"/>
+                </HBox.margin>
+            </Button>
+            <Button onAction="#onDiscard" text="Discard">
+                <HBox.margin>
+                    <Insets right="10.0"/>
+                </HBox.margin>
+            </Button>
+            <Button onAction="#onCancelDialog" text="Cancel"/>
+        </HBox>
+    </VBox>
+    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="201.0" layoutY="102.0" pickOnBounds="true"
+               preserveRatio="true">
+        <image>
+            <Image url="@../static/icons/Solid_blue.png"/>
+        </image>
+    </ImageView>
 </AnchorPane>

@@ -18,13 +18,15 @@ import java.io.IOException;
 //Entry class
 public class App extends Application {
     private static final String className = App.class.getSimpleName();
+    private static final String mainXML = "/com/solideditor/programm/fxml/mainlayout.fxml";
+
     @Override
     public void start(Stage stage) {
+
         try {
             // Log an INFO message
             LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2000);
-            String mainFxmlFile = "/com/solideditor/programm/fxml/mainlayout.fxml";
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(mainFxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(mainXML));
             Parent root = loader.load();
 
             // Apply clipping to enforce rounded corners

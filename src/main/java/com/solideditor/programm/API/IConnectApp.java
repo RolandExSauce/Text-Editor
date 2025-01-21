@@ -103,8 +103,9 @@ public class IConnectApp {
             openTabs.put(defaultTabKey, new TabEntry(defaultTabWithIndicator, unsavedFileInfo));
         };
         // Add the default tab to the TabPane if it's not already there
-        if (!tabPane.getTabs().contains(defaultTabWithIndicator)) tabPane
-                .getTabs().add(defaultTabWithIndicator);
+        if (!tabPane.getTabs().contains(defaultTabWithIndicator)) {
+            tabPane.getTabs().add(defaultTabWithIndicator);
+        }
         Objects.requireNonNull(defaultTabWithIndicator)
                 .setOnClosed(e -> FileIOService.closeFile(defaultTabWithIndicator));
     };

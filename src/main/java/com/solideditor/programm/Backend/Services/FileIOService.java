@@ -6,7 +6,6 @@ import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.FileUtils;
 import com.solideditor.programm.Frontend.Controllers.DialogController;
-import com.solideditor.programm.Frontend.Controllers.MenuBarController;
 import com.solideditor.programm.Logging.ErrorOrSuccessCode;
 import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.scene.control.Tab;
@@ -52,6 +51,7 @@ public class FileIOService {
     /******************************************************************************************************************/
     //save file
     public static void saveFile() {
+
         //get the current tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
@@ -104,11 +104,11 @@ public class FileIOService {
     /******************************************************************************************************************/
     // open file
     public static void openFile() {
+
         //first check tab limit
         if (iConnectApp.isTabLimitReached()) {
-            //TODO: waiting to implement open dialog warning
-            System.out.println("OpenFile: Maximum tabs reached.");
-            return; // prevent opening a new tab
+             DialogController.openDialog(DialogController.DialogKIND.MAX_TAB_LIMIT);
+            return;
         };
 
         FileInfo fileInfo = FileUtils.openFileAndGetContent(iConnectApp.getPrimaryStage());
@@ -152,11 +152,14 @@ public class FileIOService {
     /******************************************************************************************************************/
     //create a new file
     public static void createNewFile() {
+
+        System.out.println("size tabpane start: "+iConnectApp.getTabPane().getTabs().size());
+        System.out.println("size opentabs start: "+ iConnectApp.getOpenTabs().size());
+
         //putting this here on the higher level works instead of doing it inside createUnsavedTabAndAddToOpenTabs
         if (iConnectApp.isTabLimitReached()) {
-            //TODO: waiting to implement open dialog warning
-            System.out.println("createNewFile: Maximum tabs reached.");
-            return;
+                DialogController.openDialog(DialogController.DialogKIND.MAX_TAB_LIMIT);
+                return;
         };
         // Create a new unsaved tab with default name
         Tab addedUnsavedTab = TabManagerService.createUnsavedTabAndAddToOpenTabs();
@@ -178,64 +181,180 @@ public class FileIOService {
     };
     /******************************************************************************************************************/
     // Close a file and its tab
+//    public static void closeFile(Tab tab) {
+//        if (tab == null || iConnectApp.getTabPane() == null || iConnectApp.getOpenTabs() == null) {
+//            System.out.println("Error: Invalid state. Cannot close file.");
+//            return;
+//        };
+//
+//        // Get the associated TabEntry
+//        TabEntry tabEntry = TabManagerService.getTabEntryByTab(tab);
+//        if (tabEntry == null) {
+//            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1006);
+//            return;
+//        };
+//
+//        String filePathOrDefaultTabName = tabEntry.fileInfo().filePathOrTempTabName();
+//        // Handle unsaved tabs, check if file tab name still has "unsaved::"
+//        if (filePathOrDefaultTabName != null && filePathOrDefaultTabName.contains(iConnectApp.getPrefKeyForUnsavedFile())) {
+//            // Remove from TabManagerService and mappings
+//            boolean removedFromManager = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
+//            if (removedFromManager) {
+//                iConnectApp.getTabPane().getTabs().remove(tab);
+//                iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
+//            } else {
+//                LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
+//            };
+//
+//        } else if (filePathOrDefaultTabName != null) {   // Handle saved tabs with a valid file path
+//
+//            // Attempt to close the file resource
+//            boolean resourceClosed = FileUtils.closeFileRessource(filePathOrDefaultTabName);
+//            if (!resourceClosed) {
+//                DialogController.openDialog(DialogController.DialogKIND.FILE_NOT_EXIST);
+//            };
+//
+//            // Remove from TabManagerService and mappings
+//            if (!TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName)) {
+//                LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
+//            };
+//
+//        } else {
+//            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1007);
+//            iConnectApp.getTabPane().getTabs().remove(tab);
+//        }
+//
+//        // check if file is saved
+//        boolean checkIfSaved = TabManagerService.areChangesSaved(tab);
+//
+//        //it's the last tab so also close the app
+//        if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
+//            if(checkIfSaved) IConnectAppUtils.graceFullShutDown();
+//            //open dialog to give user options
+//            else  {
+//                DialogController.openDialog(DialogController.DialogKIND.UNSAVED_CHANGES);
+//            };
+//
+//            TabManagerService.resetUntitledTabCounter();
+//        }
+//
+//        //it's not the last tab
+//        else {
+//
+//            if(!checkIfSaved){
+//                DialogController.openDialog(DialogController.DialogKIND.UNSAVED_CHANGES);
+//            };
+//
+//        }
+//    };
     public static void closeFile(Tab tab) {
+
+        System.out.println("size tabpane start: "+iConnectApp.getTabPane().getTabs().size());
+        System.out.println("size opentabs start: "+ iConnectApp.getOpenTabs().size());
+
+
         if (tab == null || iConnectApp.getTabPane() == null || iConnectApp.getOpenTabs() == null) {
             System.out.println("Error: Invalid state. Cannot close file.");
             return;
-        };
+        }
 
         // Get the associated TabEntry
         TabEntry tabEntry = TabManagerService.getTabEntryByTab(tab);
         if (tabEntry == null) {
             LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1006);
             return;
-        };
+        }
 
+        // Check if there are unsaved changes
+        boolean hasUnsavedChanges = !TabManagerService.areChangesSaved(tab);
+
+        // If there are unsaved changes, show the dialog
+        if (hasUnsavedChanges) {
+            System.out.println("has changes in FIO");
+            DialogController.openDialog(DialogController.DialogKIND.UNSAVED_CHANGES)
+                    .thenAccept(result -> {
+                        switch (result) {
+                            case SAVE -> {
+
+                                System.out.println("save the dialog please");
+                                // Save the file, then close the tab
+//                                saveFile();
+//                                closeTab(tab, tabEntry);
+                            }
+                            case DISCARD -> {
+                                // Discard changes and close the tab
+//                                closeTab(tab, tabEntry);
+                            }
+                            case CANCEL -> {
+                                // Do nothing, user cancelled the close action
+                            }
+                            default -> {
+                                LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1007);
+                            }
+                        }
+
+                        // If it's the last tab, handle application shutdown
+                        if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
+                            IConnectAppUtils.graceFullShutDown();
+                            TabManagerService.resetUntitledTabCounter();
+                        }
+                    });
+        } else {
+
+            System.out.println("size tabpane: "+iConnectApp.getTabPane().getTabs().size());
+            System.out.println("size opentabs: "+ iConnectApp.getOpenTabs().size());
+
+
+
+            // If it's the last tab, handle application shutdown
+            if (iConnectApp.getTabPane().getTabs().size() == 1 && iConnectApp.getOpenTabs().size() == 1) {
+
+                System.out.println("hereeeee");
+
+//                System.out.println("size: "+iConnectApp.getOpenTabs().size());
+
+                System.out.println("has no changes in FIO and is last tab");
+                IConnectAppUtils.graceFullShutDown();
+                TabManagerService.resetUntitledTabCounter();
+            }
+//            else {
+//                //System.out.println("has no changes in FIO and is not last tab");
+//                closeTab(tab, tabEntry);
+//            }
+        }
+    };
+
+    /**
+     * Closes the tab and performs necessary cleanup.
+     */
+    private static void closeTab(Tab tab, TabEntry tabEntry) {
         String filePathOrDefaultTabName = tabEntry.fileInfo().filePathOrTempTabName();
-        // Handle unsaved tabs, check if file tab name still has "unsaved::"
+
         if (filePathOrDefaultTabName != null && filePathOrDefaultTabName.contains(iConnectApp.getPrefKeyForUnsavedFile())) {
-            // Remove from TabManagerService and mappings
-            boolean removedFromManager = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
-            if (removedFromManager) {
+            // Remove unsaved file mapping
+            boolean removed = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
+            if (removed) {
                 iConnectApp.getTabPane().getTabs().remove(tab);
                 iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
             } else {
                 LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
-            };
-
-        } else if (filePathOrDefaultTabName != null) {   // Handle saved tabs with a valid file path
-            // Attempt to close the file resource
+            }
+        } else if (filePathOrDefaultTabName != null) {
+            // Close the file resource
             boolean resourceClosed = FileUtils.closeFileRessource(filePathOrDefaultTabName);
             if (!resourceClosed) {
-                //TODO: fxml dialog FIle could not be found, must be deleted in filesystem
-                System.out.println("Could not close file for" + filePathOrDefaultTabName);
-            };
+                DialogController.openDialog(DialogController.DialogKIND.FILE_NOT_EXIST);
+            }
 
             // Remove from TabManagerService and mappings
-            if (!TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName)) {
+            boolean removed = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
+            if (!removed) {
                 LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
-            };
-
-        } else {
-            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1007);
-            iConnectApp.getTabPane().getTabs().remove(tab);
+            }
         }
 
-        // If all tabs are closed, reset the counter
-        if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
-            TabManagerService.resetUntitledTabCounter();
+        // Remove the tab from the TabPane
+        iConnectApp.getTabPane().getTabs().remove(tab);
+    }
 
-
-            //TODO: dialog changes are not saved
-            boolean checkIfSaved = TabManagerService.areChangesSaved(tab);
-            if(checkIfSaved){
-                System.out.println("hier saved");
-                IConnectAppUtils.graceFullShutDown();
-            }
-            else {
-                System.out.println("hier unsaved");
-                DialogController.openDialog();
-            }
-        };
-    };
 }

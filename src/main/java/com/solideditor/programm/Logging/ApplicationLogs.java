@@ -46,16 +46,14 @@ public class ApplicationLogs {
     };
 
     public static String getOSLogLocation(String appdataDirWin, String appdataDirMac, String appdataDirUnixOrOthers) {
-        String userHome = System.getProperty("user.home");
-        String os = System.getProperty("os.name").toLowerCase();
+        String userHome = System.getProperty("user.home"); //get user profile dir
+        String os = System.getProperty("os.name").toLowerCase(); //get OS type
 
-        if (os.contains("win")) {
-            return userHome + appdataDirWin;
-        } else if (os.contains("mac")) {
-            return userHome + appdataDirMac;
-        } else { // assume linux, unix or other os types
-            return userHome + appdataDirUnixOrOthers;
-        }
+        return switch (os) {
+            case String osName when osName.contains("win") -> userHome + appdataDirWin;
+            case String osName when osName.contains("mac") -> userHome + appdataDirMac;
+            default -> userHome + appdataDirUnixOrOthers; // Assume Linux, Unix, or others
+        };
     };
 
 }

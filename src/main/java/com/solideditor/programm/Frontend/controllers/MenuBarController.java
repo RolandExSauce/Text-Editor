@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Getter;
 import org.fxmisc.richtext.CodeArea;
 
@@ -42,6 +43,9 @@ public class MenuBarController {
     private TabPane tabPane;
     private Map<String, TabEntry> openTabs;
     private CodeArea codeArea;
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     /******************************************************************************************************************/
     @FXML
     public void initialize() {
@@ -99,6 +103,7 @@ public class MenuBarController {
     /******************************************************************************************************************/
   //  @FXML
 //    private void onPrintClicked() {};
+
 
 };
 

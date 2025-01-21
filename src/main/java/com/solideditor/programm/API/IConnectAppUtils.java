@@ -73,16 +73,8 @@ public class IConnectAppUtils {
                             String contentToLoad = (unsavedContent != null) ? unsavedContent :
                                     Objects.requireNonNull(fileInfo).fileContent();
 
-                            // check if content to load is null
-//                            if (contentToLoad == null) {
-//                                contentToLoad = ""; //just to avoid null pointer exc upon calling equals below
-//                            };
-
-
                             // Update CodeArea only if content differs
                             if (!contentToLoad.equals(codeArea.getText())) {
-
-//                            if (!FileHelpers.fileTabHasChanges(codeArea.getText(), tabEntry)) {
                                 codeArea.clear();
                                 codeArea.replaceText(contentToLoad);
                             };
@@ -90,8 +82,7 @@ public class IConnectAppUtils {
                     };
                 }
                 else {
-                    //Clear CodeArea if no tab is selected
-                    codeArea.clear();
+                    codeArea.clear(); //clear if no tab selected
                 };
             });
     };
