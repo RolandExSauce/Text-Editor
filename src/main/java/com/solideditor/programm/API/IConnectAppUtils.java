@@ -3,7 +3,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
-import com.solideditor.programm.Backend.services.TabManagerService;
+import com.solideditor.programm.Backend.Services.TabManagerService;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;

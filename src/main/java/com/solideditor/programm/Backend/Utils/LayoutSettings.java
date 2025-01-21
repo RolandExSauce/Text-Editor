@@ -3,7 +3,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solideditor.programm.App;
 import com.solideditor.programm.Backend.DTO.TabEntry;
-import com.solideditor.programm.Backend.services.TabManagerService;
+import com.solideditor.programm.Backend.Services.TabManagerService;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.fxmisc.richtext.CodeArea;

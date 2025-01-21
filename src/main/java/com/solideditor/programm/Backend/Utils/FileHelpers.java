@@ -1,7 +1,7 @@
 package com.solideditor.programm.Backend.Utils;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
-import com.solideditor.programm.Backend.services.TabManagerService;
+import com.solideditor.programm.Backend.Services.TabManagerService;
 import javafx.scene.control.Tab;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;

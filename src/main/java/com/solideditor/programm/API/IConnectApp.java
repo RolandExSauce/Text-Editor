@@ -2,8 +2,8 @@ package com.solideditor.programm.API;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.LayoutSettings;
-import com.solideditor.programm.Backend.services.FileIOService;
-import com.solideditor.programm.Backend.services.TabManagerService;
+import com.solideditor.programm.Backend.Services.FileIOService;
+import com.solideditor.programm.Backend.Services.TabManagerService;
 import com.solideditor.programm.Logging.ErrorOrSuccessCode;
 import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 
 
 // Interface Class to bridge functionalities from Backend Services and Frontend Controllers

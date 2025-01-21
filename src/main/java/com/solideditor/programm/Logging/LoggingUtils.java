@@ -1,5 +1,4 @@
 package com.solideditor.programm.Logging;
-
 import org.slf4j.Logger;
 
 public class LoggingUtils {
@@ -20,9 +19,8 @@ public class LoggingUtils {
      */
     public static void log(LogLevel logLevel, String className,
                            ErrorOrSuccessCode errorOrSuccessCode) {
-        // Add "INFO" or "ERROR" to the message based on the log level
-        String prefix = logLevel == LogLevel.INFO ? "INFO" : "ERROR";
-        String msg = String.format("%s: %s", prefix, errorOrSuccessCode.getCode());
+        //format message
+        String msg = String.format("%s: %s", "MESSAGE CODE", errorOrSuccessCode.getCode());
 
         // Log based on the log level
         switch (logLevel) {

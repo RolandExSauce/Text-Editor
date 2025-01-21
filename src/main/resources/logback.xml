@@ -1,7 +1,7 @@
 <configuration>
-    <!-- Use the platform-specific log directory -->
-    <property name="LOG_DIR" value="${LOG_DIR}"/>
-^
+    <!-- Define the log directory with a default value -->
+    <property name="LOG_DIR" value="${LOG_DIR:-C:/Users/rolis/AppData/Local/SolidEdit/logs}"/>
+
     <!-- File appender: General logs -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_DIR}/application.log</file>
@@ -20,12 +20,12 @@
         </encoder>
     </appender>
 
-    <!-- Root logger configuration -->
+    <!-- Root logger: Logs all levels (default INFO) -->
     <root level="INFO">
         <appender-ref ref="FILE"/>
     </root>
 
-    <!-- Logger configuration for errors -->
+    <!-- Logger for ERROR level logs only -->
     <logger name="ERROR_LOGGER" level="ERROR" additivity="false">
         <appender-ref ref="ERROR_FILE"/>
     </logger>

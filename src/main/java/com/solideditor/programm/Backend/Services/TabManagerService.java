@@ -1,4 +1,4 @@
-package com.solideditor.programm.Backend.services;
+package com.solideditor.programm.Backend.Services;
 import com.solideditor.programm.API.IConnectApp;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
