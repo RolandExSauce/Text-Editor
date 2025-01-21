@@ -23,7 +23,6 @@ import java.util.Map;
 
 //Controller for interacting with buttons in menu bar
 public class MenuBarController {
-    private static final String className = MenuBarController.class.getSimpleName();
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); // get singleton instance
     @FXML
@@ -54,7 +53,7 @@ public class MenuBarController {
             };
         });
         // Set an action for the print button to open the dialog
-        btnPrint.setOnAction(event -> openDialog());
+//        btnPrint.setOnAction(event -> openDialog());
     };
     /******************************************************************************************************************/
     // init stuff coming from IConnectApp and combo box
@@ -101,29 +100,5 @@ public class MenuBarController {
   //  @FXML
 //    private void onPrintClicked() {};
 
-    // Method to open the dialog
-    private void openDialog() {
-        try {
-            // Load the dialog FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/solideditor/programm/static/dialog.fxml"));
-            Scene dialogScene = new Scene(loader.load());
-
-            // Create a new stage for the dialog
-            Stage dialogStage = new Stage();
-            dialogStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
-            dialogStage.setScene(dialogScene);
-            dialogStage.setTitle("Unsaved Changes");
-            dialogStage.show();
-
-            // Pass the stage to the dialog controller
-            DialogController controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-
-        } catch (IOException ex) {
-            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_4000);
-        } catch (RuntimeException ex) {
-            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_4001);
-        };
-    }
 };
 

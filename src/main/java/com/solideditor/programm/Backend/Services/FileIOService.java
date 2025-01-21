@@ -5,6 +5,8 @@ import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.FileUtils;
+import com.solideditor.programm.Frontend.Controllers.DialogController;
+import com.solideditor.programm.Frontend.Controllers.MenuBarController;
 import com.solideditor.programm.Logging.ErrorOrSuccessCode;
 import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.scene.control.Tab;
@@ -131,10 +133,8 @@ public class FileIOService {
                 Tab addedTab = TabManagerService.openFileAndAddToOpenTabs(fileInfo, newTab);
 
                 if (addedTab != null) {
-                    // Set up tab behavior and add to TabPane
-                    addedTab.setOnClosed(e -> closeFile(addedTab));
-                    iConnectApp.getTabPane().getTabs().add(addedTab);
 
+                    iConnectApp.getTabPane().getTabs().add(addedTab);
                     //ONLY AFTER SETTING the tabFileMap we focus on that added tab
                     iConnectApp.getTabPane().getSelectionModel().select(addedTab);
                     iConnectApp.getTabPane().requestFocus();
@@ -142,6 +142,8 @@ public class FileIOService {
                     // Set the content of the CodeArea
                     iConnectApp.getCodeArea().clear();
                     iConnectApp.getCodeArea().replaceText(fileInfo.fileContent());
+
+                    addedTab.setOnClosed(e -> closeFile(addedTab));
                 } else {
                     LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1002);
                 };
@@ -167,7 +169,6 @@ public class FileIOService {
         // Add the tab to the TabPane
         iConnectApp.getTabPane().getTabs().add(addedUnsavedTab);
 
-        // on tab is closed
         addedUnsavedTab.setOnClosed(e -> closeFile(addedUnsavedTab));
 
         //ONLY AFTER SETTING the openTab map we focus on that added tab
@@ -224,11 +225,17 @@ public class FileIOService {
         if (iConnectApp.getTabPane().getTabs().isEmpty() && iConnectApp.getOpenTabs().isEmpty()) {
             TabManagerService.resetUntitledTabCounter();
 
-            //TODO: waiting to implement open dialog warning
-            //check if changes and then save and close based on yes, cancel, blabla
-            //FileHelpers.fileTabHasChanges(iConnectApp.getCodeArea().getText(),tabEntry);
-            // saveFile();
-            IConnectAppUtils.graceFullShutDown();
+
+            //TODO: dialog changes are not saved
+            boolean checkIfSaved = TabManagerService.areChangesSaved(tab);
+            if(checkIfSaved){
+                System.out.println("hier saved");
+                IConnectAppUtils.graceFullShutDown();
+            }
+            else {
+                System.out.println("hier unsaved");
+                DialogController.openDialog();
+            }
         };
     };
 }

@@ -1,6 +1,7 @@
 package com.solideditor.programm.Logging;
 import lombok.Getter;
 
+
 public enum ErrorOrSuccessCode {
     ERR_CODE_1000("1000", "Selected Tab is null"),
     ERR_CODE_1001("1001", "FileInfo is null"),

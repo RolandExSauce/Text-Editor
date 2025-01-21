@@ -46,6 +46,7 @@ public class IConnectAppUtils {
     //detect tab pane changes
     public static void detectTabPaneChanges(TabPane tabPane, CodeArea codeArea) {
             tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+
                 if (oldTab != null) {
                     // Save unsaved content of the current tab before switching
                     TabEntry tabEntry = TabManagerService.getTabEntryByTab(oldTab);
@@ -61,12 +62,10 @@ public class IConnectAppUtils {
                 if (newTab != null) {
                     TabEntry tabEntry = TabManagerService.getTabEntryByTab(newTab);
                     if (tabEntry != null) {
-                        String newFilePath = tabEntry.fileInfo().filePathOrTempTabName();
+                        String filePath = tabEntry.fileInfo().filePathOrTempTabName();
 
-                        //If a tab is saved (file was opened)
-                        if (newFilePath != null) {
+                        if (filePath != null) {
                             String openTabKey = tabEntry.fileInfo().filePathOrTempTabName();
-                            //System.out.println("File path: " + openTabKey);
                             FileInfo fileInfo = tabEntry.fileInfo();
 
                             // Check for unsaved content first
@@ -75,18 +74,23 @@ public class IConnectAppUtils {
                                     Objects.requireNonNull(fileInfo).fileContent();
 
                             // check if content to load is null
-                            if (contentToLoad == null) {
-                                contentToLoad = ""; //just to avoid null pointer exc upon calling equals below
-                            };
+//                            if (contentToLoad == null) {
+//                                contentToLoad = ""; //just to avoid null pointer exc upon calling equals below
+//                            };
+
+
                             // Update CodeArea only if content differs
                             if (!contentToLoad.equals(codeArea.getText())) {
+
+//                            if (!FileHelpers.fileTabHasChanges(codeArea.getText(), tabEntry)) {
                                 codeArea.clear();
                                 codeArea.replaceText(contentToLoad);
                             };
-                        };
+                        }
                     };
-                } else {
-                    // Clear CodeArea if no tab is selected
+                }
+                else {
+                    //Clear CodeArea if no tab is selected
                     codeArea.clear();
                 };
             });

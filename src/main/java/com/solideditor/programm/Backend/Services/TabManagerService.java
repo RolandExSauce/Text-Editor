@@ -194,5 +194,26 @@ public class TabManagerService {
         }
         return null;
     };
+
+
+    public static boolean areChangesSaved(Tab tab) {
+        // Ensure the tab and its graphic are not null
+        if (tab == null || tab.getGraphic() == null) {
+            throw new IllegalArgumentException("Tab or Tab graphic cannot be null.");
+        }
+
+        // Check if the graphic is a Circle
+        if (tab.getGraphic() instanceof Circle indicator) {
+            Color fillColor = (Color) indicator.getFill(); // Retrieve the fill color
+
+            // Return true if the color is transparent, false otherwise
+            return fillColor.equals(Color.TRANSPARENT);
+        }
+
+        throw new IllegalArgumentException("Tab graphic is not a Circle.");
+    };
+
+
+
 }
 

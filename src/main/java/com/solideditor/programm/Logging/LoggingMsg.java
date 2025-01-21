@@ -15,7 +15,6 @@ public class LoggingMsg {
     public LoggingMsg(String logClass, String logMessage) {
         this.logMessage = logMessage;
         this.logClass = ClazzNameSanitizer.sanitize(logClass); // Sanitize the class name
-        System.out.println("LogClass after Sanitize:"+logClass);
     }
 
     /**
@@ -26,7 +25,6 @@ public class LoggingMsg {
      * @return A formatted log message string.
      */
     public static String create(String className, String message) {
-        System.out.println("Msg Received:"+new LoggingMsg(className, message).toString());
         return new LoggingMsg(className, message).toString();
     };
 
