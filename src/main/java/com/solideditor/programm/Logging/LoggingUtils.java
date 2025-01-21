@@ -19,6 +19,7 @@ public class LoggingUtils {
      */
     public static void log(LogLevel logLevel, String className,
                            ErrorOrSuccessCode errorOrSuccessCode) {
+        System.out.println("LogClass: "+ className);
         //format message
         String msg = String.format("%s: %s", "MESSAGE CODE", errorOrSuccessCode.getCode());
 

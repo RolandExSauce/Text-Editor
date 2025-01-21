@@ -16,7 +16,7 @@ import java.io.IOException;
 
 // Main controller
 public class MainController {
-    private static final String className = MainController.class.getName();
+    private static final String className = MainController.class.getSimpleName();
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); //get IConnectApp singleton instance
     private final CodeArea codeArea = new CodeArea(); //init CodeArea

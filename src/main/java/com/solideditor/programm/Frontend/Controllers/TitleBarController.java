@@ -54,7 +54,13 @@ public class TitleBarController {
     };
     /******************************************************************************************************************/
     @FXML
-    private void minimizeWindow() {};
+    private void minimizeWindow() {
+        if (primaryStage != null) {
+            primaryStage.setIconified(true); // Minimize the window
+        } else {
+            System.err.println("Primary stage is not set.");
+        }
+    }
     /******************************************************************************************************************/
     public void onMaximizeClicked() {
         if (primaryStage != null) {

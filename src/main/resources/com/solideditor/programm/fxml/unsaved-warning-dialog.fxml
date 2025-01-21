@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <!-- ****************************************************************************************************************-->
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.solideditor.programm.Frontend.Controllers.MainController"
-            prefHeight="400.0" prefWidth="600.0">
-    <VBox alignment="CENTER">
-        <Label text="You have unsaved changes!" id="dialog-title" />
-        <HBox spacing="10">
-            <Button text="Save" onAction="#onSave" />
-            <Button text="Discard" onAction="#onDiscard" />
-            <Button text="Cancel" onAction="#onCancelDialog" />
-        </HBox>
-    </VBox>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.solideditor.programm.Frontend.Controllers.DialogController">
+    <VBox alignment="CENTER"/>
+    <Label id="dialog-title" layoutX="218.0" layoutY="174.0" text="You have unsaved changes!"/>
+    <HBox layoutX="212.0" layoutY="210.0" spacing="10">
+        <Button onAction="#onSave" text="Save"/>
+        <Button onAction="#onDiscard" prefHeight="27.0" prefWidth="64.0" text="Discard"/>
+        <Button onAction="#onCancelDialog" text="Cancel"/>
+    </HBox>
 </AnchorPane>

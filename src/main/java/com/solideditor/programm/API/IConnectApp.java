@@ -25,7 +25,7 @@ import java.util.Objects;
 @Data
 public class IConnectApp {
 
-    private static final String className = IConnectApp.class.getName();
+    private static final String className = IConnectApp.class.getSimpleName();
 
     private final ObjectProperty<Stage> delayedStageForControllers = new SimpleObjectProperty<>();
 

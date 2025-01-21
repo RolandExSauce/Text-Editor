@@ -12,7 +12,7 @@ import javafx.scene.control.Tab;
 
 //file service class to interact with controllers
 public class FileIOService {
-    private static final String className = FileIOService.class.getName();
+    private static final String className = FileIOService.class.getSimpleName();
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); //get singleton instance
     /******************************************************************************************************************/

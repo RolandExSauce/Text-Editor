@@ -17,7 +17,7 @@ import java.io.IOException;
 
 //Entry class
 public class App extends Application {
-    private static final String className = App.class.getName();
+    private static final String className = App.class.getSimpleName();
     @Override
     public void start(Stage stage) {
         try {

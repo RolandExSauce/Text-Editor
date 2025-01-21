@@ -15,14 +15,14 @@ public class ClazzNameSanitizer {
 
     //this makes sure class names are not revealed in logs with their true name
     public static String sanitize(String className) {
-        return classToModuleMap.getOrDefault(getSimpleClassName(className), "UnknownModule");
+        return classToModuleMap.getOrDefault(className, "UnknownModule");
     };
 
     //get just the simple class name
-    private static String getSimpleClassName(String fullClassName) {
-        if (fullClassName == null || fullClassName.isEmpty()) {
-            throw new IllegalArgumentException("Class name cannot be null or empty");
-        };
-        return fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
-    };
+//    private static String getSimpleClassName(String fullClassName) {
+//        if (fullClassName == null || fullClassName.isEmpty()) {
+//            throw new IllegalArgumentException("Class name cannot be null or empty");
+//        };
+//        return fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
+//    };
 };
