@@ -1,0 +1,101 @@
+/* Allgemeines Design für den Hintergrund */
+.anchor-pane {
+    -fx-background-color: #f8f9fa; /* Helles Grau */
+    -fx-border-color: #ced4da; /* Graue Umrandung */
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 20; /* Abstand innen für bessere Darstellung */
+}
+
+/* Titel-Label */
+#dialog-title {
+    -fx-font-size: 2em; /* Automatische Anpassung an die Fenstergröße */
+    -fx-font-weight: bold;
+    -fx-text-fill: #4A708B; /* Passend zu den Icon-Farben */
+    -fx-padding: 10 0;
+    -fx-alignment: center;
+}
+
+/* HBox für die Buttons */
+.hbox {
+    -fx-spacing: 10%; /* Dynamischer Abstand zwischen den Buttons */
+    -fx-padding: 20 0 0 0; /* Abstand von oben */
+    -fx-alignment: center;
+    -fx-pref-width: 80%; /* Breite der HBox relativ zur Gesamtbreite */
+}
+
+/* Stile für Buttons */
+.button {
+    -fx-font-size: 1.2em; /* Schriftgröße passt sich dynamisch an */
+    -fx-font-weight: bold;
+    -fx-background-color: #4A708B; /* Standard: Grau */
+    -fx-text-fill: #ffffff; /* Weißer Text für Kontrast */
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10 20; /* Innere Abstände */
+    -fx-min-width: 80px; /* Mindestbreite */
+    -fx-pref-width: 20%; /* Breite relativ zur HBox */
+    -fx-cursor: hand; /* Zeigt Hand-Cursor bei Hover */
+}
+
+/* Hover-Effekt für Buttons */
+.button:hover {
+    -fx-background-color: #495057;
+}
+
+/* Farben für spezifische Buttons */
+.button[text="Save"] {
+    -fx-background-color: #28a745; /* Grün für Save */
+}
+
+.button[text="Save"]:hover {
+    -fx-background-color: #218838;
+}
+
+.button[text="Discard"] {
+    -fx-background-color: #dc3545; /* Rot für Discard */
+}
+
+.button[text="Discard"]:hover {
+    -fx-background-color: #c82333;
+}
+
+.button[text="Cancel"] {
+    -fx-background-color: #ffc107; /* Gelb für Cancel */
+    -fx-text-fill: #212529;
+}
+
+.button[text="Cancel"]:hover {
+    -fx-background-color: #e0a800;
+}
+
+/* Responsivität für kleinere Bildschirme */
+@media screen and (max-width: 600px) {
+    .anchor-pane {
+        -fx-padding: 10; /* Weniger Abstand innen bei kleinen Bildschirmen */
+    }
+
+    #dialog-title {
+        -fx-font-size: 1.5em; /* Kleinere Schriftgröße für den Titel */
+    }
+
+    .hbox {
+        -fx-spacing: 5%; /* Weniger Abstand zwischen Buttons */
+        -fx-padding: 10 0; /* Weniger Abstand von oben */
+    }
+
+    .button {
+        -fx-font-size: 1em; /* Kleinere Schriftgröße */
+        -fx-padding: 8 16; /* Kleinere Buttons */
+    }
+}
+/* Dialog-Hintergrund mit Rahmen */
+.anchor-pane {
+    -fx-background-color: #f8f9fa; /* Helles Grau */
+    -fx-border-color: #4A708B; /* Sichtbarer Rahmen in Graublau */
+    -fx-border-width: 5px; /* Dicke des Rahmens */
+    -fx-border-radius: 15px; /* Runde Ecken des Rahmens */
+    -fx-background-radius: 15px; /* Gleiche Rundung wie Rahmen */
+    -fx-padding: 20; /* Innenabstand für Inhalte */
+}
+

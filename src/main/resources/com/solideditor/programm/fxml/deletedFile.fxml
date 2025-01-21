@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- **-->
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solideditor.programm.Frontend.Controllers.DialogController">
+    <VBox alignment="CENTER" prefHeight="180.0" prefWidth="287.0">
+        <ImageView fitHeight="33.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../static/icons/Solid_blue.png" />
+            </image>
+            <VBox.margin>
+                <Insets bottom="13.0" top="5.0" />
+            </VBox.margin>
+        </ImageView>
+        <Label id="dialog-title" contentDisplay="CENTER" prefHeight="62.0" prefWidth="298.0" text="Die Datei wurde gelöscht oder existiert nicht mehr" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+            <VBox.margin>
+                <Insets bottom="15.0" />
+            </VBox.margin>
+            <font>
+                <Font name="Helvetica" size="18.0" />
+            </font>
+        </Label>
+        <Button onAction="#onSave" prefHeight="33.3" prefWidth="80.0" style="-fx-background-color: #406988;" text="Close" textFill="WHITE">
+            <VBox.margin>
+                <Insets bottom="5.0" />
+            </VBox.margin>
+        </Button>
+    </VBox>
+</StackPane>

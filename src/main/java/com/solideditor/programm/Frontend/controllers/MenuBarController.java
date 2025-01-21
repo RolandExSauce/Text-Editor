@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Getter;
 import org.fxmisc.richtext.CodeArea;
 
@@ -43,6 +44,9 @@ public class MenuBarController {
     private TabPane tabPane;
     private Map<String, TabEntry> openTabs;
     private CodeArea codeArea;
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     /******************************************************************************************************************/
     @FXML
     public void initialize() {
@@ -105,13 +109,25 @@ public class MenuBarController {
     private void openDialog() {
         try {
             // Load the dialog FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/solideditor/programm/static/dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/solideditor/programm/fxml/unsaved-warning-dialog.fxml"));
+            //FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/solideditor/programm/fxml/max-tab-limit-dialog.fxml"));
+            //FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/solideditor/programm/fxml/deletedFile.fxml"));
+
             Scene dialogScene = new Scene(loader.load());
 
             // Create a new stage for the dialog
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
+            dialogStage.initStyle(StageStyle.UNDECORATED); // Entfernt die obere Leiste
             dialogStage.setScene(dialogScene);
+            dialogScene.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+            dialogScene.setOnMouseDragged(event -> {
+                dialogStage.setX(event.getScreenX() - xOffset);
+                dialogStage.setY(event.getScreenY() - yOffset);
+            });
             dialogStage.setTitle("Unsaved Changes");
             dialogStage.show();
 
