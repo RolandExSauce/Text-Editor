@@ -1,6 +1,6 @@
 <configuration>
     <!-- Define the log directory with a default value -->
-    <property name="LOG_DIR" value="${LOG_DIR:-C:/Users/rolis/AppData/Local/SolidEdit/logs}"/>
+    <property name="LOG_DIR" value="${LOG_DIR}"/>
 
     <!-- File appender: General logs -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
