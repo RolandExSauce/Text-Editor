@@ -34,12 +34,11 @@ public class FooterBarController {
                 if (iConnectApp.getCodeArea() != null) {
                     double fontSize = scale * 14; // standard font size = 14px
                     iConnectApp.getCodeArea().setStyle("-fx-font-size: " + fontSize + "px;");
-                } else {
-                    System.err.println("CodeArea ist null! Zoom kann nicht angewendet werden.");
                 }
+//                else {
+//                    System.err.println("CodeArea ist null! Zoom kann nicht angewendet werden.");
+//                }
             });
-        } else {
-            System.err.println("ZoomSlider ist null! Kann Zoom nicht initialisieren.");
-        }
+        };
     };
 }

@@ -1,4 +1,5 @@
-package com.solideditor.programm.API;
+package com.solideditor.programm.Logging;
+import lombok.Getter;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import java.io.File;
@@ -9,7 +10,11 @@ public class ApplicationLogs {
     private static final String APPDATA_DIR_WIN = "\\AppData\\Local\\SolidEdit\\logs";
     private static final String APPDATA_DIR_MAC = "/Library/Application Support/SolidEdit/logs";
     private  static  final String APPDATA_DIR_UNIX_OR_OTHERS = "/.local/share/SolidEdit/logs";
+
+    @Getter
     private static final Logger rootLogger;
+
+    @Getter
     private static final Logger errorLogger;
 
     static {
@@ -30,29 +35,27 @@ public class ApplicationLogs {
         //init loggers
         rootLogger = LoggerFactory.getLogger("GlobalLogger");
         errorLogger = LoggerFactory.getLogger("ERROR_LOGGER");
-    };
+    }
 
     private ApplicationLogs() {
         // prevent instantiation
     };
 
-    public static Logger getLogger() {
-        return rootLogger;
-    }
-    public static Logger getErrorLogger(){ return errorLogger; }
-
     private static String getLogDirectory() {
+        return getOSLogLocation(APPDATA_DIR_WIN, APPDATA_DIR_MAC, APPDATA_DIR_UNIX_OR_OTHERS);
+    };
+
+    public static String getOSLogLocation(String appdataDirWin, String appdataDirMac, String appdataDirUnixOrOthers) {
         String userHome = System.getProperty("user.home");
         String os = System.getProperty("os.name").toLowerCase();
 
         if (os.contains("win")) {
-            return userHome + APPDATA_DIR_WIN;
+            return userHome + appdataDirWin;
         } else if (os.contains("mac")) {
-            return userHome + APPDATA_DIR_MAC;
+            return userHome + appdataDirMac;
         } else { // assume linux, unix or other os types
-            return userHome + APPDATA_DIR_UNIX_OR_OTHERS;
+            return userHome + appdataDirUnixOrOthers;
         }
     };
-};
 
-
+}

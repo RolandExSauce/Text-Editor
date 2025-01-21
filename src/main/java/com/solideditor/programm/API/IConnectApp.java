@@ -4,6 +4,8 @@ import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Backend.services.FileIOService;
 import com.solideditor.programm.Backend.services.TabManagerService;
+import com.solideditor.programm.Logging.ErrorOrSuccessCode;
+import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
@@ -19,9 +21,12 @@ import java.util.Map;
 import java.util.Objects;
 
 
+
 // Interface Class to bridge functionalities from Backend Services and Frontend Controllers
 @Data
 public class IConnectApp {
+
+    private static final String className = IConnectApp.class.getName();
 
     private final ObjectProperty<Stage> delayedStageForControllers = new SimpleObjectProperty<>();
 
@@ -31,7 +36,9 @@ public class IConnectApp {
 
     //Also nice solution to use "::" cuz new files can't be saved using colon afaik, but maybe only on WINDOWS ?
     private static final String prefKeyForUnsavedFile = "unsaved::"; //just to stay consistent globally
+
     private final List<String> fonts;
+
     private TextField searchTxtField;
 
     private TabPane tabPane;
@@ -54,7 +61,10 @@ public class IConnectApp {
     };
 
     //no arg constructor to init some values, maybe add more
-    private IConnectApp() { this.fonts = LayoutSettings.loadFonts(); };
+    private IConnectApp() {
+        this.fonts = LayoutSettings.loadFonts();
+        LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2002);
+    };
 
     /* Setters to set references for global usage *********************************************************************/
     public void setUpStage(Stage stage){
@@ -62,20 +72,17 @@ public class IConnectApp {
         this.delayedStageForControllers.set(primaryStage);
     };
     public void setUpCodeArea(CodeArea codeArea){
-        if (codeArea == null) throw new IllegalArgumentException("CodeArea cannot be null");
         setCodeArea(codeArea);
         listenForCodeAreaChangesForOpenFile();
     };
 
     public void setWordCountAndSignCount (Label wordCount, Label signCount){
-        if (wordCount == null && signCount == null) throw new IllegalArgumentException("TabPane cannot be null");
         setWordCountLabel(wordCount);
         setSignCountLabel(signCount);
         listenForCodeAreaChangesForOpenFile();
     };
 
     public void setUpTabPane(TabPane tabPane) {
-        if (tabPane == null) throw new IllegalArgumentException("TabPane cannot be null");
         setTabPane(tabPane);
         detectTabPaneChanges();
         listenForCodeAreaChangesForOpenFile();
@@ -83,7 +90,6 @@ public class IConnectApp {
     /******************************************************************************************************************/
     //set default tab and add it to open tabs map
     public void initDefaultTab(Tab defaultTab) {
-        if (defaultTab == null) throw new IllegalArgumentException("Default tab cannot be null");
         String defaultTabName = defaultTab.getText();
         Tab defaultTabWithIndicator =
                 TabManagerService.createTabWithIfFileSavedIndicator(defaultTab);
@@ -96,7 +102,7 @@ public class IConnectApp {
             FileInfo unsavedFileInfo = new FileInfo(defaultTabKey,
                     null, defaultTabName, null);
             openTabs.put(defaultTabKey, new TabEntry(defaultTabWithIndicator, unsavedFileInfo));
-        } else System.out.println("Default tab already exists in openTabs.");
+        };
         // Add the default tab to the TabPane if it's not already there
         if (!tabPane.getTabs().contains(defaultTabWithIndicator)) tabPane
                 .getTabs().add(defaultTabWithIndicator);
@@ -105,7 +111,6 @@ public class IConnectApp {
     };
     /******************************************************************************************************************/
     public void setUpSearchTxtField(TextField txtField) {
-        if (txtField == null) throw new IllegalArgumentException("Search TextField cannot be null");
         setSearchTxtField(txtField);
         addSearchTxtFieldListener();
         listenForCodeAreaChangesForOpenFile();
@@ -130,9 +135,8 @@ public class IConnectApp {
                 //FileHelpers.findWordInFileAndReturnPos(newValue);
                 }
             });
-        } else {
-            System.err.println("Search TextField is null! Cannot add listener.");
-        }
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2003);
+        };
     };
     /******************************************************************************************************************/
     // Detect changes on TabPane
@@ -140,6 +144,7 @@ public class IConnectApp {
         if(codeArea != null & tabPane != null){
             IConnectAppUtils.detectTabPaneChanges(tabPane, codeArea);
             listenForCodeAreaChangesForOpenFile();
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2003);
         };
     };
     /******************************************************************************************************************/
@@ -147,6 +152,10 @@ public class IConnectApp {
     private void listenForCodeAreaChangesForOpenFile() {
         if(codeArea != null & tabPane != null & wordCountLabel != null & signCountLabel != null){
             IConnectAppUtils.addCodeAreaChangeListener(codeArea, tabPane, wordCountLabel, signCountLabel);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2003);
         };
     };
+    //NOTE: In application.log, log infos appear in different order due to threading conditions
+    //in javafx thread, e.g. codeArea could still be null while tabPane is not, to visualize make
+    //sure err codes have distinguishable names
 };

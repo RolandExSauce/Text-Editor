@@ -20,7 +20,6 @@ public class IConnectAppUtils {
 
     //add listener for code area
     public static void addCodeAreaChangeListener(CodeArea codeArea, TabPane tabPane, Label wordCount, Label signCount) {
-        if (codeArea != null && tabPane != null) {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
                 // Get the currently selected tab
                 Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
@@ -42,14 +41,10 @@ public class IConnectAppUtils {
                     };
                 };
             });
-        } else {
-            System.err.println("CodeArea or TabPane is null! Cannot add listener.");
-        }
     };
     /******************************************************************************************************************/
     //detect tab pane changes
     public static void detectTabPaneChanges(TabPane tabPane, CodeArea codeArea) {
-        if (tabPane != null) {
             tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
                 if (oldTab != null) {
                     // Save unsaved content of the current tab before switching
@@ -61,7 +56,7 @@ public class IConnectAppUtils {
                         };
                     };
                 };
-                /******************************************************************************************************/
+
                 //if new tab is not null
                 if (newTab != null) {
                     TabEntry tabEntry = TabManagerService.getTabEntryByTab(newTab);
@@ -95,9 +90,6 @@ public class IConnectAppUtils {
                     codeArea.clear();
                 };
             });
-        } else {
-            System.err.println("TabPane is null! Cannot detect changes.");
-        };
     };
     /******************************************************************************************************************/
     //exit app

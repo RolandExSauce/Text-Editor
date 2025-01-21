@@ -94,16 +94,21 @@ public class TabManagerService {
     // remove a tab
     public static boolean removeFileFromOpenTabs(String fileName, String filePath) {
         String uniqueKey = genFileKey(fileName, filePath);
+
+        // Check if the tab exists in openTabs
         if (iConnectApp.getOpenTabs().containsKey(uniqueKey)) {
-            //System.out.println("contains key: "+ uniqueKey);
+            // Remove the tab from openTabs
             iConnectApp.getOpenTabs().remove(uniqueKey);
+
+            // Remove the corresponding tab from the TabPane
+            iConnectApp.getTabPane().getTabs().removeIf(tab -> tab.getText().equals(fileName));
+
             // Optional: Adjust the counter to the lowest available number
             adjustUntitledTabCounter();
             return true;
-        } else {
-            return false; // tab not found
-        }
+        } else return false;
     };
+
     /******************************************************************************************************************/
     private static void adjustUntitledTabCounter() {
         int highestUsed = 1; // Start at 1 for "Untitled Tab 1"

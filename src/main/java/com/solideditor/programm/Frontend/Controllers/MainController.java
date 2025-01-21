@@ -1,5 +1,7 @@
 package com.solideditor.programm.Frontend.Controllers;
 import com.solideditor.programm.API.IConnectApp;
+import com.solideditor.programm.Logging.ErrorOrSuccessCode;
+import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,7 @@ import java.io.IOException;
 
 // Main controller
 public class MainController {
+    private static final String className = MainController.class.getName();
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); //get IConnectApp singleton instance
     private final CodeArea codeArea = new CodeArea(); //init CodeArea
@@ -45,9 +48,8 @@ public class MainController {
         loadIncludedFXML("/com/solideditor/programm/fxml/footerbar.fxml", bottomContainer);
 
         // After loading FXML components, ensure TabPane is set in IConnectApp
-        if (iConnectApp.getTabPane() == null && iConnectApp.getCodeArea() == null) {
-            System.err.println("TabPane is null after loading checking corresponding controller/class.");
-            System.err.println("Code Area is null after loading checking corresponding controller/class.");
+        if (iConnectApp.getTabPane() != null && iConnectApp.getCodeArea() != null) {
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2002);
         };
     };
     /******************************************************************************************************************/
@@ -86,22 +88,27 @@ public class MainController {
                     iConnectApp.setUpSearchTxtField(menuBarController.getSearchTxtField());
                 };
             };
-
             if (controller instanceof TitleBarController titleBarController) {
-                //set default tab and tabPane from title bar controller
-                iConnectApp.setUpTabPane(titleBarController.getTabPane());
-                iConnectApp.initDefaultTab(titleBarController.getDefaultTab());
+                if (titleBarController.getTabPane() != null
+                        & titleBarController.getDefaultTab() != null) {
+                    iConnectApp.setUpTabPane(titleBarController.getTabPane());
+                    iConnectApp.initDefaultTab(titleBarController.getDefaultTab());
+                };
             };
-
             if (controller instanceof FooterBarController footerBarController) {
-                iConnectApp.setWordCountAndSignCount(
-                        footerBarController.getWordCountLabel(),
-                        footerBarController.getSignCountLabel()
-                );
+                if (footerBarController.getWordCountLabel() != null &
+                        footerBarController.getSignCountLabel() != null){
+                    iConnectApp.setWordCountAndSignCount(
+                            footerBarController.getWordCountLabel(),
+                            footerBarController.getSignCountLabel()
+                    );
+                };
             };
-        } catch (IOException e) {
-            //e.printStackTrace();
-        };
+        } catch (IOException ex) {
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_4000);
+            } catch (RuntimeException ex) {
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_4001);
+            };
     };
 
     public void onSave(ActionEvent actionEvent) {

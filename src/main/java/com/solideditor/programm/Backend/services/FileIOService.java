@@ -5,11 +5,14 @@ import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Utils.FileUtils;
+import com.solideditor.programm.Logging.ErrorOrSuccessCode;
+import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.scene.control.Tab;
 
 
 //file service class to interact with controllers
 public class FileIOService {
+    private static final String className = FileIOService.class.getName();
     private static final IConnectApp iConnectApp
             = IConnectApp.getIconnectAppInstance(); //get singleton instance
     /******************************************************************************************************************/
@@ -18,7 +21,7 @@ public class FileIOService {
         // Get the currently selected tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
-            System.out.println("No tab selected to save.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1000);
             return;
         };
 
@@ -26,10 +29,11 @@ public class FileIOService {
         String contentToSave  = iConnectApp.getCodeArea().getText();
 
         // Open a "Save As" dialog to get the file path
-        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(iConnectApp.getPrimaryStage(), contentToSave );
+        FileInfo fileInfo = FileUtils.saveNewFileUnderDirAndGetFileContent(
+                iConnectApp.getPrimaryStage(), contentToSave );
 
         if (fileInfo == null) {
-            System.out.println("Save operation canceled.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
             return;
         };
 
@@ -41,6 +45,7 @@ public class FileIOService {
         iConnectApp.getOpenTabs().remove(oldKey); // remove old key
         selectedTab.setText(fileInfo.fileName()); // update tab title
         FileHelpers.updateTabIfFileSavedIndicator(selectedTab, false); // Mark as saved
+
     };
     /******************************************************************************************************************/
     //save file
@@ -48,7 +53,7 @@ public class FileIOService {
         //get the current tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
-            System.out.println("No tab selected to save.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1000);
             return;
         };
 
@@ -57,7 +62,7 @@ public class FileIOService {
         String filePath = tabEntry.fileInfo().filePathOrTempTabName();
 
         if (filePath == null) {
-            System.out.println("No file path associated with the selected tab.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
             return;
         };
 
@@ -78,7 +83,7 @@ public class FileIOService {
         //get the current tab
         Tab selectedTab = iConnectApp.getTabPane().getSelectionModel().getSelectedItem();
         if (selectedTab == null) {
-            System.out.println("No tab selected to save.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1000);
             return;
         };
 
@@ -87,7 +92,7 @@ public class FileIOService {
         String fakePath = tabEntry.fileInfo().filePathOrTempTabName();
 
         if (fakePath == null) {
-            System.out.println("path does not exist"); // IF WE LAND HERE => SOME ISSUES WITH DEFAULT TAB CREATION
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1005);
         }
         else {
             if(fakePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())) saveUnsavedNewFile();
@@ -103,8 +108,13 @@ public class FileIOService {
             System.out.println("OpenFile: Maximum tabs reached.");
             return; // prevent opening a new tab
         };
+
         FileInfo fileInfo = FileUtils.openFileAndGetContent(iConnectApp.getPrimaryStage());
-        if (fileInfo != null) {
+        if (fileInfo == null) {
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
+            return;
+        };
+
             // Check if the file is already open
             Tab existingTab = TabManagerService.getOpenTab(fileInfo.fileName(), fileInfo.filePathOrTempTabName());
             if (existingTab != null) {
@@ -133,11 +143,9 @@ public class FileIOService {
                     iConnectApp.getCodeArea().clear();
                     iConnectApp.getCodeArea().replaceText(fileInfo.fileContent());
                 } else {
-                    System.out.println("Error: Could not add new tab for file: " + fileInfo.filePathOrTempTabName());
-                }
+                    LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1002);
+                };
             }
-        }
-        // System.out.println("Debug: Current number of open tabs after: " + iConnectApp.getOpenTabs().size());
     };
     /******************************************************************************************************************/
     //create a new file
@@ -150,6 +158,11 @@ public class FileIOService {
         };
         // Create a new unsaved tab with default name
         Tab addedUnsavedTab = TabManagerService.createUnsavedTabAndAddToOpenTabs();
+
+        if(addedUnsavedTab == null){
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1003);
+            return;
+        };
 
         // Add the tab to the TabPane
         iConnectApp.getTabPane().getTabs().add(addedUnsavedTab);
@@ -173,7 +186,7 @@ public class FileIOService {
         // Get the associated TabEntry
         TabEntry tabEntry = TabManagerService.getTabEntryByTab(tab);
         if (tabEntry == null) {
-            System.out.println("Error: No TabEntry found for the given tab.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1006);
             return;
         };
 
@@ -185,27 +198,25 @@ public class FileIOService {
             if (removedFromManager) {
                 iConnectApp.getTabPane().getTabs().remove(tab);
                 iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
-            } else System.out.println("Failed to remove unsaved tab");
+            } else {
+                LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
+            };
 
         } else if (filePathOrDefaultTabName != null) {   // Handle saved tabs with a valid file path
             // Attempt to close the file resource
             boolean resourceClosed = FileUtils.closeFileRessource(filePathOrDefaultTabName);
             if (!resourceClosed) {
-                System.out.println("Could not close file for" + filePathOrDefaultTabName); //If file is deleted in filesystem
-            }
+                //TODO: fxml dialog FIle could not be found, must be deleted in filesystem
+                System.out.println("Could not close file for" + filePathOrDefaultTabName);
+            };
 
             // Remove from TabManagerService and mappings
-            boolean removedFromManager = TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName);
-            if (removedFromManager) {
-                iConnectApp.getTabPane().getTabs().remove(tab);
-                iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
-                //System.out.println("Saved tab removed successfully: " + tab.getText());
-            } else {
-                System.out.println("Error: Failed to remove saved tab from TabManagerService.");
-            }
+            if (!TabManagerService.removeFileFromOpenTabs(tab.getText(), filePathOrDefaultTabName)) {
+                LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
+            };
+
         } else {
-            // Handle edge case where no file path is associated
-            System.out.println("No file path associated with the tab. Removing from TabPane.");
+            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1007);
             iConnectApp.getTabPane().getTabs().remove(tab);
         }
 
