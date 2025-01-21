@@ -89,13 +89,13 @@ public class FileIOService {
 
         //get the file path for the selected tab
         TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
-        String fakePath = tabEntry.fileInfo().filePathOrTempTabName();
+        String filePath = tabEntry.fileInfo().filePathOrTempTabName();
 
-        if (fakePath == null) {
+        if (filePath == null) {
             LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1005);
         }
         else {
-            if(fakePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())) saveUnsavedNewFile();
+            if(filePath.startsWith(iConnectApp.getPrefKeyForUnsavedFile())) saveUnsavedNewFile();
             else saveFile();
         };
     };

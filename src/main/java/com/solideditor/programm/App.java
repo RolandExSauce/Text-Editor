@@ -22,7 +22,7 @@ public class App extends Application {
     public void start(Stage stage) {
         try {
             // Log an INFO message
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2000);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2000);
             String mainFxmlFile = "/com/solideditor/programm/fxml/mainlayout.fxml";
             FXMLLoader loader = new FXMLLoader(getClass().getResource(mainFxmlFile));
             Parent root = loader.load();
@@ -58,7 +58,7 @@ public class App extends Application {
             EffectUtilities.makeDraggable(stage, root);
             stage.show();
 
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2001);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2001);
         }
         catch (IOException ex) {
             LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_4000);

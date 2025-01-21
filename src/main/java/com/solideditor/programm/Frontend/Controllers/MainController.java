@@ -49,7 +49,7 @@ public class MainController {
 
         // After loading FXML components, ensure TabPane is set in IConnectApp
         if (iConnectApp.getTabPane() != null && iConnectApp.getCodeArea() != null) {
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2002);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2002);
         };
     };
     /******************************************************************************************************************/

@@ -7,14 +7,14 @@ public enum ErrorOrSuccessCode {
     ERR_CODE_1002("1002", "Could not add new Tab"),
     ERR_CODE_1003("1003", "Could not create new Tab"),
     ERR_CODE_1004("1004", "Failed to remove unsaved tab"),
-    ERR_CODE_1005("1005", "Issues with creating default Tab"),
-    ERR_CODE_1006("1006", "No TabEntry found for the given tab"),
+    ERR_CODE_1005("1005", "Can't save the existing/new file, File may be deleted from FileSystem"),
+    ERR_CODE_1006("1006", "No TabEntry found for the given tab, File may be deleted from FileSystem"),
     ERR_CODE_1007("1007", "Removing Tab with unassociated file path from TabPane"),
     /* SUCCESS CODES **************************************************************************************************/
-    ERR_CODE_2000("2000", "SUCCESSFUL APP LAUNCH"), //e.g application successfully launches
-    ERR_CODE_2001("2001", "SUCCESSFUL APP SETUP"), //application successfully finishes
-    ERR_CODE_2002("2002", "SUCCESSFUL CONSTRUCTOR INITIALIZATION"), //construct init ok
-    ERR_CODE_2003("2003", "SUCCESSFUL AGENT LISTENER LAUNCHED"),
+    SUCCESS_CODE_2000("2000", "SUCCESSFUL APP LAUNCH"), //e.g application successfully launches
+    SUCCESS_CODE_2001("2001", "SUCCESSFUL APP SETUP"), //application successfully finishes
+    SUCCESS_CODE_2002("2002", "SUCCESSFUL CONSTRUCTOR INITIALIZATION"), //construct init ok
+    SUCCESS_CODE_2003("2003", "SUCCESSFUL AGENT LISTENER LAUNCHED"),
     /* UNSUCCESSFUL CODES *********************************************************************************************/
     ERR_CODE_4000("4000", "FAILED TO LOAD FXML FILE RESSOURCE(S)"),
     ERR_CODE_4001("4001", "UNEXPECTED RUNTIME EXCEPTION");

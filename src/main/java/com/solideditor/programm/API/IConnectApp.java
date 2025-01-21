@@ -62,7 +62,7 @@ public class IConnectApp {
     //no arg constructor to init some values, maybe add more
     private IConnectApp() {
         this.fonts = LayoutSettings.loadFonts();
-        LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2002);
+        LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2002);
     };
 
     /* Setters to set references for global usage *********************************************************************/
@@ -134,7 +134,7 @@ public class IConnectApp {
                 //FileHelpers.findWordInFileAndReturnPos(newValue);
                 }
             });
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2003);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
         };
     };
     /******************************************************************************************************************/
@@ -143,7 +143,7 @@ public class IConnectApp {
         if(codeArea != null & tabPane != null){
             IConnectAppUtils.detectTabPaneChanges(tabPane, codeArea);
             listenForCodeAreaChangesForOpenFile();
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2003);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
         };
     };
     /******************************************************************************************************************/
@@ -151,7 +151,7 @@ public class IConnectApp {
     private void listenForCodeAreaChangesForOpenFile() {
         if(codeArea != null & tabPane != null & wordCountLabel != null & signCountLabel != null){
             IConnectAppUtils.addCodeAreaChangeListener(codeArea, tabPane, wordCountLabel, signCountLabel);
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.ERR_CODE_2003);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
         };
     };
     //NOTE: In application.log, log infos appear in different order due to threading conditions
