@@ -12,30 +12,30 @@
 
 <!-- ****************************************************************************************************************-->
 
-<StackPane stylesheets="@/com/solideditor/programm/static/css/dialog/max-tab-limit-dialog.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solideditor.programm.Frontend.Controllers.DialogController">
+<StackPane prefHeight="250.0" prefWidth="400.0" stylesheets="@/com/solideditor/programm/static/css/dialog/max-tab-limit-dialog.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solideditor.programm.Frontend.Controllers.DialogController">
     <VBox alignment="CENTER" prefHeight="160.0" prefWidth="287.0">
         <ImageView fitHeight="33.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../static/icons/Solid_blue.png" />
             </image>
             <VBox.margin>
-                <Insets bottom="15.0" top="10.0" />
+                <Insets bottom="25.0" />
             </VBox.margin>
         </ImageView>
         <Label id="dialog-title" text="Max Tab Limit Reached!" textFill="#4a708b">
             <VBox.margin>
-                <Insets bottom="15.0" />
+                <Insets bottom="25.0" />
             </VBox.margin>
             <font>
-                <Font name="Helvetica" size="18.0" />
+                <Font name="System Bold" size="22.0" />
             </font>
         </Label>
         <Button onAction="#onCancelDialog" prefHeight="33.3" prefWidth="80.0" style="-fx-background-color: #406988;" text="Close" textFill="WHITE">
             <VBox.margin>
-                <Insets bottom="5.0" />
+                <Insets bottom="15.0" />
             </VBox.margin>
         </Button>
-        <HBox alignment="BOTTOM_CENTER" prefHeight="56.0" prefWidth="800.0">
+        <HBox alignment="BOTTOM_CENTER" prefHeight="9.0" prefWidth="400.0">
             <Label id="dialog-title" text="This feature ensures top performance" textAlignment="CENTER" textFill="#4a708b" textOverrun="CENTER_ELLIPSIS">
                 <font>
                     <Font name="Helvetica" size="10.0" />
