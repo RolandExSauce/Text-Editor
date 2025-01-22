@@ -1,9 +1,12 @@
+import org.gradle.internal.os.OperatingSystem
+
+/**********************************************************************************************************************/
 plugins {
     id 'java'
     id 'idea'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.14' //for packaging
     id 'org.javamodularity.moduleplugin' version '1.8.12'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'org.beryx.jlink' version '2.25.0'
 }
 
@@ -90,4 +93,24 @@ jlink {
 
 jlinkZip {
     group = 'distribution'
+}
+
+def jpackageOutputDir = layout.buildDirectory.dir("jpackage").get().asFile
+
+tasks.register('jpackageExe', Exec) {
+    doFirst {
+        mkdir(jpackageOutputDir)
+    }
+    commandLine "jpackage",
+            "--type", "exe",
+            "--input", layout.buildDirectory.dir("libs").get().asFile,
+            "--dest", jpackageOutputDir,
+            "--name", "SolidEdit", // Replace with your app name
+            "--main-class", application.mainClass.get(),
+            "--main-jar", jar.archiveFileName.get(),
+            "--icon", "src/main/resources/com/solideditor/programm/static/icons/SolidEdit.ico"
+}
+
+tasks.register('packageAll') {
+    dependsOn 'jpackageExe'
 }

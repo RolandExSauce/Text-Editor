@@ -1,23 +1,13 @@
 package com.solideditor.programm.Frontend.Controllers;
 import com.solideditor.programm.API.IConnectApp;
-import com.solideditor.programm.App;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Backend.Services.FileIOService;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
-import com.solideditor.programm.Logging.ErrorOrSuccessCode;
-import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.Getter;
 import org.fxmisc.richtext.CodeArea;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,9 +33,6 @@ public class MenuBarController {
     private TabPane tabPane;
     private Map<String, TabEntry> openTabs;
     private CodeArea codeArea;
-    private double xOffset = 0;
-    private double yOffset = 0;
-
     /******************************************************************************************************************/
     @FXML
     public void initialize() {
@@ -56,8 +43,6 @@ public class MenuBarController {
                 LayoutSettings.changeFont(codeArea, selectedFont);
             };
         });
-        // Set an action for the print button to open the dialog
-//        btnPrint.setOnAction(event -> openDialog());
     };
     /******************************************************************************************************************/
     // init stuff coming from IConnectApp and combo box
@@ -67,8 +52,6 @@ public class MenuBarController {
         List<String> fonts = iConnectApp.getFonts();
         this.codeArea = iConnectApp.getCodeArea();
         ControllerUtils.initializeComboBox(fontsComboBox, fonts);
-        //System.out.println("MenuClass:" +className);
-
     };
     /******************************************************************************************************************/
     //open an existing file
@@ -101,9 +84,8 @@ public class MenuBarController {
         };
     };
     /******************************************************************************************************************/
-  //  @FXML
-//    private void onPrintClicked() {};
-
+    //@FXML
+    // private void onPrintClicked() {};
 
 };
 
