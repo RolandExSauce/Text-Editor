@@ -1,3 +1,7 @@
+.root{
+    -fx-background-color: #1C2128;
+    -fx-background-radius: 10;
+}
 /* Allgemeines Design für den Hintergrund */
 .anchor-pane {
     -fx-background-color: #f8f9fa; /* Helles Grau */
@@ -9,16 +13,13 @@
 
 /* Titel-Label */
 #dialog-title {
-    -fx-font-size: 2em; /* Automatische Anpassung an die Fenstergröße */
     -fx-font-weight: bold;
     -fx-text-fill: #4A708B; /* Passend zu den Icon-Farben */
-    -fx-padding: 10 0;
-    -fx-alignment: center;
+
 }
 
 /* HBox für die Buttons */
 .hbox {
-    -fx-spacing: 10%; /* Dynamischer Abstand zwischen den Buttons */
     -fx-padding: 20 0 0 0; /* Abstand von oben */
     -fx-alignment: center;
     -fx-pref-width: 80%; /* Breite der HBox relativ zur Gesamtbreite */
