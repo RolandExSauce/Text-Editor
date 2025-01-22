@@ -92,10 +92,12 @@
                 <TextField fx:id="searchTxtField" prefHeight="26.0" promptText="Search in File"
                            style="-fx-background-color: transparent;"/>
             </HBox>
-            <Label fx:id="lableFoundAt" prefWidth="70.0" text="Found at:"/>
+            <Label fx:id="lableFoundAt"  text="Found at:"/>
             <padding>
-                <Insets right="100.0"/>
+                <Insets right="200.0"/>
             </padding>
         </HBox>
+
+
     </HBox>
 </HBox>

@@ -13,9 +13,9 @@ import javafx.scene.control.Tab;
 import java.util.concurrent.CompletableFuture;
 
 //TODO: BAD PRACTICE =>  DialogController.openDialog, here a method from a controller is being
-//called from Service != don't align with MVC pattern, for now we good, to lazy 😪 to fix
+//called from Service != don't align with MVC pattern, for now we good, to lazy 😪😪 to fix
 // FIXME: call services methods from the controller
-
+//TODO: More precise usage of err logs
 
 
 //file service class to interact with controllers
@@ -41,7 +41,7 @@ public class FileIOService {
                 iConnectApp.getPrimaryStage(), contentToSave );
 
         if (fileInfo == null) {
-            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
+            //LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
             return;
         };
 
@@ -71,7 +71,7 @@ public class FileIOService {
         String filePath = tabEntry.fileInfo().filePathOrTempTabName();
 
         if (filePath == null) {
-            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
+            //LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
             return;
         };
 
@@ -120,7 +120,7 @@ public class FileIOService {
 
         FileInfo fileInfo = FileUtils.openFileAndGetContent(iConnectApp.getPrimaryStage());
         if (fileInfo == null) {
-            LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
+            //LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1001);
             return;
         };
 
@@ -348,9 +348,8 @@ public class FileIOService {
 
                                     });
                                 }
-                                case CANCEL -> {
-                                } //do nothing
-                                default -> System.out.println("SERVICE: No valid result.");
+                                case CANCEL -> { } //do nothing
+                                default -> System.out.println("Cancel, doing nothing");
                             }
                         });
             };

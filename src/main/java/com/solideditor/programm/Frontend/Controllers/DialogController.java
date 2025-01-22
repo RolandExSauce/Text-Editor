@@ -45,14 +45,10 @@ public class DialogController {
 
     // Enum for dialog results
     public enum DialogResult {
-
         //for unsaved file changes dialog
         SAVE,
         DISCARD,
         CANCEL,
-
-
-        NONE
     };
 
     //Save changes call service save method and close

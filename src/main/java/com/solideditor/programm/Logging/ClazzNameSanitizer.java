@@ -9,6 +9,7 @@ public class ClazzNameSanitizer {
             "App", "App Module",
             "MainController", "Main-C-Module",
             "MenuBarController", "Menu-C-Module",
+            "DialogController", "Dialog-C-Module",
             "FileIOService", "File-S-Module",
             "TabManagerService", "Tab-S-Module",
             "LayoutSettings", "Settings-U-Module"
