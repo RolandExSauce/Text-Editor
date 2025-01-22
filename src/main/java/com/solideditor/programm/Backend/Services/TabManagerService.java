@@ -14,6 +14,7 @@ public class TabManagerService {
             = IConnectApp.getIconnectAppInstance(); // get singleton instance
     private static int untitledTabCounter = 1; // counter to track default tabs creation
     /******************************************************************************************************************/
+       //to save unsaved content of a file before switching
         public static void saveUnsavedContent(String filePathOrTabName, String content) {
             for (Map.Entry<String, TabEntry> entry : iConnectApp.getOpenTabs().entrySet()) {
                 FileInfo fileInfo = entry.getValue().fileInfo();
@@ -111,10 +112,13 @@ public class TabManagerService {
 
     /******************************************************************************************************************/
     private static void adjustUntitledTabCounter() {
-        int highestUsed = 1; // Start at 1 for "Untitled Tab 1"
+        int highestUsed = 0; // Start at 1 for "Untitled Tab 1"
+        boolean hasUntitledTabs = false;
         for (TabEntry entry : iConnectApp.getOpenTabs().values()) {
             String tabName = entry.tab().getText();
+            //TODO: could be more robust as a user could potentially name its file "Untitled Tab blabla" ?
             if (tabName.startsWith("Untitled Tab ")) {
+                hasUntitledTabs = true;
                 try {
                     int number = Integer.parseInt(tabName.substring(13));
                     if (number > highestUsed) {
@@ -125,18 +129,16 @@ public class TabManagerService {
                 }
             }
         };
-        untitledTabCounter = highestUsed + 1;
-    };
-    /******************************************************************************************************************/
-    public static void resetUntitledTabCounter() {
-        untitledTabCounter = 1; // Reset to the initial value
+
+        // If there are no untitled tabs left, reset to 1
+        untitledTabCounter = hasUntitledTabs ? highestUsed + 1 : 1;
     };
     /******************************************************************************************************************/
     // Get the Tab associated with an open file
     public static Tab getOpenTab(String fileName, String filePath) {
         String uniqueKey = genFileKey(fileName, filePath);
         TabEntry entry = iConnectApp.getOpenTabs().get(uniqueKey); // retrieve the TabEntry
-        //System.out.println("Tab found: " + (entry != null ? entry.tab().getText() : "null"));
+
         return entry != null ? entry.tab() : null; // return the Tab if it exists
     };
     /******************************************************************************************************************/
@@ -169,12 +171,12 @@ public class TabManagerService {
                 // Clear unsaved content when updating FileInfo (if necessary)
                 iConnectApp.getOpenTabs().put(entry.getKey(), new TabEntry(tab, updatedFileInfo, null));
 
-                System.out.println("FileInfo updated and unsaved content cleared for file path: " + filePath);
                 return;
             }
         };
     };
     /******************************************************************************************************************/
+    //TODO: feels kinda redundant ? doing cleaning later
     //Finds the TabEntry associated with the given Tab
     public static TabEntry getTabEntryByTab(Tab tab) {
         if (tab == null) return null;
@@ -183,6 +185,7 @@ public class TabManagerService {
         };
         return null; // no tab entry found
     };
+
 
     // Helper method to check if FileInfo exists in openTabs
     public static FileInfo findFileInfoInOpenTabs(String filePath) {
@@ -194,8 +197,9 @@ public class TabManagerService {
         }
         return null;
     };
-
-
+    /******************************************************************************************************************/
+    //Because graphic indicator is updated correctly during codeArea changes use it to determine wheter to prompt
+    //for unsaved changes dialog or not, maybe can improve later
     public static boolean areChangesSaved(Tab tab) {
         // Ensure the tab and its graphic are not null
         if (tab == null || tab.getGraphic() == null) {
@@ -209,10 +213,8 @@ public class TabManagerService {
             // Return true if the color is transparent, false otherwise
             return fillColor.equals(Color.TRANSPARENT);
         }
-
         throw new IllegalArgumentException("Tab graphic is not a Circle.");
     };
-
 
 
 }

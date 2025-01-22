@@ -10,7 +10,7 @@ import java.io.*;
 //utility class to handle all file related operations, will interact with FileService class
 public class FileUtils {
 
-    // save a new file "under XY dir" method
+    // create a new file "under XY dir" method
     public static FileInfo saveNewFileUnderDirAndGetFileContent(Stage mainStage, String content) {
         FileChooser fileChooser = FileHelpers //keep descriptive as possible
                 .getFileChooser("Create New File Or Replace existing File with new content");
@@ -22,11 +22,14 @@ public class FileUtils {
             try {
                 // check if the file already exists
                 if (file.exists()) {
-                    // TODO: Customize the dialog to draw the user's attention even more effectively ?
+                    // TODO: Customize the default chooser dialog with more info, WHEN OVERWRITING CONTENT of existing
+                    //  file, to draw the user's attention even more effectively ? Like You are about to override
+                    //Changes from file xy blabla ?
                     return FileHelpers.provideExistingFileInfoOrCreate(file, content); //override with new content
                 }
                 else {
                     if (file.createNewFile()) {
+                        //create a new file with the current content from codeArea
                         FileInfo createdFileInfo = FileHelpers.provideExistingFileInfoOrCreate(file, content);
                         saveChangesToFile(createdFileInfo);
                         return createdFileInfo;

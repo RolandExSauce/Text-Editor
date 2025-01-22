@@ -10,7 +10,6 @@ public class LoggingUtils {
         ERROR
     };
 
-
     /**
      * Logs a message with the provided details at the specified log level.
      *

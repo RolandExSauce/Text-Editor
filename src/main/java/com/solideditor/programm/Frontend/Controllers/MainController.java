@@ -2,7 +2,6 @@ package com.solideditor.programm.Frontend.Controllers;
 import com.solideditor.programm.API.IConnectApp;
 import com.solideditor.programm.Logging.ErrorOrSuccessCode;
 import com.solideditor.programm.Logging.LoggingUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -87,6 +86,7 @@ public class MainController {
             if (controller instanceof MenuBarController menuBarController) {
                 if (menuBarController.getSearchTxtField() != null) {
                     iConnectApp.setUpSearchTxtField(menuBarController.getSearchTxtField());
+                    iConnectApp.setUpLabelFoundAt(menuBarController.getLableFoundAt());
                 };
             };
             if (controller instanceof TitleBarController titleBarController) {
@@ -112,15 +112,4 @@ public class MainController {
             };
     };
 
-    public void onSave(ActionEvent actionEvent) {
-    }
-
-    public void onDiscard(ActionEvent actionEvent) {
-    }
-
-    public void onCancelDialog(ActionEvent actionEvent) {
-    }
-
-    public void onCloseDialog(ActionEvent actionEvent) {
-    }
 }

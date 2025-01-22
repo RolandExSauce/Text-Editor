@@ -86,7 +86,8 @@ public class FileHelpers {
         return path.getFileName().toString();
     };
     /******************************************************************************************************************/
-    // helper methods to provide FileInfo from existing file or return existing one from a File record
+    // helper methods to provide FileInfo from existing file or return existing one from a new File record
+    //used for opening files
     public static <T> FileInfo provideExistingFileInfoOrCreate(T input) {
         if (input == null) {
             throw new IllegalArgumentException("Input cannot be null");
@@ -104,6 +105,7 @@ public class FileHelpers {
                 throw new IllegalArgumentException("File must exist");
             };
             String absolutePath = file.getAbsolutePath();
+
             // Check if FileInfo already exists in openTabs
             FileInfo existingFileInfo = TabManagerService.findFileInfoInOpenTabs(absolutePath);
             return existingFileInfo != null ? existingFileInfo : new FileInfo(absolutePath);
@@ -112,6 +114,8 @@ public class FileHelpers {
         }
     };
 
+    //used to create a new file with codeArea content => option 1. user selects existing file, then that file's content
+    // is overridden or Option 2: user creates new file and the codeArea content  is added as file content to that new file
     public static <T> FileInfo provideExistingFileInfoOrCreate(T input, String content) {
         if (input == null) {
             throw new IllegalArgumentException("Input cannot be null");

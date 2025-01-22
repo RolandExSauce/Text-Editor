@@ -1,7 +1,4 @@
 package com.solideditor.programm.Frontend.Controllers;
-import com.solideditor.programm.API.IConnectApp;
-import com.solideditor.programm.API.IConnectAppUtils;
-import com.solideditor.programm.Backend.Services.FileIOService;
 import com.solideditor.programm.Logging.ErrorOrSuccessCode;
 import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.fxml.FXML;
@@ -19,8 +16,6 @@ import java.util.concurrent.CompletableFuture;
 
 //dialog controller
 public class DialogController {
-    private static final IConnectApp iConnectApp
-            = IConnectApp.getIconnectAppInstance(); // get singleton instance
     private static final String className = DialogController.class.getSimpleName(); //get dialog name for logger
     private static double xOffset = 0;
     private static double yOffset = 0;
@@ -50,9 +45,13 @@ public class DialogController {
 
     // Enum for dialog results
     public enum DialogResult {
+
+        //for unsaved file changes dialog
         SAVE,
         DISCARD,
         CANCEL,
+
+
         NONE
     };
 
@@ -61,9 +60,9 @@ public class DialogController {
     private void onSave() {
         if (dialogResultFuture != null) {
             dialogResultFuture.complete(DialogResult.SAVE);
-        }
+        };
         closeDialog();
-    }
+    };
 
     //cancel dialog
     @FXML
@@ -79,7 +78,7 @@ public class DialogController {
     private void onCancelDialog() {
         if (dialogResultFuture != null) {
             dialogResultFuture.complete(DialogResult.CANCEL);
-        }
+        };
         closeDialog();
     };
 
@@ -90,11 +89,10 @@ public class DialogController {
         }
     };
 
+
     // Method to open the dialog
     public static CompletableFuture<DialogResult> openDialog(DialogKIND dialogKIND) {
-
         dialogResultFuture = new CompletableFuture<>();
-
         try {
             //load the dialog FXML
             String dialogToLoad = switch (dialogKIND) {

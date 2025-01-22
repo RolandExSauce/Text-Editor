@@ -1,14 +1,20 @@
 package com.solideditor.programm.API;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Services.TabManagerService;
+import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
+import com.solideditor.programm.Logging.ErrorOrSuccessCode;
+import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import org.fxmisc.richtext.CodeArea;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -18,8 +24,53 @@ import java.util.concurrent.TimeUnit;
 //extracted here to keep code clean
 public class IConnectAppUtils {
 
+    // Listener for Search TextField changes
+    public static void addSearchTxtFieldListener(
+            TextField searchTxtField,
+            CodeArea codeArea,
+            TabPane tabPane,
+            Label lableFoundAt
+    ) {
+        if (searchTxtField != null) {
+            searchTxtField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if(codeArea != null & tabPane != null) {
+                    if (newValue == null || newValue.isEmpty()) {
+                        LayoutSettings.highlightWordSequenceFound(tabPane, "", codeArea);
+                    } else {
+                        LayoutSettings.highlightWordSequenceFound(tabPane, newValue, codeArea);
+                    };
+
+                    // Extract and format row positions
+                    Map<Integer, List<Integer>> rowPositions =
+                            FileHelpers.findWordInFileAndReturnPos(codeArea.getText(), newValue);
+
+                    if (rowPositions.isEmpty()) {
+                        //System.out.println("No matches found.");
+                        lableFoundAt.setText("No matches.");
+                    } else {
+                        // Extract the keys (row numbers) from the map
+                        String rowNumbers = rowPositions.keySet().stream()
+                                .map(String::valueOf) // Convert each key to a string
+                                .sorted() // Optional: Sort the row numbers
+                                .reduce((a, b) -> a + ", " + b) // Join with commas
+                                .orElse(""); // Handle empty case
+
+                        System.out.println("Row numbers: " + rowNumbers);
+                        lableFoundAt.setText("Found at rows: " + rowNumbers);
+                    }
+
+                }
+            });
+
+        };
+    };
+    /******************************************************************************************************************/
     //add listener for code area
-    public static void addCodeAreaChangeListener(CodeArea codeArea, TabPane tabPane, Label wordCount, Label signCount) {
+    public static void addCodeAreaChangeListener(
+            CodeArea codeArea, TabPane tabPane,
+            Label wordCount, Label signCount, Label lableFoundAt,
+            TextField searchTxtField
+    ) {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
                 // Get the currently selected tab
                 Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();

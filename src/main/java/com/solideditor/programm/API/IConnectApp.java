@@ -42,6 +42,8 @@ public class IConnectApp {
 
     private TabPane tabPane;
 
+    private Label lableFoundAt;
+
     private Label wordCountLabel;
 
     private Label signCountLabel;
@@ -70,15 +72,24 @@ public class IConnectApp {
         setPrimaryStage(stage);
         this.delayedStageForControllers.set(primaryStage);
     };
+
+    //as soon as codeArea is set up, listen to changes
     public void setUpCodeArea(CodeArea codeArea){
         setCodeArea(codeArea);
         listenForCodeAreaChangesForOpenFile();
     };
 
+    //word count labels and sign count labels will listen for code area changes
     public void setWordCountAndSignCount (Label wordCount, Label signCount){
         setWordCountLabel(wordCount);
         setSignCountLabel(signCount);
         listenForCodeAreaChangesForOpenFile();
+    };
+
+    //label found at will listen to search text field changes
+    public void setUpLabelFoundAt (Label lableFoundAt){
+        setLableFoundAt(lableFoundAt);
+        listenForSearchTextFieldChangesForOpenFile();
     };
 
     public void setUpTabPane(TabPane tabPane) {
@@ -105,39 +116,27 @@ public class IConnectApp {
         // Add the default tab to the TabPane if it's not already there
         if (!tabPane.getTabs().contains(defaultTabWithIndicator)) {
             tabPane.getTabs().add(defaultTabWithIndicator);
-        }
+        };
+        tabPane.getSelectionModel().select(defaultTabWithIndicator);
+        tabPane.requestFocus();
         Objects.requireNonNull(defaultTabWithIndicator)
-                .setOnClosed(e -> FileIOService.closeFile(defaultTabWithIndicator));
+        .setOnCloseRequest( e -> {
+            e.consume();
+            FileIOService.closeFile(defaultTabWithIndicator);
+        });
     };
     /******************************************************************************************************************/
-    public void setUpSearchTxtField(TextField txtField) {
-        setSearchTxtField(txtField);
-        addSearchTxtFieldListener();
+    public void setUpSearchTxtField(TextField searchTxtField) {
+        setSearchTxtField(searchTxtField);
+        listenForSearchTextFieldChangesForOpenFile();
         listenForCodeAreaChangesForOpenFile();
     };
     /******************************************************************************************************************/
-    public boolean isTabLimitReached() {
+    public boolean getIsTabLimitReached() {
         return openTabs.size() >= MAX_OPEN_TABS; // check tab limit
     };
-    /******************************************************************************************************************/
+
     public String getPrefKeyForUnsavedFile(){ return prefKeyForUnsavedFile; } // return pref key unsaved files
-    /******************************************************************************************************************/
-    // Listener for Search TextField changes
-    private void addSearchTxtFieldListener() {
-        if (searchTxtField != null) {
-            searchTxtField.textProperty().addListener((observable, oldValue, newValue) -> {
-                if(codeArea != null & tabPane != null) {
-                    if (newValue == null || newValue.isEmpty()) {
-                        LayoutSettings.highlightWordSequenceFound(tabPane, "", codeArea);
-                    } else {
-                        LayoutSettings.highlightWordSequenceFound(tabPane, newValue, codeArea);
-                    };
-                //FileHelpers.findWordInFileAndReturnPos(newValue);
-                }
-            });
-            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
-        };
-    };
     /******************************************************************************************************************/
     // Detect changes on TabPane
     private void detectTabPaneChanges() {
@@ -151,8 +150,20 @@ public class IConnectApp {
     //Listener for CodeArea changes
     private void listenForCodeAreaChangesForOpenFile() {
         if(codeArea != null & tabPane != null & wordCountLabel != null & signCountLabel != null){
-            IConnectAppUtils.addCodeAreaChangeListener(codeArea, tabPane, wordCountLabel, signCountLabel);
+            IConnectAppUtils.addCodeAreaChangeListener(
+                    codeArea, tabPane, wordCountLabel,
+                    signCountLabel, lableFoundAt, searchTxtField
+            );
             LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
+        };
+    };
+    /******************************************************************************************************************/
+    //Listener for search field changes
+    private void listenForSearchTextFieldChangesForOpenFile() {
+        if(codeArea != null & tabPane != null & searchTxtField != null & lableFoundAt != null){
+            IConnectAppUtils.addSearchTxtFieldListener(searchTxtField, codeArea, tabPane, lableFoundAt);
+            LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
+
         };
     };
     //NOTE: In application.log, log infos appear in different order due to threading conditions
