@@ -56,7 +56,9 @@ public class LayoutSettings {
     //method to highlight words found
     public static void highlightWordSequenceFound(
             TabPane tabPane,
-            String txtToSearch, CodeArea codeArea
+            String txtToSearch,
+            CodeArea codeArea,
+            String currentCodeAreaContent
     ) {
         //Get the selected tab
         Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
@@ -64,48 +66,47 @@ public class LayoutSettings {
             System.err.println("No tab selected");
             return;
         }
+
         //Get file path associated with the selected tab
         TabEntry tabEntry = TabManagerService.getTabEntryByTab(selectedTab);
-
         String filePath = tabEntry.fileInfo().filePathOrTempTabName();
         if (filePath == null) {
             System.err.println("No file path associated with the selected tab");
             return;
-        }
+        };
 
-        //Get content
-        String content = tabEntry.fileInfo().fileContent();
-        if (content == null) {
+        // get current content directly so that if the file is edited, we still can highlight the search
+        if (currentCodeAreaContent == null) {
             System.err.println("File content is null for file path: " + filePath);
             return;
-        }
+        };
 
         //Clear existing styles
         try {
-            codeArea.clearStyle(0, content.length());
+            codeArea.clearStyle(0, currentCodeAreaContent.length());
         } catch (Exception e) {
             System.err.println("Error clearing styles: " + e.getMessage());
             return;
-        }
+        };
 
         //Find and highlight positions
         if (txtToSearch == null || txtToSearch.isEmpty()) {
             System.out.println("Search text is empty. No highlighting applied.");
             return;
-        }
+        };
 
         List<Integer> positions;
         try {
-            positions = FileHelpers.findSubstringPositions(content, txtToSearch);
+            positions = FileHelpers.findSubstringPositions(currentCodeAreaContent, txtToSearch);
         } catch (Exception e) {
             System.err.println("Error finding substring positions: " + e.getMessage());
             return;
-        }
+        };
 
         //Apply styles
         for (int index : positions) {
             int endIndex = index + txtToSearch.length();
-            if (endIndex <= content.length()) {
+            if (endIndex <= currentCodeAreaContent.length()) {
                 try {
                     codeArea.setStyleClass(index, endIndex, "highlight");
                 } catch (Exception e) {

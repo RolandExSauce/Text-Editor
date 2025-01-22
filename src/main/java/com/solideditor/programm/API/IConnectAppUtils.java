@@ -8,8 +8,6 @@ import com.solideditor.programm.Backend.Utils.FileHelpers;
 import com.solideditor.programm.Backend.Services.TabManagerService;
 import com.solideditor.programm.Backend.Utils.LayoutSettings;
 import com.solideditor.programm.Frontend.Tools.ControllerUtils;
-import com.solideditor.programm.Logging.ErrorOrSuccessCode;
-import com.solideditor.programm.Logging.LoggingUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -21,7 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
-//extracted here to keep code clean
+
+//extracted listeners here to keep code clean
 public class IConnectAppUtils {
 
     // Listener for Search TextField changes
@@ -33,11 +32,15 @@ public class IConnectAppUtils {
     ) {
         if (searchTxtField != null) {
             searchTxtField.textProperty().addListener((observable, oldValue, newValue) -> {
+
+                //Highlight text found and return positions
+                //TODO: WHEN TAB IS SWITCHED THE STYLES ARE ALSO RESETTED, PROBABLY BECAUSE TEXT AREA IS CLEARED
+
                 if(codeArea != null & tabPane != null) {
                     if (newValue == null || newValue.isEmpty()) {
-                        LayoutSettings.highlightWordSequenceFound(tabPane, "", codeArea);
+                        LayoutSettings.highlightWordSequenceFound(tabPane, "", codeArea, codeArea.getText());
                     } else {
-                        LayoutSettings.highlightWordSequenceFound(tabPane, newValue, codeArea);
+                        LayoutSettings.highlightWordSequenceFound(tabPane, newValue, codeArea, codeArea.getText());
                     };
 
                     // Extract and format row positions
@@ -58,18 +61,16 @@ public class IConnectAppUtils {
                         System.out.println("Row numbers: " + rowNumbers);
                         lableFoundAt.setText("Found at rows: " + rowNumbers);
                     }
-
                 }
             });
 
         };
     };
     /******************************************************************************************************************/
-    //add listener for code area
+    //Listener for codeArea changes
     public static void addCodeAreaChangeListener(
             CodeArea codeArea, TabPane tabPane,
-            Label wordCount, Label signCount, Label lableFoundAt,
-            TextField searchTxtField
+            Label wordCount, Label signCount
     ) {
             codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
                 // Get the currently selected tab
@@ -138,7 +139,7 @@ public class IConnectAppUtils {
             });
     };
     /******************************************************************************************************************/
-    //exit app
+    //exit app, actually don't belong here in a class called listener
     public static void graceFullShutDown(){
         // Create a ScheduledExecutorService for delayed execution
         try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {

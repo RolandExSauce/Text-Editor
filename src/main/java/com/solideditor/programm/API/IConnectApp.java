@@ -151,8 +151,7 @@ public class IConnectApp {
     private void listenForCodeAreaChangesForOpenFile() {
         if(codeArea != null & tabPane != null & wordCountLabel != null & signCountLabel != null){
             IConnectAppUtils.addCodeAreaChangeListener(
-                    codeArea, tabPane, wordCountLabel,
-                    signCountLabel, lableFoundAt, searchTxtField
+                    codeArea, tabPane, wordCountLabel, signCountLabel
             );
             LoggingUtils.log(LoggingUtils.LogLevel.INFO, className, ErrorOrSuccessCode.SUCCESS_CODE_2003);
         };

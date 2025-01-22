@@ -1,5 +1,6 @@
 package com.solideditor.programm.Backend.Services;
 import com.solideditor.programm.API.IConnectApp;
+import com.solideditor.programm.API.IConnectAppUtils;
 import com.solideditor.programm.Backend.DTO.FileInfo;
 import com.solideditor.programm.Backend.DTO.TabEntry;
 import com.solideditor.programm.Backend.Utils.FileHelpers;
@@ -222,6 +223,12 @@ public class FileIOService {
                     LoggingUtils.log(LoggingUtils.LogLevel.ERROR, className, ErrorOrSuccessCode.ERR_CODE_1004);
                     return;
                 };
+
+                // Check if all tabs are closed and exit app
+                if (iConnectApp.getTabPane().getTabs().isEmpty()) {
+                    IConnectAppUtils.graceFullShutDown(); // Call your shutdown method
+                };
+
             } else {
                 //changes are not saved, that means user created a new tab, made some changes, did not save and
                 //is now trying to close it
@@ -236,6 +243,11 @@ public class FileIOService {
                                     Platform.runLater(() -> {
                                         iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
                                         iConnectApp.getTabPane().getTabs().remove(tab);
+
+                                        // Check if all tabs are closed and exit app
+                                        if (iConnectApp.getTabPane().getTabs().isEmpty()) {
+                                            IConnectAppUtils.graceFullShutDown(); // Call your shutdown method
+                                        };
                                     });
                                 }
                                 case DISCARD -> {
@@ -243,10 +255,16 @@ public class FileIOService {
                                         //TODO: test before removal
                                         iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
                                         iConnectApp.getTabPane().getTabs().remove(tab);
+
+                                        // Check if all tabs are closed and exit app
+                                        if (iConnectApp.getTabPane().getTabs().isEmpty()) {
+                                            IConnectAppUtils.graceFullShutDown(); // Call your shutdown method
+                                        };
                                     });
+
+
                                 }
-                                case CANCEL -> {
-                                } //do nothing
+                                case CANCEL -> { } //do nothing
                                 default -> System.out.println("Cancel, doing nothing");
                             }
                         });
@@ -259,7 +277,6 @@ public class FileIOService {
 
             //check if saved tab files has changes
             if (areChangesSaved) {
-                //TODO: ALSO CHECK IF ITS THE LAST TAB THEN EXIT THE APP
 
                 //changes are saved
                 boolean removedFromManager = TabManagerService
@@ -278,6 +295,11 @@ public class FileIOService {
                     System.out.println("Could not close file for" + filePathOrDefaultTabName); //If file is deleted in filesystem
                 }
 
+                // Check if all tabs are closed and exit app
+                if (iConnectApp.getTabPane().getTabs().isEmpty()) {
+                    IConnectAppUtils.graceFullShutDown();
+                };
+
             } else {
                 //changes are not saved and user opened a file through "open button",
                 // made some changes, did not save and is now trying to close it
@@ -293,6 +315,11 @@ public class FileIOService {
                                         iConnectApp.getOpenTabs().remove(filePathOrDefaultTabName);
                                         iConnectApp.getTabPane().getTabs().remove(tab);
                                         FileUtils.closeFileRessource(filePathOrDefaultTabName); //close the file ressource
+
+                                        // Check if all tabs are closed and exit app
+                                        if (iConnectApp.getTabPane().getTabs().isEmpty()) {
+                                            IConnectAppUtils.graceFullShutDown();
+                                        };
                                     });
                                 }
                                 case DISCARD -> {
@@ -313,6 +340,11 @@ public class FileIOService {
                                             DialogController.openDialog(DialogController.DialogKIND.FILE_NOT_EXIST);
                                             System.out.println("Could not close file for" + filePathOrDefaultTabName); //If file is deleted in filesystem
                                         }
+
+                                        // Check if all tabs are closed and exit app
+                                        if (iConnectApp.getTabPane().getTabs().isEmpty()) {
+                                            IConnectAppUtils.graceFullShutDown();
+                                        };
 
                                     });
                                 }
